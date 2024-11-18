@@ -31,6 +31,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
     with TickerProviderStateMixin {
   late MainPageModel _model;
   late SearchBarModel _searchBarModel;
+  var isLoadingSearch = false;
   final TextEditingController _searchController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -76,9 +77,10 @@ class _MainPageWidgetState extends State<MainPageWidget>
     super.dispose();
   }
 
-  void _handleTextChange() {
+  void _handleTextChange() async {
     String text = _searchBarModel.textController?.text ?? '';
-    _model.searchQuery = text;
+    _model.searchResults.query = text;
+    isLoadingSearch = true;
     safeSetState(() {});
   }
 
@@ -177,6 +179,53 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                             'Search Watch',
                                                       ),
                                                     ),
+                                                  ),
+                                                  Visibility(
+                                                    visible: _searchBarModel
+                                                            .textFieldFocusNode
+                                                            ?.hasFocus ==
+                                                        true,
+                                                    maintainSize: false,
+                                                    child: Padding(
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(0.0,
+                                                                0.0, 20.0, 0.0),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            _model.searchResults
+                                                                .query = '';
+                                                            _searchController
+                                                                .text = '';
+                                                            isLoadingSearch =
+                                                                false;
+                                                            _searchBarModel
+                                                                .textFieldFocusNode
+                                                                ?.unfocus();
+                                                          },
+                                                          child: Text(
+                                                            'Cancel',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'DM Sans',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .alternate,
+                                                                  fontSize:
+                                                                      17.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                  lineHeight:
+                                                                      1.41,
+                                                                ),
+                                                          ),
+                                                        )),
                                                   ),
                                                   Align(
                                                     alignment:
@@ -348,36 +397,95 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                             width: 4.0)),
                                                       ),
                                                     ),
-                                                    Container(
-                                                        width: double.infinity,
-                                                        height: MediaQuery
-                                                                    .sizeOf(
-                                                                        context)
-                                                                .height *
-                                                            0.9,
-                                                        decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground),
-                                                        child: FutureBuilder<
-                                                                ApiCallResponse>(
-                                                            future: MutualWatchGroup
-                                                                .watchFiltersGraphQLCall
-                                                                .call(
-                                                              queryName:
-                                                                  'SearchResults',
-                                                              variablesJson:
-                                                                  searchResults,
-                                                              authorization:
-                                                                  FFAppState()
-                                                                      .loginData
-                                                                      .accessToken,
-                                                            ),
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              return const Text(
-                                                                  'Test');
-                                                            }))
+                                                    Visibility(
+                                                      visible: _searchBarModel
+                                                              .textFieldFocusNode
+                                                              ?.hasFocus ==
+                                                          true,
+                                                      maintainSize:
+                                                          false, // Maintain the space when not visible
+                                                      maintainAnimation: true,
+                                                      maintainState: true,
+                                                      replacement: // Optional: shows an empty space if needed
+                                                          const SizedBox
+                                                              .shrink(),
+                                                      child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .height *
+                                                                  0.9,
+                                                          decoration: BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryBackground),
+                                                          child: Stack(
+                                                            children: [
+                                                              FutureBuilder<
+                                                                      ApiCallResponse>(
+                                                                  future: MutualWatchGroup
+                                                                      .watchFiltersGraphQLCall
+                                                                      .call(
+                                                                    queryName:
+                                                                        'SearchResults',
+                                                                    variablesJson:
+                                                                        searchResults,
+                                                                    authorization:
+                                                                        FFAppState()
+                                                                            .loginData
+                                                                            .accessToken,
+                                                                  ),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    if (snapshot
+                                                                        .hasData) {
+                                                                      isLoadingSearch =
+                                                                          false;
+                                                                      final searchResultsResponse =
+                                                                          snapshot
+                                                                              .data!;
+                                                                      final masterSearches = SearchResultsResponseStruct.maybeFromMap(searchResultsResponse.jsonBody)
+                                                                              ?.data
+                                                                              .data
+                                                                              .data
+                                                                              .searchResults
+                                                                              .masterSearchs
+                                                                              .toList() ??
+                                                                          [];
+                                                                      return ListView
+                                                                          .builder(
+                                                                        itemCount:
+                                                                            masterSearches.length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return ListTile(
+                                                                            title:
+                                                                                Text(masterSearches[index].matchingString),
+                                                                            onTap:
+                                                                                () {
+                                                                              print('Slug: ${masterSearches[index].slug}');
+                                                                            },
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                    } else {
+                                                                      return const Center(
+                                                                          child:
+                                                                              CircularProgressIndicator());
+                                                                    }
+                                                                  }),
+                                                              Center(
+                                                                  child: Visibility(
+                                                                      visible:
+                                                                          isLoadingSearch,
+                                                                      child:
+                                                                          const CircularProgressIndicator()))
+                                                            ],
+                                                          )),
+                                                    )
                                                   ],
                                                 )),
                                           ],

@@ -25,7 +25,6 @@ class MainPageModel extends FlutterFlowModel<MainPageWidget> {
   int get tabBarCurrentIndex =>
       tabBarController != null ? tabBarController!.index : 0;
 
-  String searchQuery = '';
   late SearchResultsStruct searchResults;
 
   // Model for SearchBar component.
@@ -94,8 +93,7 @@ class MainPageModel extends FlutterFlowModel<MainPageWidget> {
 
   @override
   void initState(BuildContext context) {
-    searchResults =
-        SearchResultsStruct(query: searchQuery, includeAllFilters: false);
+    searchResults = SearchResultsStruct(query: '', includeAllFilters: false);
     searchBarModel = createModel(context, () => SearchBarModel());
     iconButtonModel1 = createModel(context, () => IconButtonModel());
     iconButtonModel2 = createModel(context, () => IconButtonModel());
