@@ -31,7 +31,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
     with TickerProviderStateMixin {
   late MainPageModel _model;
   late SearchBarModel _searchBarModel;
-  var isLoadingSearch = false;
+  var isLoadingSearch = true;
   final TextEditingController _searchController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
