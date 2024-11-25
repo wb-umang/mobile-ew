@@ -54,7 +54,7 @@ class _WatchTagWidgetState extends State<WatchTagWidget> {
             if (widget.title == 'LIVE AUCTION') {
               return FlutterFlowTheme.of(context).liveAuction;
             } else if (widget.title == 'MARKETPLACE') {
-              return FlutterFlowTheme.of(context).alternate;
+              return FlutterFlowTheme.of(context).marketplace;
             } else {
               return const Color(0x34009FDB);
             }

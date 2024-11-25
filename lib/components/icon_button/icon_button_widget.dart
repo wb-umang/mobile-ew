@@ -11,47 +11,21 @@ class IconButtonWidget extends StatefulWidget {
     String? name,
     this.icon,
     required this.selectedAction,
-    bool? isInitiallySelected,
-  })  : name = name ?? 'Title',
-        isInitiallySelected = isInitiallySelected ?? false;
+    required this.unselectedAction,
+    required this.isSelected,
+  }) : name = name ?? 'Title';
 
   final String name;
   final Widget? icon;
   final Future Function()? selectedAction;
-  final bool isInitiallySelected;
+  final Future Function()? unselectedAction;
+  final bool isSelected;
 
   @override
   State<IconButtonWidget> createState() => _IconButtonWidgetState();
 }
 
 class _IconButtonWidgetState extends State<IconButtonWidget> {
-  late IconButtonModel _model;
-
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _model = createModel(context, () => IconButtonModel());
-
-    // On component load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.isSelected = widget.isInitiallySelected;
-      safeSetState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _model.maybeDispose();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -60,11 +34,12 @@ class _IconButtonWidgetState extends State<IconButtonWidget> {
       hoverColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () async {
-        _model.isSelected = !_model.isSelected;
-        safeSetState(() {});
-        if (_model.isSelected) {
+        if (widget.isSelected) {
+          await widget.unselectedAction?.call();
+        } else {
           await widget.selectedAction?.call();
         }
+        safeSetState(() {});
       },
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.299,
@@ -87,12 +62,12 @@ class _IconButtonWidgetState extends State<IconButtonWidget> {
                   width: 32.0,
                   height: 32.0,
                   decoration: BoxDecoration(
-                    color: _model.isSelected
+                    color: widget.isSelected
                         ? const Color(0x14040731)
                         : FlutterFlowTheme.of(context).secondaryBackground,
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
-                      color: _model.isSelected
+                      color: widget.isSelected
                           ? FlutterFlowTheme.of(context).primary
                           : FlutterFlowTheme.of(context).border2,
                       width: 1.0,

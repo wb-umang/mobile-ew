@@ -42,6 +42,14 @@ class _ToggleButtonWidgetState extends State<ToggleButtonWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant ToggleButtonWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isSelected != widget.isSelected) {
+      _model.isSelected = widget.isSelected;
+    }
+  }
+
+  @override
   void dispose() {
     _model.maybeDispose();
 

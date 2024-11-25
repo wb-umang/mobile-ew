@@ -59,6 +59,7 @@ abstract class FlutterFlowTheme {
   late Color appBar;
   late Color badge;
   late Color liveAuction;
+  late Color marketplace;
   late Color lightGray;
   late Color border2;
   late Color warm;
@@ -158,6 +159,7 @@ class LightModeTheme extends FlutterFlowTheme {
   late Color appBar = const Color(0xFFF7F7FA);
   late Color badge = const Color(0xFFEB5757);
   late Color liveAuction = const Color(0xFF035640);
+  late Color marketplace = const Color(0xFF20A58B);
   late Color lightGray = const Color(0xFFEDEFF8);
   late Color border2 = const Color(0xFFD8DBE4);
   late Color warm = const Color(0xFFE77308);
@@ -340,6 +342,7 @@ class DarkModeTheme extends FlutterFlowTheme {
   late Color appBar = const Color(0xFFBDD58E);
   late Color badge = const Color(0xFF4EE8E7);
   late Color liveAuction = const Color(0xFFF69233);
+  late Color marketplace = const Color(0xFF20A58B);
   late Color lightGray = const Color(0xFFF0CA95);
   late Color border2 = const Color(0xFFEE5BE0);
   late Color warm = const Color(0xFF3739D7);

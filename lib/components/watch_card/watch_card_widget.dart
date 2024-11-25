@@ -15,13 +15,15 @@ class WatchCardWidget extends StatefulWidget {
     String? price,
     String? auctionLocation,
     String? auctionDate,
+    String? auctionLotType,
     this.imagePath,
   })  : brand = brand ?? '-',
         model = model ?? '-',
         priceTitle = priceTitle ?? '-',
         price = price ?? '-',
         auctionLocation = auctionLocation ?? '-',
-        auctionDate = auctionDate ?? '-';
+        auctionDate = auctionDate ?? '-',
+        auctionLotType = auctionLotType ?? '-';
 
   final String brand;
   final String model;
@@ -29,6 +31,7 @@ class WatchCardWidget extends StatefulWidget {
   final String price;
   final String auctionLocation;
   final String auctionDate;
+  final String auctionLotType;
   final String? imagePath;
 
   @override
@@ -94,6 +97,10 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                           height: 130.0,
                           fit: BoxFit.fitHeight,
                           alignment: const Alignment(0.0, 0.0),
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const Text('Failed to load image');
+                          },
                         ),
                       ),
                     ),
@@ -158,8 +165,10 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                   child: wrapWithModel(
                     model: _model.watchTagModel,
                     updateCallback: () => safeSetState(() {}),
-                    child: const WatchTagWidget(
-                      title: 'LIVE AUCTION',
+                    child: WatchTagWidget(
+                      title: widget.auctionLotType == 'UPCOMING'
+                          ? 'LIVE AUCTION'
+                          : 'MARKETPLACE',
                     ),
                   ),
                 ),

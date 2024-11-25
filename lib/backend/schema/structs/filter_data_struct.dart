@@ -372,6 +372,37 @@ class FilterDataStruct extends BaseStruct {
         ),
       );
 
+  static FilterDataStruct parseFilterData(String query) {
+    Map<String, List<String>> params = {};
+
+    // Split the query string by '&' to get each parameter
+    query.split('&').forEach((param) {
+      var parts = param.split('=');
+      if (parts.length == 2) {
+        params[parts[0]] = (params[parts[0]] ?? [])..add(parts[1]);
+      }
+    });
+
+    return FilterDataStruct(
+      manufacturer: params['manufacturer'],
+      model: params['model'],
+      referenceNumber: params['referenceNumber'],
+      caseSize: params['caseSize'],
+      caseMaterial: params['caseMaterial'],
+      dialColor: params['dialColor'],
+      movement: params['movement'],
+      braceletMaterial: params['braceletMaterial'],
+      claspMaterial: params['claspMaterial'],
+      infoSource: params['infoSource'],
+      country: params['country'],
+      condition: params['condition'],
+    );
+  }
+
+  static FilterDataStruct createEmptyFilterDataStruct(
+          {String? currencyMode, List<String>? auctionType}) =>
+      FilterDataStruct(currencyMode: currencyMode, auctionType: auctionType);
+
   @override
   String toString() => 'FilterDataStruct(${toMap()})';
 
@@ -413,10 +444,3 @@ class FilterDataStruct extends BaseStruct {
         condition,
       ]);
 }
-
-FilterDataStruct createFilterDataStruct({
-  String? currencyMode,
-}) =>
-    FilterDataStruct(
-      currencyMode: currencyMode,
-    );

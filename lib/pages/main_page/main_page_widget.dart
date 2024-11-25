@@ -1,3 +1,5 @@
+import 'package:every_watch/app_state.dart';
+
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/icon_button/icon_button_widget.dart';
@@ -32,6 +34,10 @@ class _MainPageWidgetState extends State<MainPageWidget>
   late MainPageModel _model;
   late SearchBarModel _searchBarModel;
   var isLoadingSearch = true;
+  var isAvailableSelected = true;
+  var isHistoricalSelected = false;
+  var isUpcomingSelected = false;
+  var isMarketplaceSelected = false;
   final TextEditingController _searchController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -82,6 +88,15 @@ class _MainPageWidgetState extends State<MainPageWidget>
     _model.searchResults.query = text;
     isLoadingSearch = true;
     safeSetState(() {});
+  }
+
+  void clearSearch([bool clearQuery = true]) {
+    if (clearQuery) {
+      _model.searchResults.query = '';
+      _searchController.text = '';
+    }
+    isLoadingSearch = false;
+    _searchBarModel.textFieldFocusNode?.unfocus();
   }
 
   @override
@@ -193,15 +208,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                 0.0, 20.0, 0.0),
                                                         child: InkWell(
                                                           onTap: () {
-                                                            _model.searchResults
-                                                                .query = '';
-                                                            _searchController
-                                                                .text = '';
-                                                            isLoadingSearch =
-                                                                false;
-                                                            _searchBarModel
-                                                                .textFieldFocusNode
-                                                                ?.unfocus();
+                                                            clearSearch();
                                                           },
                                                           child: Text(
                                                             'Cancel',
@@ -333,8 +340,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                     .primary,
                                                                 size: 16.0,
                                                               ),
-                                                              isInitiallySelected:
-                                                                  true,
+                                                              isSelected:
+                                                                  isAvailableSelected,
                                                               selectedAction:
                                                                   () async {
                                                                 FFAppState()
@@ -350,7 +357,34 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                 _model.isAvailable =
                                                                     true;
                                                                 safeSetState(
-                                                                    () {});
+                                                                    () {
+                                                                  isHistoricalSelected =
+                                                                      false;
+                                                                  isAvailableSelected =
+                                                                      true;
+                                                                  isUpcomingSelected =
+                                                                      false;
+                                                                  isMarketplaceSelected =
+                                                                      false;
+                                                                });
+                                                              },
+                                                              unselectedAction:
+                                                                  () async {
+                                                                FFAppState()
+                                                                    .updateWatchListingFilter(
+                                                                  (e) => e
+                                                                    ..filterData
+                                                                        .auctionType
+                                                                        .removeUnique(
+                                                                            'listing'),
+                                                                );
+                                                                _model.isAvailable =
+                                                                    true;
+                                                                safeSetState(
+                                                                    () {
+                                                                  isAvailableSelected =
+                                                                      false;
+                                                                });
                                                               },
                                                             ),
                                                           ),
@@ -374,6 +408,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                     .primary,
                                                                 size: 16.0,
                                                               ),
+                                                              isSelected:
+                                                                  isHistoricalSelected,
                                                               selectedAction:
                                                                   () async {
                                                                 FFAppState()
@@ -389,7 +425,34 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                 _model.isAvailable =
                                                                     false;
                                                                 safeSetState(
-                                                                    () {});
+                                                                    () {
+                                                                  isHistoricalSelected =
+                                                                      true;
+                                                                  isAvailableSelected =
+                                                                      false;
+                                                                  isUpcomingSelected =
+                                                                      false;
+                                                                  isMarketplaceSelected =
+                                                                      false;
+                                                                });
+                                                              },
+                                                              unselectedAction:
+                                                                  () async {
+                                                                FFAppState()
+                                                                    .updateWatchListingFilter(
+                                                                  (e) => e
+                                                                    ..filterData
+                                                                        .auctionType
+                                                                        .removeUnique(
+                                                                            'historical'),
+                                                                );
+                                                                _model.isAvailable =
+                                                                    false;
+                                                                safeSetState(
+                                                                    () {
+                                                                  isHistoricalSelected =
+                                                                      false;
+                                                                });
                                                               },
                                                             ),
                                                           ),
@@ -466,7 +529,18 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                                 Text(masterSearches[index].matchingString),
                                                                             onTap:
                                                                                 () {
-                                                                              print('Slug: ${masterSearches[index].slug}');
+                                                                              FFAppState().update(() {
+                                                                                var search = masterSearches[index];
+                                                                                var query = search.filters;
+                                                                                var currentFilterData = FFAppState().watchListingFilter.filterData;
+                                                                                var parsedFilterData = FilterDataStruct.parseFilterData(query);
+                                                                                parsedFilterData.auctionType = currentFilterData.auctionType;
+                                                                                parsedFilterData.currencyMode = currentFilterData.currencyMode;
+                                                                                FFAppState().watchListingFilter.filterData = parsedFilterData;
+                                                                                _model.searchResults.query = search.matchingString;
+                                                                                _searchController.text = search.matchingString;
+                                                                                clearSearch(false);
+                                                                              });
                                                                             },
                                                                           );
                                                                         },
@@ -636,7 +710,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                     title:
                                                                         'Upcoming Auctions',
                                                                     isSelected:
-                                                                        false,
+                                                                        isUpcomingSelected,
                                                                     count: () {
                                                                       if (FFAppState()
                                                                           .watchListingFilter
@@ -670,16 +744,14 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                     }(),
                                                                     selectedAction:
                                                                         () async {
+                                                                      isUpcomingSelected =
+                                                                          true;
                                                                       if (_model
                                                                           .isAvailable) {
                                                                         FFAppState()
                                                                             .updateWatchListingFilter(
                                                                           (e) => e
-                                                                            ..filterData = FilterDataStruct(
-                                                                              auctionType: [
-                                                                                'upcomingLive'
-                                                                              ],
-                                                                            ),
+                                                                            ..filterData.auctionType.addUnique('upcomingLive'),
                                                                         );
                                                                         safeSetState(
                                                                             () {});
@@ -687,18 +759,23 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                         FFAppState()
                                                                             .updateWatchListingFilter(
                                                                           (e) => e
-                                                                            ..filterData = FilterDataStruct(
-                                                                              auctionType: [
-                                                                                'result'
-                                                                              ],
-                                                                            ),
+                                                                            ..filterData.auctionType.addUnique('result'),
                                                                         );
                                                                         safeSetState(
                                                                             () {});
                                                                       }
                                                                     },
                                                                     unselectedAction:
-                                                                        () async {},
+                                                                        () async {
+                                                                      isUpcomingSelected =
+                                                                          false;
+                                                                      FFAppState()
+                                                                          .updateWatchListingFilter((e) => e
+                                                                            ..filterData.auctionType.removeUnique('upcomingLive')
+                                                                            ..filterData.auctionType.removeUnique('result'));
+                                                                      safeSetState(
+                                                                          () {});
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ),
@@ -721,7 +798,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                     title:
                                                                         'Marketplace',
                                                                     isSelected:
-                                                                        false,
+                                                                        isMarketplaceSelected,
                                                                     count: FFAppState()
                                                                             .watchListingFilter
                                                                             .filterData
@@ -738,6 +815,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                         : null,
                                                                     selectedAction:
                                                                         () async {
+                                                                      isMarketplaceSelected =
+                                                                          true;
                                                                       if (_model
                                                                           .isAvailable) {
                                                                         FFAppState()
@@ -766,7 +845,22 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                       }
                                                                     },
                                                                     unselectedAction:
-                                                                        () async {},
+                                                                        () async {
+                                                                      isMarketplaceSelected =
+                                                                          false;
+                                                                      FFAppState()
+                                                                          .updateWatchListingFilter(
+                                                                        (e) => e
+                                                                          ..filterData
+                                                                              .auctionType
+                                                                              .removeUnique('marketplaceArchive')
+                                                                          ..filterData
+                                                                              .auctionType
+                                                                              .removeUnique('marketplace'),
+                                                                      );
+                                                                      safeSetState(
+                                                                          () {});
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ),
@@ -904,6 +998,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                               'Phillips Bacs & Russo, Switzerland',
                                                                           auctionDate:
                                                                               'May 14 - May 18',
+                                                                          auctionLotType:
+                                                                              watchListingsItem.auctionLotType,
                                                                           imagePath: watchListingsItem
                                                                               .primaryImage
                                                                               .preview768,
@@ -1004,7 +1100,10 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                               .primary,
                                                           size: 16.0,
                                                         ),
+                                                        isSelected: false,
                                                         selectedAction:
+                                                            () async {},
+                                                        unselectedAction:
                                                             () async {},
                                                       ),
                                                     ),
@@ -1023,7 +1122,10 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                               .primary,
                                                           size: 16.0,
                                                         ),
+                                                        isSelected: false,
                                                         selectedAction:
+                                                            () async {},
+                                                        unselectedAction:
                                                             () async {},
                                                       ),
                                                     ),
@@ -1043,7 +1145,10 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                               .primary,
                                                           size: 16.0,
                                                         ),
+                                                        isSelected: false,
                                                         selectedAction:
+                                                            () async {},
+                                                        unselectedAction:
                                                             () async {},
                                                       ),
                                                     ),
