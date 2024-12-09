@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 class SpecificationsCardModel
     extends FlutterFlowModel<SpecificationsCardWidget> {
+  String allSpecificationsTitle = 'All Specifications';
+  bool showAllSpecifications = false;
+
   @override
   void initState(BuildContext context) {}
 

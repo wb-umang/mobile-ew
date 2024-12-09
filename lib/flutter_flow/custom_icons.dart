@@ -95,7 +95,7 @@ class FFIcons {
   // notification-filled
 
   // share
-
+  static const IconData kshare = IconData(0xe900, fontFamily: _shareFamily);
   // email
 
   // bookmark

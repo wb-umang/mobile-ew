@@ -952,6 +952,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                               .transparent,
                                                                       onTap:
                                                                           () async {
+                                                                        FFAppState().watchListingStruct =
+                                                                            watchListingsItem;
                                                                         context.pushNamed(
                                                                             'WatchPage');
                                                                       },
@@ -987,17 +989,11 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                           priceTitle:
                                                                               'Estimates',
                                                                           price:
-                                                                              '\$${valueOrDefault<String>(
-                                                                            watchListingsItem.minEstUsd.toString(),
-                                                                            '-',
-                                                                          )} - \$${valueOrDefault<String>(
-                                                                            watchListingsItem.maxEstUsd.toString(),
-                                                                            '-',
-                                                                          )}',
+                                                                              watchListingsItem.parsePrice(),
                                                                           auctionLocation:
-                                                                              'Phillips Bacs & Russo, Switzerland',
+                                                                              watchListingsItem.parseLocation(),
                                                                           auctionDate:
-                                                                              'May 14 - May 18',
+                                                                              watchListingsItem.parseEventDates(),
                                                                           auctionLotType:
                                                                               watchListingsItem.auctionLotType,
                                                                           imagePath: watchListingsItem
@@ -1310,26 +1306,14 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                   ),
                                                                   priceTitle:
                                                                       'Estimates',
-                                                                  price:
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                    '\$${valueOrDefault<String>(
-                                                                      watchListingsItem
-                                                                          .minEstUsd
-                                                                          .toString(),
-                                                                      '-',
-                                                                    )} - \$${valueOrDefault<String>(
-                                                                      watchListingsItem
-                                                                          .maxEstUsd
-                                                                          .toString(),
-                                                                      '-',
-                                                                    )}',
-                                                                    '-',
-                                                                  ),
+                                                                  price: watchListingsItem
+                                                                      .parsePrice(),
                                                                   auctionLocation:
-                                                                      'Phillips Bacs & Russo, Switzerland',
+                                                                      watchListingsItem
+                                                                          .parseLocation(),
                                                                   auctionDate:
-                                                                      'May 14 - May 18',
+                                                                      watchListingsItem
+                                                                          .parseEventDates(),
                                                                   imagePath: watchListingsItem
                                                                       .primaryImage
                                                                       .original,

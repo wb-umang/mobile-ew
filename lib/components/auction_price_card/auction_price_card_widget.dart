@@ -10,11 +10,14 @@ class AuctionPriceCardWidget extends StatefulWidget {
     super.key,
     String? estimationPrice,
     String? salePrice,
+    String? buyersPremium,
   })  : estimationPrice = estimationPrice ?? '\$15.5K - 20K',
-        salePrice = salePrice ?? '\$22.325K';
+        salePrice = salePrice ?? '\$22.325K',
+        buyersPremium = buyersPremium ?? '10%';
 
   final String estimationPrice;
   final String salePrice;
+  final String buyersPremium;
 
   @override
   State<AuctionPriceCardWidget> createState() => _AuctionPriceCardWidgetState();
@@ -52,7 +55,6 @@ class _AuctionPriceCardWidgetState extends State<AuctionPriceCardWidget> {
       ),
       child: Container(
         width: double.infinity,
-        height: 184.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).lightGray,
           borderRadius: BorderRadius.circular(24.0),
@@ -176,20 +178,90 @@ class _AuctionPriceCardWidgetState extends State<AuctionPriceCardWidget> {
                   ),
                 ],
               ),
+              Visibility(
+                visible: _model.showBuyersPremium,
+                maintainState: true, // Keeps the state of the widget
+                maintainAnimation: true, // Maintain animations
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Buyer\'s Premium',
+                          textAlign: TextAlign.start,
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'DM Sans',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    letterSpacing: 0.08,
+                                    lineHeight: 1.43,
+                                  ),
+                        ),
+                        Text(
+                          'An additional amount that the buyer \nhas to pay on top of the item\'s \nhammer price.',
+                          textAlign: TextAlign.start,
+                          maxLines: 3,
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                fontFamily: 'DM Sans',
+                                color: FlutterFlowTheme.of(context).secondary,
+                                fontSize: 12.0,
+                                letterSpacing: 0.16,
+                                lineHeight: 1.33,
+                              ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          valueOrDefault<String>(
+                            widget.buyersPremium,
+                            '10%',
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'DM Sans',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    letterSpacing: 0.12,
+                                    fontWeight: FontWeight.bold,
+                                    lineHeight: 1.43,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                padding:
+                    const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () {
-                    print('Button pressed ...');
+                    setState(() {
+                      _model.showBuyersPremium = !_model.showBuyersPremium;
+                      if (_model.showBuyersPremium) {
+                        _model.buyersPremiumTitle = 'Hide Buyers Fee Details';
+                      } else {
+                        _model.buyersPremiumTitle = 'Buyers Fee Details';
+                      }
+                    });
                   },
-                  text: 'Buyers Fee Details',
+                  text: _model.buyersPremiumTitle,
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 36.0,
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    iconPadding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        24.0, 0.0, 24.0, 0.0),
+                    iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 0.0, 0.0, 0.0),
                     color: FlutterFlowTheme.of(context).lightGray,
                     textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                           fontFamily: 'DM Sans',

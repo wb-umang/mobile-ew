@@ -39,6 +39,17 @@ class FFAppState extends ChangeNotifier {
           print("Can't decode persisted data type. Error: $e.");
         }
       }
+
+      if (prefs.containsKey('ff_watchListingStruct')) {
+        try {
+          final serializedData =
+              prefs.getString('ff_watchListingStruct') ?? '{}';
+          _watchListingStruct = WatchListingStruct.fromSerializableMap(
+              jsonDecode(serializedData));
+        } catch (e) {
+          print("Can't decode persisted data type. Error: $e.");
+        }
+      }
     });
   }
 
@@ -76,6 +87,18 @@ class FFAppState extends ChangeNotifier {
   void updateWatchListingFilter(Function(WatchListingFilterStruct) updateFn) {
     updateFn(_watchListingFilter);
     prefs.setString('ff_watchListingFilter', _watchListingFilter.serialize());
+  }
+
+  WatchListingStruct _watchListingStruct = WatchListingStruct();
+  WatchListingStruct get watchListingStruct => _watchListingStruct;
+  set watchListingStruct(WatchListingStruct value) {
+    _watchListingStruct = value;
+    prefs.setString('ff_watchListingStruct', value.serialize());
+  }
+
+  void updateWatchListingStruct(Function(WatchListingStruct) updateFn) {
+    updateFn(_watchListingStruct);
+    prefs.setString('ff_watchListingStruct', _watchListingStruct.serialize());
   }
 }
 

@@ -101,24 +101,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'WatchPage',
           path: '/watchPage',
-          builder: (context, params) => WatchPageWidget(
-            brand: params.getParam(
-              'brand',
-              ParamType.String,
-            ),
-            ref: params.getParam(
-              'ref',
-              ParamType.String,
-            ),
-            model: params.getParam(
-              'model',
-              ParamType.String,
-            ),
-            price: params.getParam(
-              'price',
-              ParamType.String,
-            ),
-          ),
+          builder: (context, params) => const WatchPageWidget(),
         ),
         FFRoute(
           name: 'SettingsPage',

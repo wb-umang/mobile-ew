@@ -124,7 +124,7 @@ class WatchListingStruct extends BaseStruct {
     String? eventPublishTitle,
     String? eventPublishLotQuantity,
     String? eventPublishEndDate,
-    String? eventPublistStartDate,
+    String? eventPublishStartDate,
     String? eventSlug,
     String? eventIsDeleted,
     String? isDeleted,
@@ -315,7 +315,7 @@ class WatchListingStruct extends BaseStruct {
         _eventPublishTitle = eventPublishTitle,
         _eventPublishLotQuantity = eventPublishLotQuantity,
         _eventPublishEndDate = eventPublishEndDate,
-        _eventPublistStartDate = eventPublistStartDate,
+        _eventPublishStartDate = eventPublishStartDate,
         _eventSlug = eventSlug,
         _eventIsDeleted = eventIsDeleted,
         _isDeleted = isDeleted,
@@ -1256,17 +1256,17 @@ class WatchListingStruct extends BaseStruct {
 
   // "eventPublishEndDate" field.
   String? _eventPublishEndDate;
-  String get eventPublishEndDate => _eventPublishEndDate ?? '';
   set eventPublishEndDate(String? val) => _eventPublishEndDate = val;
+  String get eventPublishEndDate => _eventPublishEndDate ?? '';
 
   bool hasEventPublishEndDate() => _eventPublishEndDate != null;
 
-  // "eventPublistStartDate" field.
-  String? _eventPublistStartDate;
-  String get eventPublistStartDate => _eventPublistStartDate ?? '';
-  set eventPublistStartDate(String? val) => _eventPublistStartDate = val;
+  // "eventPublishStartDate" field.
+  String? _eventPublishStartDate;
+  String get eventPublishStartDate => _eventPublishStartDate ?? '';
+  set eventPublishStartDate(String? val) => _eventPublishStartDate = val;
 
-  bool hasEventPublistStartDate() => _eventPublistStartDate != null;
+  bool haseventPublishStartDate() => _eventPublishStartDate != null;
 
   // "eventSlug" field.
   String? _eventSlug;
@@ -1803,6 +1803,38 @@ class WatchListingStruct extends BaseStruct {
 
   bool hasOrganizationId() => _organizationId != null;
 
+  String parsePrice() {
+    var price = '\$${valueOrDefault<String>(
+      minEstUsd.toString(),
+      '-',
+    )} - \$${valueOrDefault<String>(
+      maxEstUsd.toString(),
+      '-',
+    )}';
+    if (price.length > 5) {
+      return price;
+    }
+    return '-';
+  }
+
+  String parseEventDates() {
+    var eventDates = '${valueOrDefault<String>(
+      eventPublishStartDate.toString(),
+      '-',
+    )} - ${valueOrDefault<String>(
+      eventPublishEndDate.toString(),
+      '-',
+    )}';
+
+    if (eventDates.length > 5) {
+      return eventDates;
+    }
+    return 'Date Locked';
+  }
+
+  String parseLocation() =>
+      valueOrDefault<String>(eventPublishTitle, 'Location Locked');
+
   static WatchListingStruct fromMap(Map<String, dynamic> data) =>
       WatchListingStruct(
         id: castToType<int>(data['id']),
@@ -1930,7 +1962,7 @@ class WatchListingStruct extends BaseStruct {
         eventPublishTitle: data['eventPublishTitle'] as String?,
         eventPublishLotQuantity: data['eventPublishLotQuantity'] as String?,
         eventPublishEndDate: data['eventPublishEndDate'] as String?,
-        eventPublistStartDate: data['eventPublistStartDate'] as String?,
+        eventPublishStartDate: data['eventPublishStartDate'] as String?,
         eventSlug: data['eventSlug'] as String?,
         eventIsDeleted: data['eventIsDeleted'] as String?,
         isDeleted: data['isDeleted'] as String?,
@@ -2129,7 +2161,7 @@ class WatchListingStruct extends BaseStruct {
         'eventPublishTitle': _eventPublishTitle,
         'eventPublishLotQuantity': _eventPublishLotQuantity,
         'eventPublishEndDate': _eventPublishEndDate,
-        'eventPublistStartDate': _eventPublistStartDate,
+        'eventPublishStartDate': _eventPublishStartDate,
         'eventSlug': _eventSlug,
         'eventIsDeleted': _eventIsDeleted,
         'isDeleted': _isDeleted,
@@ -2681,8 +2713,8 @@ class WatchListingStruct extends BaseStruct {
           _eventPublishEndDate,
           ParamType.String,
         ),
-        'eventPublistStartDate': serializeParam(
-          _eventPublistStartDate,
+        'eventPublishStartDate': serializeParam(
+          _eventPublishStartDate,
           ParamType.String,
         ),
         'eventSlug': serializeParam(
@@ -3569,8 +3601,8 @@ class WatchListingStruct extends BaseStruct {
           ParamType.String,
           false,
         ),
-        eventPublistStartDate: deserializeParam(
-          data['eventPublistStartDate'],
+        eventPublishStartDate: deserializeParam(
+          data['eventPublishStartDate'],
           ParamType.String,
           false,
         ),
@@ -4058,7 +4090,7 @@ class WatchListingStruct extends BaseStruct {
         eventPublishTitle == other.eventPublishTitle &&
         eventPublishLotQuantity == other.eventPublishLotQuantity &&
         eventPublishEndDate == other.eventPublishEndDate &&
-        eventPublistStartDate == other.eventPublistStartDate &&
+        eventPublishStartDate == other.eventPublishStartDate &&
         eventSlug == other.eventSlug &&
         eventIsDeleted == other.eventIsDeleted &&
         isDeleted == other.isDeleted &&
@@ -4253,7 +4285,7 @@ class WatchListingStruct extends BaseStruct {
         eventPublishTitle,
         eventPublishLotQuantity,
         eventPublishEndDate,
-        eventPublistStartDate,
+        eventPublishStartDate,
         eventSlug,
         eventIsDeleted,
         isDeleted,
@@ -4448,7 +4480,7 @@ WatchListingStruct createWatchListingStruct({
   String? eventPublishTitle,
   String? eventPublishLotQuantity,
   String? eventPublishEndDate,
-  String? eventPublistStartDate,
+  String? eventPublishStartDate,
   String? eventSlug,
   String? eventIsDeleted,
   String? isDeleted,
@@ -4641,7 +4673,7 @@ WatchListingStruct createWatchListingStruct({
       eventPublishTitle: eventPublishTitle,
       eventPublishLotQuantity: eventPublishLotQuantity,
       eventPublishEndDate: eventPublishEndDate,
-      eventPublistStartDate: eventPublistStartDate,
+      eventPublishStartDate: eventPublishStartDate,
       eventSlug: eventSlug,
       eventIsDeleted: eventIsDeleted,
       isDeleted: isDeleted,

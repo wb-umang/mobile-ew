@@ -1,3 +1,5 @@
+import 'package:every_watch/backend/schema/structs/index.dart';
+
 import '/components/auction_price_card/auction_price_card_widget.dart';
 import '/components/pill_bold_button/pill_bold_button_widget.dart';
 import '/components/price_guide_card/price_guide_card_widget.dart';
@@ -14,18 +16,7 @@ import 'watch_page_model.dart';
 export 'watch_page_model.dart';
 
 class WatchPageWidget extends StatefulWidget {
-  const WatchPageWidget({
-    super.key,
-    String? brand,
-    this.ref,
-    this.model,
-    this.price,
-  }) : brand = brand ?? 'Hublot';
-
-  final String brand;
-  final String? ref;
-  final String? model;
-  final String? price;
+  const WatchPageWidget({super.key});
 
   @override
   State<WatchPageWidget> createState() => _WatchPageWidgetState();
@@ -33,6 +24,7 @@ class WatchPageWidget extends StatefulWidget {
 
 class _WatchPageWidgetState extends State<WatchPageWidget> {
   late WatchPageModel _model;
+  late WatchListingStruct _watch;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -40,6 +32,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
+    _watch = FFAppState().watchListingStruct;
   }
 
   @override
@@ -111,8 +104,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                               child: Stack(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 30.0),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 30.0),
                                     child: PageView(
                                       controller: _model.pageViewController ??=
                                           PageController(initialPage: 0),
@@ -121,29 +115,27 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(0.0),
-                                          child: Image.asset(
-                                            'assets/images/image_8236.png',
-                                            height: 300.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          child: Image.asset(
-                                            'assets/images/image_8236_(1).png',
-                                            height: 300.0,
-                                            fit: BoxFit.cover,
-                                          ),
+                                          child: Image.network(
+                                              _watch.primaryImage.original,
+                                              height: 300.0,
+                                              fit: BoxFit.cover, errorBuilder:
+                                                  (BuildContext context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                            return const Text(
+                                                'Failed to load image');
+                                          }),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Align(
-                                    alignment: const AlignmentDirectional(0.0, 1.0),
+                                    alignment:
+                                        const AlignmentDirectional(0.0, 1.0),
                                     child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 12.0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 12.0),
                                       child: smooth_page_indicator
                                           .SmoothPageIndicator(
                                         controller:
@@ -155,8 +147,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                           await _model.pageViewController!
                                               .animateToPage(
                                             i,
-                                            duration:
-                                                const Duration(milliseconds: 500),
+                                            duration: const Duration(
+                                                milliseconds: 500),
                                             curve: Curves.ease,
                                           );
                                           safeSetState(() {});
@@ -202,7 +194,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 8.0, 0.0, 0.0),
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -227,7 +220,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                     0.0, 12.0, 0.0, 0.0),
                                 child: Text(
                                   valueOrDefault<String>(
-                                    widget.brand,
+                                    _watch.manufactureName,
                                     'Hublot',
                                   ),
                                   style: FlutterFlowTheme.of(context)
@@ -246,10 +239,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     0.0, 8.0, 0.0, 0.0),
                                 child: Text(
-                                  valueOrDefault<String>(
-                                    widget.ref,
-                                    'REF 704.OQ.1138.RX',
-                                  ),
+                                  'REF ${valueOrDefault(_watch.referenceNumber, '-')}',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -268,12 +258,12 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Align(
-                                        alignment:
-                                            const AlignmentDirectional(0.0, 0.0),
+                                        alignment: const AlignmentDirectional(
+                                            0.0, 0.0),
                                         child: FlutterFlowIconButton(
                                           buttonSize: 48.0,
                                           icon: Icon(
-                                            FFIcons.kicon,
+                                            FFIcons.kshare,
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
                                             size: 24.0,
@@ -294,10 +284,10 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                         ),
                                         child: Text(
                                           valueOrDefault<String>(
-                                            widget.model,
-                                            'Big Bang King Power Grand Complication - Limited to 10 ',
+                                            _watch.modelName,
+                                            '-',
                                           ),
-                                          textAlign: TextAlign.start,
+                                          textAlign: TextAlign.center,
                                           maxLines: 2,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -334,26 +324,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                               ),
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 12.0, 0.0, 0.0),
-                                child: Text(
-                                  valueOrDefault<String>(
-                                    widget.price,
-                                    'Estimates \$80.6K - \$98K',
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'DM Sans',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        letterSpacing: 0.12,
-                                        fontWeight: FontWeight.bold,
-                                        lineHeight: 1.43,
-                                      ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
                                     0.0, 24.0, 0.0, 0.0),
                                 child: wrapWithModel(
                                   model: _model.twoButtonPageMenuModel,
@@ -370,8 +340,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                   if (_model
                                       .twoButtonPageMenuModel.isFirstSelected)
                                     Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 12.0, 0.0, 0.0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 12.0, 0.0, 0.0),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
@@ -386,14 +357,19 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   _model.auctionPriceCardModel,
                                               updateCallback: () =>
                                                   safeSetState(() {}),
-                                              child: const AuctionPriceCardWidget(),
+                                              child: AuctionPriceCardWidget(
+                                                estimationPrice:
+                                                    _watch.parsePrice(),
+                                                salePrice: _watch.retailPrice,
+                                              ),
                                             ),
                                             wrapWithModel(
                                               model: _model
                                                   .specificationsCardModel,
                                               updateCallback: () =>
                                                   safeSetState(() {}),
-                                              child: const SpecificationsCardWidget(),
+                                              child:
+                                                  const SpecificationsCardWidget(),
                                             ),
                                             wrapWithModel(
                                               model: _model.priceGuideCardModel,
@@ -434,15 +410,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                 numberOfLots: '382',
                                               ),
                                             ),
-                                          ].divide(const SizedBox(height: 12.0)),
+                                          ].divide(
+                                              const SizedBox(height: 12.0)),
                                         ),
                                       ),
                                     ),
                                   if (!_model
                                       .twoButtonPageMenuModel.isFirstSelected)
                                     Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 12.0, 0.0, 0.0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 12.0, 0.0, 0.0),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
@@ -471,7 +449,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                               ),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(12.0),
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
@@ -497,8 +476,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                           ),
                                                     ),
                                                   ),
-                                                ].divide(
-                                                    const SizedBox(height: 14.0)),
+                                                ].divide(const SizedBox(
+                                                    height: 14.0)),
                                               ),
                                             ),
                                           ),

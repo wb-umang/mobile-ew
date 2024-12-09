@@ -1,3 +1,5 @@
+import 'package:every_watch/backend/schema/structs/index.dart';
+
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -6,27 +8,7 @@ import 'specifications_card_model.dart';
 export 'specifications_card_model.dart';
 
 class SpecificationsCardWidget extends StatefulWidget {
-  const SpecificationsCardWidget({
-    super.key,
-    String? source,
-    String? condition,
-    String? yearOfProduction,
-    String? caseSize,
-    String? caseMaterial,
-    String? dialColor,
-  })  : source = source ?? 'Classic 55',
-        condition = condition ?? 'outstanding',
-        yearOfProduction = yearOfProduction ?? '1967',
-        caseSize = caseSize ?? '36mm',
-        caseMaterial = caseMaterial ?? '18k gold',
-        dialColor = dialColor ?? 'Silver';
-
-  final String source;
-  final String condition;
-  final String yearOfProduction;
-  final String caseSize;
-  final String caseMaterial;
-  final String dialColor;
+  const SpecificationsCardWidget({super.key});
 
   @override
   State<SpecificationsCardWidget> createState() =>
@@ -35,6 +17,7 @@ class SpecificationsCardWidget extends StatefulWidget {
 
 class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
   late SpecificationsCardModel _model;
+  late WatchListingStruct _watch;
 
   @override
   void setState(VoidCallback callback) {
@@ -46,6 +29,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => SpecificationsCardModel());
+    _watch = FFAppState().watchListingStruct;
   }
 
   @override
@@ -100,8 +84,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         ),
                         Text(
                           valueOrDefault<String>(
-                            widget.source,
-                            'Classic 55',
+                            _watch.infoSourceName,
+                            'Locked',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -134,8 +118,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         ),
                         Text(
                           valueOrDefault<String>(
-                            widget.condition,
-                            'outstanding',
+                            _watch.conditionName,
+                            'Locked',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -174,8 +158,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         ),
                         Text(
                           valueOrDefault<String>(
-                            widget.yearOfProduction,
-                            '1967',
+                            _watch.yearOfProduction.toString(),
+                            'Locked',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -208,8 +192,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         ),
                         Text(
                           valueOrDefault<String>(
-                            widget.caseSize,
-                            '36mm',
+                            _watch.caseSizeName,
+                            'Locked',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -248,8 +232,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         ),
                         Text(
                           valueOrDefault<String>(
-                            widget.caseMaterial,
-                            '18k gold',
+                            _watch.caseMaterialName,
+                            'Locked',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -282,8 +266,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         ),
                         Text(
                           valueOrDefault<String>(
-                            widget.dialColor,
-                            'Silver',
+                            _watch.dialColorName,
+                            'Locked',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -299,10 +283,261 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                   ),
                 ],
               ),
+              Visibility(
+                  visible: _model.showAllSpecifications,
+                  maintainState: true, // Keeps the state of the widget
+                  maintainAnimation: true, // Maintain animations
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Bracelete/Strap',
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      _watch.braceletMaterialName,
+                                      'Locked',
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ].divide(const SizedBox(height: 4.0)),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Movement Type',
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      _watch.movementName,
+                                      'Locked',
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ].divide(const SizedBox(height: 4.0)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Box',
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      _watch.box,
+                                      'Locked',
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ].divide(const SizedBox(height: 4.0)),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Papers',
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      _watch.paper,
+                                      'Locked',
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    maxLines: 1,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ].divide(const SizedBox(height: 4.0)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Lot Number',
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      _watch.lotNumber,
+                                      'Locked',
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ].divide(const SizedBox(height: 4.0)),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Location',
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      _watch.eventPublishTitle,
+                                      'Locked',
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    maxLines: 1,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ].divide(const SizedBox(height: 4.0)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ].divide(const SizedBox(height: 14.0)))),
               Align(
                 alignment: const AlignmentDirectional(0.0, 0.0),
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -313,9 +548,19 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                               0.0, 0.0, 8.0, 0.0),
                           child: FFButtonWidget(
                             onPressed: () {
-                              print('Button pressed ...');
+                              setState(() {
+                                _model.showAllSpecifications =
+                                    !_model.showAllSpecifications;
+                                if (_model.showAllSpecifications) {
+                                  _model.allSpecificationsTitle =
+                                      'Less Specifications';
+                                } else {
+                                  _model.allSpecificationsTitle =
+                                      'All Specifications';
+                                }
+                              });
                             },
-                            text: 'All Specifications',
+                            text: _model.allSpecificationsTitle,
                             options: FFButtonOptions(
                               width: MediaQuery.sizeOf(context).width * 0.4,
                               height: 36.0,
