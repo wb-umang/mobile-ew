@@ -590,8 +590,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                       ),
                       Expanded(
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
+                          onPressed: () async {
+                            await launchURL(_watch.sourceLink);
                           },
                           text: 'Go to Source',
                           options: FFButtonOptions(

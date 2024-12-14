@@ -1,7 +1,7 @@
+import 'package:every_watch/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_charts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:flutter/material.dart';
 import 'price_guide_card_model.dart';
 export 'price_guide_card_model.dart';
@@ -9,59 +9,22 @@ export 'price_guide_card_model.dart';
 class PriceGuideCardWidget extends StatefulWidget {
   const PriceGuideCardWidget({
     super.key,
-    String? numberOfAuctionWatches,
-    String? medianAuctionValue,
-    String? latestSalePrice,
-    String? latestSaleDate,
-    String? auctionRange,
-    String? numberOfMarketplaceWatches,
-    String? medianMarketplaceValue,
-    String? marketplaceRange,
+    required this.watchAnalysis,
     required this.downArrow,
     required this.upArrow,
-    String? unsold,
-    String? soldBelowEstimate,
-    String? soldWithinEstimate,
-    String? soldAboveEstimate,
-    String? unsoldRate,
-    String? numberOfLots,
+    String? auctionLotType,
     String? brand,
     String? model,
     String? referenceNumber,
-  })  : numberOfAuctionWatches = numberOfAuctionWatches ?? '0',
-        medianAuctionValue = medianAuctionValue ?? '\$116.59K',
-        latestSalePrice = latestSalePrice ?? '\$105.56K',
-        latestSaleDate = latestSaleDate ?? '1 Feb 2024',
-        auctionRange = auctionRange ?? '\$104.7K-129.38K',
-        numberOfMarketplaceWatches = numberOfMarketplaceWatches ?? '0',
-        medianMarketplaceValue = medianMarketplaceValue ?? '0',
-        marketplaceRange = marketplaceRange ?? '\$0',
-        unsold = unsold ?? '0',
-        soldBelowEstimate = soldBelowEstimate ?? '0',
-        soldWithinEstimate = soldWithinEstimate ?? '0',
-        soldAboveEstimate = soldAboveEstimate ?? '0',
-        unsoldRate = unsoldRate ?? '0%',
-        numberOfLots = numberOfLots ?? '0',
+  })  : auctionLotType = auctionLotType ?? 'UPCOMING',
         brand = brand ?? 'Rolex',
         model = model ?? 'GMT-Master II',
         referenceNumber = referenceNumber ?? '116710BLNR';
 
-  final String numberOfAuctionWatches;
-  final String medianAuctionValue;
-  final String latestSalePrice;
-  final String latestSaleDate;
-  final String auctionRange;
-  final String numberOfMarketplaceWatches;
-  final String medianMarketplaceValue;
-  final String marketplaceRange;
+  final WatchAnalysisStruct? watchAnalysis;
   final Widget? downArrow;
   final Widget? upArrow;
-  final String unsold;
-  final String soldBelowEstimate;
-  final String soldWithinEstimate;
-  final String soldAboveEstimate;
-  final String unsoldRate;
-  final String numberOfLots;
+  final String auctionLotType;
   final String brand;
   final String model;
   final String referenceNumber;
@@ -72,6 +35,24 @@ class PriceGuideCardWidget extends StatefulWidget {
 
 class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
   late PriceGuideCardModel _model;
+  late PriceAnalysisStruct? _priceAnalysis;
+  String _auctionValueTitle = 'Median Auction Value';
+  String _auctionValueSubtitle = '';
+  String _salePriceTitle = 'Latest Sale Price';
+  String _salePriceSubtitle = '';
+  String _salePrice = '';
+  String _rangeTitle = 'Auction Range';
+  String _rangeSubtitle = '';
+  String _rangePrice = '';
+  String _dealersValueTitle = 'Median Dealers Value';
+  String _dealersValueSubtitle = '';
+  String _dealersPrice = '';
+  String _dealersRangeTitle = 'Dealers Range';
+  String _dealersRangeSubtitle = '';
+  String _dealersRangePrice = '';
+  String _numberOfWatches = '';
+  String _numberOfWatchesDealers = '';
+  String _auctionValue = '';
 
   @override
   void setState(VoidCallback callback) {
@@ -83,6 +64,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PriceGuideCardModel());
+    _priceAnalysis = widget.watchAnalysis?.referenceNumberPriceAnalysis;
   }
 
   @override
@@ -94,6 +76,38 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_model.brandSelected) {
+      _priceAnalysis = widget.watchAnalysis?.manufacturerPriceAnalysis;
+    } else if (_model.modelSelected) {
+      _priceAnalysis = widget.watchAnalysis?.modelPriceAnalysis;
+    } else if (_model.referenceSelected) {
+      _priceAnalysis = widget.watchAnalysis?.referenceNumberPriceAnalysis;
+    }
+    _numberOfWatches =
+        '(${_priceAnalysis?.auctionPriceMedian?.count.toString()} Watches)';
+    _numberOfWatchesDealers =
+        '(${_priceAnalysis?.marketPlacePriceMedian?.count.toString()} Watches)';
+    _auctionValue =
+        '(${_priceAnalysis?.auctionPriceMedian?.realUsd.toString()} USD)';
+    var now = DateTime.now();
+    var auctionValueMonthsDiff =
+        calculateMonthDifference(_priceAnalysis?.medianMinDate ?? now, now);
+    _auctionValueSubtitle =
+        'Last $auctionValueMonthsDiff months $_numberOfWatches';
+    _salePriceSubtitle = dateTimeFormat('D MMM YYYY',
+        _priceAnalysis?.auctionPriceAnalysis?.auctionLatestSalesDate);
+    _salePrice =
+        '${_priceAnalysis?.auctionPriceAnalysis?.auctionLatestSalesPriceUsd} USD';
+    var rangeMonthsDiff =
+        calculateMonthDifference(_priceAnalysis?.analysisMinDate ?? now, now);
+    _rangeSubtitle = 'Last $rangeMonthsDiff months $_numberOfWatches';
+    _rangePrice =
+        '${_priceAnalysis?.auctionPriceMedian?.minPriceUsd.toString()} - ${_priceAnalysis?.auctionPriceMedian?.maxPriceUsd.toString()} USD';
+    _dealersValueSubtitle = 'Current price $_numberOfWatchesDealers';
+    _dealersPrice = '${_priceAnalysis?.marketPlacePriceMedian?.realUsd} USD';
+    _dealersRangeSubtitle = 'Current price $_numberOfWatchesDealers';
+    _dealersRangePrice =
+        '${_priceAnalysis?.marketPlacePriceMedian?.minPriceUsd.toString()} - ${_priceAnalysis?.marketPlacePriceMedian?.maxPriceUsd.toString()} USD';
     final chartPieChartColorsList = [
       FlutterFlowTheme.of(context).error,
       FlutterFlowTheme.of(context).warm,
@@ -299,7 +313,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Marketplace Range',
+                            _auctionValueTitle,
                             textAlign: TextAlign.start,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -314,25 +328,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Current Price',
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      fontSize: 12.0,
-                                      letterSpacing: 0.16,
-                                      lineHeight: 1.33,
-                                    ),
-                              ),
-                              Text(
-                                '(${valueOrDefault<String>(
-                                  widget.numberOfMarketplaceWatches,
-                                  '24',
-                                )} Watches)',
+                                _auctionValueSubtitle,
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 style: FlutterFlowTheme.of(context)
@@ -351,10 +347,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         ],
                       ),
                       Text(
-                        valueOrDefault<String>(
-                          widget.marketplaceRange,
-                          '\$116.44K-206.26K',
-                        ),
+                        _auctionValue,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'DM Sans',
                               color: FlutterFlowTheme.of(context).primary,
@@ -374,7 +367,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Median Marketplace Value',
+                            _salePriceTitle,
                             textAlign: TextAlign.start,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -389,25 +382,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Current Price',
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      fontSize: 12.0,
-                                      letterSpacing: 0.16,
-                                      lineHeight: 1.33,
-                                    ),
-                              ),
-                              Text(
-                                '(${valueOrDefault<String>(
-                                  widget.numberOfMarketplaceWatches,
-                                  '24',
-                                )} Watches)',
+                                _salePriceSubtitle,
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 style: FlutterFlowTheme.of(context)
@@ -426,10 +401,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         ],
                       ),
                       Text(
-                        valueOrDefault<String>(
-                          widget.medianMarketplaceValue,
-                          '\$142.55K',
-                        ),
+                        _salePrice,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'DM Sans',
                               color: FlutterFlowTheme.of(context).primary,
@@ -449,7 +421,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Auction Range',
+                            _rangeTitle,
                             textAlign: TextAlign.start,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -464,22 +436,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Last 12 Months',
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      fontSize: 12.0,
-                                      letterSpacing: 0.16,
-                                      lineHeight: 1.33,
-                                    ),
-                              ),
-                              Text(
-                                '(${widget.numberOfAuctionWatches} Watches)',
+                                _rangeSubtitle,
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 style: FlutterFlowTheme.of(context)
@@ -498,10 +455,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         ],
                       ),
                       Text(
-                        valueOrDefault<String>(
-                          widget.auctionRange,
-                          '\$104.7K-129.38K',
-                        ),
+                        _rangePrice,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'DM Sans',
                               color: FlutterFlowTheme.of(context).primary,
@@ -521,7 +475,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Latest Sale Price',
+                            _dealersValueTitle,
                             textAlign: TextAlign.start,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -533,10 +487,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                 ),
                           ),
                           Text(
-                            valueOrDefault<String>(
-                              widget.latestSaleDate,
-                              '1 Feb 2024',
-                            ),
+                            _dealersValueSubtitle,
                             textAlign: TextAlign.start,
                             maxLines: 2,
                             style: FlutterFlowTheme.of(context)
@@ -552,10 +503,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         ],
                       ),
                       Text(
-                        valueOrDefault<String>(
-                          widget.latestSalePrice,
-                          '\$105.56K',
-                        ),
+                        _dealersPrice,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'DM Sans',
                               color: FlutterFlowTheme.of(context).primary,
@@ -575,7 +523,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Median Auction Value',
+                            _dealersRangeTitle,
                             textAlign: TextAlign.start,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -590,22 +538,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Last 12 Months',
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      fontSize: 12.0,
-                                      letterSpacing: 0.16,
-                                      lineHeight: 1.33,
-                                    ),
-                              ),
-                              Text(
-                                '(${widget.numberOfAuctionWatches} Watches)',
+                                _dealersRangeSubtitle,
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 style: FlutterFlowTheme.of(context)
@@ -624,10 +557,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         ],
                       ),
                       Text(
-                        valueOrDefault<String>(
-                          widget.medianAuctionValue,
-                          '\$116.59K',
-                        ),
+                        _dealersRangePrice,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'DM Sans',
                               color: FlutterFlowTheme.of(context).primary,
@@ -746,11 +676,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             height: 116.0,
                                             child: FlutterFlowPieChart(
                                               data: FFPieChartData(
-                                                values: List.generate(
-                                                    random_data.randomInteger(
-                                                        4, 4),
-                                                    (index) => random_data
-                                                        .randomInteger(0, 100)),
+                                                values: [0, 1, 2, 3],
                                                 colors: chartPieChartColorsList,
                                                 radius: [14.0],
                                                 borderColor: [
@@ -776,8 +702,11 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             children: [
                                               Text(
                                                 valueOrDefault<String>(
-                                                  widget.numberOfLots,
-                                                  '382',
+                                                  _priceAnalysis
+                                                      ?.auctionPriceAnalysis
+                                                      ?.totalLots
+                                                      .toString(),
+                                                  '0',
                                                 ),
                                                 textAlign: TextAlign.start,
                                                 style:
@@ -865,8 +794,11 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             ),
                                             Text(
                                               valueOrDefault<String>(
-                                                widget.unsold,
-                                                '200',
+                                                _priceAnalysis
+                                                    ?.auctionPriceAnalysis
+                                                    ?.unsold
+                                                    .toString(),
+                                                '0',
                                               ),
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -932,8 +864,11 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             ),
                                             Text(
                                               valueOrDefault<String>(
-                                                widget.soldBelowEstimate,
-                                                '79',
+                                                _priceAnalysis
+                                                    ?.auctionPriceAnalysis
+                                                    ?.belowEstimate
+                                                    .toString(),
+                                                '0',
                                               ),
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -999,8 +934,11 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             ),
                                             Text(
                                               valueOrDefault<String>(
-                                                widget.soldWithinEstimate,
-                                                '19',
+                                                _priceAnalysis
+                                                    ?.auctionPriceAnalysis
+                                                    ?.withinEstimate
+                                                    .toString(),
+                                                '0',
                                               ),
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -1066,7 +1004,10 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             ),
                                             Text(
                                               valueOrDefault<String>(
-                                                widget.soldAboveEstimate,
+                                                _priceAnalysis
+                                                    ?.auctionPriceAnalysis
+                                                    ?.aboveEstimate
+                                                    .toString(),
                                                 '0',
                                               ),
                                               style: FlutterFlowTheme.of(
@@ -1107,10 +1048,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                                   ),
                                             ),
                                             Text(
-                                              valueOrDefault<String>(
-                                                widget.unsoldRate,
-                                                '84%',
-                                              ),
+                                              '${_priceAnalysis?.auctionPriceAnalysis?.unsoldRate.toInt()}%',
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -1144,4 +1082,9 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
       ),
     );
   }
+}
+
+int calculateMonthDifference(DateTime startDate, DateTime endDate) {
+  return (endDate.year * 12 + endDate.month) -
+      (startDate.year * 12 + startDate.month);
 }

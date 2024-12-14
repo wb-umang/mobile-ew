@@ -1818,18 +1818,27 @@ class WatchListingStruct extends BaseStruct {
   }
 
   String parseEventDates() {
-    var eventDates = '${valueOrDefault<String>(
-      eventPublishStartDate.toString(),
-      '-',
-    )} - ${valueOrDefault<String>(
-      eventPublishEndDate.toString(),
-      '-',
-    )}';
+    DateTime? startDate;
+    DateTime? endDate;
+    if (eventPublishStartDate.isNotEmpty) {
+      startDate = DateTime.parse(eventPublishStartDate);
+    }
+    if (eventPublishEndDate.isNotEmpty) {
+      endDate = DateTime.parse(eventPublishEndDate);
+    }
+    var startDateText = dateTimeFormat("MMM d", startDate);
+    var endDateText = dateTimeFormat("MMM d", endDate);
+    var eventDates = '$startDateText - $endDateText';
+    if (startDateText.isEmpty && endDateText.isNotEmpty) {
+      eventDates = endDateText;
+    } else if (startDateText.isNotEmpty && endDateText.isEmpty) {
+      eventDates = startDateText;
+    }
 
-    if (eventDates.length > 5) {
+    if (startDateText.isNotEmpty || endDateText.isNotEmpty) {
       return eventDates;
     }
-    return 'Date Locked';
+    return '-';
   }
 
   String parseLocation() =>

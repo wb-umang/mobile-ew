@@ -112,7 +112,6 @@ class _MainPageWidgetState extends State<MainPageWidget>
         WatchListingFilterStruct filter = FFAppState().watchListingFilter;
         var searchResults = _model.searchResults.toMap();
 
-        // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,

@@ -1,3 +1,4 @@
+import 'package:every_watch/backend/schema/structs/index.dart';
 import '/components/auction_price_card/auction_price_card_widget.dart';
 import '/components/pill_bold_button/pill_bold_button_widget.dart';
 import '/components/price_guide_card/price_guide_card_widget.dart';
@@ -13,6 +14,7 @@ class WatchPageModel extends FlutterFlowModel<WatchPageWidget> {
   bool isFavorite = false;
 
   ///  State fields for stateful widgets in this page.
+  WatchAnalysisFilterStruct? filter;
 
   // State field(s) for PageView widget.
   PageController? pageViewController;

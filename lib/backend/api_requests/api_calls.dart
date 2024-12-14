@@ -260,6 +260,8 @@ class MutualWatchGroup {
   static ApiUserWaitingListPOSTCall apiUserWaitingListPOSTCall =
       ApiUserWaitingListPOSTCall();
   static WatchListingCall watchListingCall = WatchListingCall();
+  static GetWatchAnalysisByIdCall getWatchAnalysisByIdCall =
+      GetWatchAnalysisByIdCall();
   static ApiWatchGetWatchDetailByIdGETCall apiWatchGetWatchDetailByIdGETCall =
       ApiWatchGetWatchDetailByIdGETCall();
   static ApiWatchGetWatchAnalysisByIdGETCall
@@ -3537,6 +3539,36 @@ class WatchListingCall {
     return ApiManager.instance.makeApiCall(
       callName: 'watchListing',
       apiUrl: '$baseUrl/api/Watch/WatchListing',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      params: {
+        'variables': variables,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class GetWatchAnalysisByIdCall {
+  Future<ApiCallResponse> call({
+    dynamic variablesJson,
+    String? accessToken = '',
+  }) async {
+    final baseUrl = MutualWatchGroup.getBaseUrl();
+
+    final variables = _serializeJson(variablesJson);
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'getWatchAnalysisById',
+      apiUrl: '$baseUrl/api/Watch/GetWatchAnalysisById',
       callType: ApiCallType.GET,
       headers: {
         'Content-type': 'application/json',
