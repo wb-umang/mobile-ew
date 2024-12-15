@@ -114,70 +114,80 @@ class _AuctionPriceCardWidgetState extends State<AuctionPriceCardWidget> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
+              Visibility(
+                  visible: widget.salePrice != "0.0",
+                  child: Row(
                     mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Sale Price',
-                        textAlign: TextAlign.start,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.08,
-                              lineHeight: 1.43,
-                            ),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Sale Price',
+                            textAlign: TextAlign.start,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DM Sans',
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.08,
+                                  lineHeight: 1.43,
+                                ),
+                          ),
+                          Text(
+                            'Hammer, Buyer\'s premium \nare included',
+                            textAlign: TextAlign.start,
+                            maxLines: 2,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DM Sans',
+                                  color: FlutterFlowTheme.of(context).secondary,
+                                  fontSize: 12.0,
+                                  letterSpacing: 0.16,
+                                  lineHeight: 1.33,
+                                ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Hammer, Buyer\'s premium \nare included',
-                        textAlign: TextAlign.start,
-                        maxLines: 2,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).secondary,
-                              fontSize: 12.0,
-                              letterSpacing: 0.16,
-                              lineHeight: 1.33,
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            valueOrDefault<String>(
+                              widget.salePrice,
+                              '\$22.325K',
                             ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DM Sans',
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.12,
+                                  fontWeight: FontWeight.bold,
+                                  lineHeight: 1.43,
+                                ),
+                          ),
+                          Text(
+                            '(Beat EST by 10%)',
+                            textAlign: TextAlign.start,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DM Sans',
+                                  color: FlutterFlowTheme.of(context).success,
+                                  fontSize: 12.0,
+                                  letterSpacing: 0.16,
+                                  lineHeight: 1.33,
+                                ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        valueOrDefault<String>(
-                          widget.salePrice,
-                          '\$22.325K',
-                        ),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.12,
-                              fontWeight: FontWeight.bold,
-                              lineHeight: 1.43,
-                            ),
-                      ),
-                      Text(
-                        '(Beat EST by 10%)',
-                        textAlign: TextAlign.start,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).success,
-                              fontSize: 12.0,
-                              letterSpacing: 0.16,
-                              lineHeight: 1.33,
-                            ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                  )),
               Visibility(
                 visible: _model.showBuyersPremium,
                 maintainState: true, // Keeps the state of the widget

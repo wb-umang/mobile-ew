@@ -83,6 +83,11 @@ int calculateMonthDifference(DateTime startDate, DateTime endDate) {
       (startDate.year * 12 + startDate.month);
 }
 
+String truncateString(String text, int maxLength) {
+  if (text.length <= maxLength) return text;
+  return '${text.substring(0, maxLength)}...'; // Add ellipsis to indicate truncation
+}
+
 String formatAbbrevNumber(double? number) {
   if (number == null) {
     return '';

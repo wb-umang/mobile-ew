@@ -8,8 +8,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 class PrimaryImageStruct extends BaseStruct {
   PrimaryImageStruct({
     String? url,
-    String? isPrimary,
-    String? isDeleted,
+    bool? isPrimary,
+    bool? isDeleted,
     String? original,
     String? preview320,
     String? preview480,
@@ -36,16 +36,16 @@ class PrimaryImageStruct extends BaseStruct {
   bool hasUrl() => _url != null;
 
   // "isPrimary" field.
-  String? _isPrimary;
-  String get isPrimary => _isPrimary ?? '';
-  set isPrimary(String? val) => _isPrimary = val;
+  bool? _isPrimary;
+  bool get isPrimary => _isPrimary ?? false;
+  set isPrimary(bool? val) => _isPrimary = val;
 
   bool hasIsPrimary() => _isPrimary != null;
 
   // "isDeleted" field.
-  String? _isDeleted;
-  String get isDeleted => _isDeleted ?? '';
-  set isDeleted(String? val) => _isDeleted = val;
+  bool? _isDeleted;
+  bool get isDeleted => _isDeleted ?? false;
+  set isDeleted(bool? val) => _isDeleted = val;
 
   bool hasIsDeleted() => _isDeleted != null;
 
@@ -101,8 +101,8 @@ class PrimaryImageStruct extends BaseStruct {
   static PrimaryImageStruct fromMap(Map<String, dynamic> data) =>
       PrimaryImageStruct(
         url: data['url'] as String?,
-        isPrimary: data['isPrimary'] as String?,
-        isDeleted: data['isDeleted'] as String?,
+        isPrimary: data['isPrimary'] as bool?,
+        isDeleted: data['isDeleted'] as bool?,
         original: data['original'] as String?,
         preview320: data['preview320'] as String?,
         preview480: data['preview480'] as String?,
@@ -262,8 +262,8 @@ class PrimaryImageStruct extends BaseStruct {
 
 PrimaryImageStruct createPrimaryImageStruct({
   String? url,
-  String? isPrimary,
-  String? isDeleted,
+  bool? isPrimary,
+  bool? isDeleted,
   String? original,
   String? preview320,
   String? preview480,

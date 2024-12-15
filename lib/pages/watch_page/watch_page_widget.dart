@@ -51,11 +51,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return FutureBuilder<ApiCallResponse>(
-      future: MutualWatchGroup.getWatchAnalysisByIdCall.call(
-        accessToken: FFAppState().loginData.accessToken,
-        variablesJson: _model.filter?.toMap(),
-      ),
+    return FutureBuilder<List<ApiCallResponse>>(
+      future: Future.wait([
+        MutualWatchGroup.getWatchAnalysisByIdCall.call(
+          accessToken: FFAppState().loginData.accessToken,
+          variablesJson: _model.filter?.toMap(),
+        ),
+        MutualWatchGroup.getWatchDetailByIdCall.call(
+          accessToken: FFAppState().loginData.accessToken,
+          variablesJson: _model.filter?.toMap(),
+        )
+      ]),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Scaffold(
@@ -73,12 +79,34 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             ),
           );
         }
-        final watchAnalysisResponse = snapshot.data!;
+        final watchAnalysisResponse = snapshot.data![0];
         final watchAnalysis = WatchAnalysisResponseStruct.maybeFromMap(
                 watchAnalysisResponse.jsonBody)
             ?.data
             .data
             .watchAnalysis;
+        final watchDetailResponse = snapshot.data![1];
+        final watchDetail =
+            WatchDetailResponseStruct.maybeFromMap(watchDetailResponse.jsonBody)
+                ?.data
+                .data
+                .data
+                .watchDetails
+                .watchDetail;
+        List<Widget> watchImages = [];
+        if (watchDetail?.watchImages != null) {
+          for (var image in watchDetail!.watchImages) {
+            watchImages.add(ClipRRect(
+              borderRadius: BorderRadius.circular(0.0),
+              child: Image.network(image.original,
+                  height: 300.0,
+                  fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                      Object exception, StackTrace? stackTrace) {
+                return const Center(child: Text('Failed to load image'));
+              }),
+            ));
+          }
+        }
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
@@ -148,23 +176,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   .pageViewController ??=
                                               PageController(initialPage: 0),
                                           scrollDirection: Axis.horizontal,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(0.0),
-                                              child: Image.network(
-                                                  _watch.primaryImage.original,
-                                                  height: 300.0,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (BuildContext
-                                                          context,
-                                                      Object exception,
-                                                      StackTrace? stackTrace) {
-                                                return const Text(
-                                                    'Failed to load image');
-                                              }),
-                                            ),
-                                          ],
+                                          children: watchImages,
                                         ),
                                       ),
                                       Align(
@@ -178,7 +190,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                             controller: _model
                                                     .pageViewController ??=
                                                 PageController(initialPage: 0),
-                                            count: 2,
+                                            count: watchImages.length,
                                             axisDirection: Axis.horizontal,
                                             onDotClicked: (i) async {
                                               await _model.pageViewController!
@@ -412,8 +424,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   child: AuctionPriceCardWidget(
                                                     estimationPrice:
                                                         _watch.parsePrice(),
-                                                    salePrice:
-                                                        _watch.retailPrice,
+                                                    salePrice: _watch
+                                                        .retailPrice
+                                                        .toString(),
                                                   ),
                                                 ),
                                                 wrapWithModel(
@@ -508,7 +521,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                             const AlignmentDirectional(
                                                                 -1.0, 0.0),
                                                         child: Text(
-                                                          'Description.',
+                                                          watchDetail
+                                                                  ?.description ??
+                                                              "No description.",
                                                           textAlign:
                                                               TextAlign.start,
                                                           style: FlutterFlowTheme

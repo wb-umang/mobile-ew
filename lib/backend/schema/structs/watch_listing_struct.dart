@@ -18,7 +18,7 @@ class WatchListingStruct extends BaseStruct {
     String? defaultManufacturerName,
     int? modelId,
     String? modelName,
-    String? modelParentId,
+    int? modelParentId,
     String? isActiveModel,
     String? modelSlug,
     String? modelURL,
@@ -27,7 +27,7 @@ class WatchListingStruct extends BaseStruct {
     String? defaultModelName,
     int? referenceNumberId,
     String? referenceNumber,
-    String? referenceParentId,
+    int? referenceParentId,
     String? isActiveReferenceNumber,
     String? referenceNumberSlug,
     String? referenceNumberURL,
@@ -38,7 +38,7 @@ class WatchListingStruct extends BaseStruct {
     String? defaultReferenceNumberParentName,
     PrimaryImageStruct? primaryImage,
     String? imageUrl,
-    String? watchImages,
+    List<PrimaryImageStruct>? watchImages,
     String? sourceLink,
     String? description,
     String? descriptionHtml,
@@ -157,22 +157,22 @@ class WatchListingStruct extends BaseStruct {
     int? maxEstChf,
     int? minEstSgd,
     int? maxEstSgd,
-    String? minEstAed,
-    String? maxEstAed,
-    String? minEstJpy,
-    String? maxEstJpy,
-    String? maximumEstimatedPrice,
-    String? minimumEstimatedPrice,
-    String? hammerUsd,
-    String? hammerSgd,
-    String? hammerHkd,
-    String? hammerGbp,
-    String? hammerEur,
-    String? hammerChf,
-    String? hammerAed,
-    String? hammerJpy,
+    int? minEstAed,
+    int? maxEstAed,
+    int? minEstJpy,
+    int? maxEstJpy,
+    double? maximumEstimatedPrice,
+    double? minimumEstimatedPrice,
+    double? hammerUsd,
+    double? hammerSgd,
+    double? hammerHkd,
+    double? hammerGbp,
+    double? hammerEur,
+    double? hammerChf,
+    double? hammerAed,
+    double? hammerJpy,
     String? auctionIsDeleted,
-    String? soldPrice,
+    double? soldPrice,
     bool? isResultPending,
     int? lotStatusId,
     String? lotStatusName,
@@ -191,8 +191,8 @@ class WatchListingStruct extends BaseStruct {
     String? slug,
     String? sellerOrganizationName,
     String? lastSeenDate,
-    String? retailCurrencyId,
-    String? retailPrice,
+    int? retailCurrencyId,
+    double? retailPrice,
     int? braceletMaterialId,
     int? defaultBraceletMaterialId,
     int? organizationId,
@@ -492,9 +492,9 @@ class WatchListingStruct extends BaseStruct {
   bool hasModelName() => _modelName != null;
 
   // "modelParentId" field.
-  String? _modelParentId;
-  String get modelParentId => _modelParentId ?? '';
-  set modelParentId(String? val) => _modelParentId = val;
+  int? _modelParentId;
+  int get modelParentId => _modelParentId ?? 0;
+  set modelParentId(int? val) => _modelParentId = val;
 
   bool hasModelParentId() => _modelParentId != null;
 
@@ -561,9 +561,9 @@ class WatchListingStruct extends BaseStruct {
   bool hasReferenceNumber() => _referenceNumber != null;
 
   // "referenceParentId" field.
-  String? _referenceParentId;
-  String get referenceParentId => _referenceParentId ?? '';
-  set referenceParentId(String? val) => _referenceParentId = val;
+  int? _referenceParentId;
+  int get referenceParentId => _referenceParentId ?? 0;
+  set referenceParentId(int? val) => _referenceParentId = val;
 
   bool hasReferenceParentId() => _referenceParentId != null;
 
@@ -652,9 +652,9 @@ class WatchListingStruct extends BaseStruct {
   bool hasImageUrl() => _imageUrl != null;
 
   // "watchImages" field.
-  String? _watchImages;
-  String get watchImages => _watchImages ?? '';
-  set watchImages(String? val) => _watchImages = val;
+  List<PrimaryImageStruct>? _watchImages;
+  List<PrimaryImageStruct> get watchImages => _watchImages ?? [];
+  set watchImages(List<PrimaryImageStruct>? val) => _watchImages = val;
 
   bool hasWatchImages() => _watchImages != null;
 
@@ -1522,100 +1522,100 @@ class WatchListingStruct extends BaseStruct {
   bool hasMaxEstSgd() => _maxEstSgd != null;
 
   // "minEstAed" field.
-  String? _minEstAed;
-  String get minEstAed => _minEstAed ?? '';
-  set minEstAed(String? val) => _minEstAed = val;
+  int? _minEstAed;
+  int get minEstAed => _minEstAed ?? 0;
+  set minEstAed(int? val) => _minEstAed = val;
 
   bool hasMinEstAed() => _minEstAed != null;
 
   // "maxEstAed" field.
-  String? _maxEstAed;
-  String get maxEstAed => _maxEstAed ?? '';
-  set maxEstAed(String? val) => _maxEstAed = val;
+  int? _maxEstAed;
+  int get maxEstAed => _maxEstAed ?? 0;
+  set maxEstAed(int? val) => _maxEstAed = val;
 
   bool hasMaxEstAed() => _maxEstAed != null;
 
   // "minEstJpy" field.
-  String? _minEstJpy;
-  String get minEstJpy => _minEstJpy ?? '';
-  set minEstJpy(String? val) => _minEstJpy = val;
+  int? _minEstJpy;
+  int get minEstJpy => _minEstJpy ?? 0;
+  set minEstJpy(int? val) => _minEstJpy = val;
 
   bool hasMinEstJpy() => _minEstJpy != null;
 
   // "maxEstJpy" field.
-  String? _maxEstJpy;
-  String get maxEstJpy => _maxEstJpy ?? '';
-  set maxEstJpy(String? val) => _maxEstJpy = val;
+  int? _maxEstJpy;
+  int get maxEstJpy => _maxEstJpy ?? 0;
+  set maxEstJpy(int? val) => _maxEstJpy = val;
 
   bool hasMaxEstJpy() => _maxEstJpy != null;
 
   // "maximumEstimatedPrice" field.
-  String? _maximumEstimatedPrice;
-  String get maximumEstimatedPrice => _maximumEstimatedPrice ?? '';
-  set maximumEstimatedPrice(String? val) => _maximumEstimatedPrice = val;
+  double? _maximumEstimatedPrice;
+  double get maximumEstimatedPrice => _maximumEstimatedPrice ?? 0.0;
+  set maximumEstimatedPrice(double? val) => _maximumEstimatedPrice = val;
 
   bool hasMaximumEstimatedPrice() => _maximumEstimatedPrice != null;
 
   // "minimumEstimatedPrice" field.
-  String? _minimumEstimatedPrice;
-  String get minimumEstimatedPrice => _minimumEstimatedPrice ?? '';
-  set minimumEstimatedPrice(String? val) => _minimumEstimatedPrice = val;
+  double? _minimumEstimatedPrice;
+  double get minimumEstimatedPrice => _minimumEstimatedPrice ?? 0.0;
+  set minimumEstimatedPrice(double? val) => _minimumEstimatedPrice = val;
 
   bool hasMinimumEstimatedPrice() => _minimumEstimatedPrice != null;
 
   // "hammerUsd" field.
-  String? _hammerUsd;
-  String get hammerUsd => _hammerUsd ?? '';
-  set hammerUsd(String? val) => _hammerUsd = val;
+  double? _hammerUsd;
+  double get hammerUsd => _hammerUsd ?? 0.0;
+  set hammerUsd(double? val) => _hammerUsd = val;
 
   bool hasHammerUsd() => _hammerUsd != null;
 
   // "hammerSgd" field.
-  String? _hammerSgd;
-  String get hammerSgd => _hammerSgd ?? '';
-  set hammerSgd(String? val) => _hammerSgd = val;
+  double? _hammerSgd;
+  double get hammerSgd => _hammerSgd ?? 0.0;
+  set hammerSgd(double? val) => _hammerSgd = val;
 
   bool hasHammerSgd() => _hammerSgd != null;
 
   // "hammerHkd" field.
-  String? _hammerHkd;
-  String get hammerHkd => _hammerHkd ?? '';
-  set hammerHkd(String? val) => _hammerHkd = val;
+  double? _hammerHkd;
+  double get hammerHkd => _hammerHkd ?? 0.0;
+  set hammerHkd(double? val) => _hammerHkd = val;
 
   bool hasHammerHkd() => _hammerHkd != null;
 
   // "hammerGbp" field.
-  String? _hammerGbp;
-  String get hammerGbp => _hammerGbp ?? '';
-  set hammerGbp(String? val) => _hammerGbp = val;
+  double? _hammerGbp;
+  double get hammerGbp => _hammerGbp ?? 0.0;
+  set hammerGbp(double? val) => _hammerGbp = val;
 
   bool hasHammerGbp() => _hammerGbp != null;
 
   // "hammerEur" field.
-  String? _hammerEur;
-  String get hammerEur => _hammerEur ?? '';
-  set hammerEur(String? val) => _hammerEur = val;
+  double? _hammerEur;
+  double get hammerEur => _hammerEur ?? 0.0;
+  set hammerEur(double? val) => _hammerEur = val;
 
   bool hasHammerEur() => _hammerEur != null;
 
   // "hammerChf" field.
-  String? _hammerChf;
-  String get hammerChf => _hammerChf ?? '';
-  set hammerChf(String? val) => _hammerChf = val;
+  double? _hammerChf;
+  double get hammerChf => _hammerChf ?? 0.0;
+  set hammerChf(double? val) => _hammerChf = val;
 
   bool hasHammerChf() => _hammerChf != null;
 
   // "hammerAed" field.
-  String? _hammerAed;
-  String get hammerAed => _hammerAed ?? '';
-  set hammerAed(String? val) => _hammerAed = val;
+  double? _hammerAed;
+  double get hammerAed => _hammerAed ?? 0.0;
+  set hammerAed(double? val) => _hammerAed = val;
 
   bool hasHammerAed() => _hammerAed != null;
 
   // "hammerJpy" field.
-  String? _hammerJpy;
-  String get hammerJpy => _hammerJpy ?? '';
-  set hammerJpy(String? val) => _hammerJpy = val;
+  double? _hammerJpy;
+  double get hammerJpy => _hammerJpy ?? 0.0;
+  set hammerJpy(double? val) => _hammerJpy = val;
 
   bool hasHammerJpy() => _hammerJpy != null;
 
@@ -1627,9 +1627,9 @@ class WatchListingStruct extends BaseStruct {
   bool hasAuctionIsDeleted() => _auctionIsDeleted != null;
 
   // "soldPrice" field.
-  String? _soldPrice;
-  String get soldPrice => _soldPrice ?? '';
-  set soldPrice(String? val) => _soldPrice = val;
+  double? _soldPrice;
+  double get soldPrice => _soldPrice ?? 0.0;
+  set soldPrice(double? val) => _soldPrice = val;
 
   bool hasSoldPrice() => _soldPrice != null;
 
@@ -1760,16 +1760,16 @@ class WatchListingStruct extends BaseStruct {
   bool hasLastSeenDate() => _lastSeenDate != null;
 
   // "retailCurrencyId" field.
-  String? _retailCurrencyId;
-  String get retailCurrencyId => _retailCurrencyId ?? '';
-  set retailCurrencyId(String? val) => _retailCurrencyId = val;
+  int? _retailCurrencyId;
+  int get retailCurrencyId => _retailCurrencyId ?? 0;
+  set retailCurrencyId(int? val) => _retailCurrencyId = val;
 
   bool hasRetailCurrencyId() => _retailCurrencyId != null;
 
   // "retailPrice" field.
-  String? _retailPrice;
-  String get retailPrice => _retailPrice ?? '';
-  set retailPrice(String? val) => _retailPrice = val;
+  double? _retailPrice;
+  double get retailPrice => _retailPrice ?? 0.0;
+  set retailPrice(double? val) => _retailPrice = val;
 
   bool hasRetailPrice() => _retailPrice != null;
 
@@ -1859,7 +1859,7 @@ class WatchListingStruct extends BaseStruct {
         defaultManufacturerName: data['defaultManufacturerName'] as String?,
         modelId: castToType<int>(data['modelId']),
         modelName: data['modelName'] as String?,
-        modelParentId: data['modelParentId'] as String?,
+        modelParentId: castToType<int>(data['modelParentId']),
         isActiveModel: data['isActiveModel'] as String?,
         modelSlug: data['modelSlug'] as String?,
         modelURL: data['modelURL'] as String?,
@@ -1868,7 +1868,7 @@ class WatchListingStruct extends BaseStruct {
         defaultModelName: data['defaultModelName'] as String?,
         referenceNumberId: castToType<int>(data['referenceNumberId']),
         referenceNumber: data['referenceNumber'] as String?,
-        referenceParentId: data['referenceParentId'] as String?,
+        referenceParentId: castToType<int>(data['referenceParentId']),
         isActiveReferenceNumber: data['isActiveReferenceNumber'] as String?,
         referenceNumberSlug: data['referenceNumberSlug'] as String?,
         referenceNumberURL: data['referenceNumberURL'] as String?,
@@ -1883,7 +1883,10 @@ class WatchListingStruct extends BaseStruct {
             data['defaultReferenceNumberParentName'] as String?,
         primaryImage: PrimaryImageStruct.maybeFromMap(data['primaryImage']),
         imageUrl: data['imageUrl'] as String?,
-        watchImages: data['watchImages'] as String?,
+        watchImages: getStructList(
+          data['watchImages'],
+          PrimaryImageStruct.fromMap,
+        ),
         sourceLink: data['sourceLink'] as String?,
         description: data['description'] as String?,
         descriptionHtml: data['descriptionHtml'] as String?,
@@ -2004,22 +2007,22 @@ class WatchListingStruct extends BaseStruct {
         maxEstChf: castToType<int>(data['maxEstChf']),
         minEstSgd: castToType<int>(data['minEstSgd']),
         maxEstSgd: castToType<int>(data['maxEstSgd']),
-        minEstAed: data['minEstAed'] as String?,
-        maxEstAed: data['maxEstAed'] as String?,
-        minEstJpy: data['minEstJpy'] as String?,
-        maxEstJpy: data['maxEstJpy'] as String?,
-        maximumEstimatedPrice: data['maximumEstimatedPrice'] as String?,
-        minimumEstimatedPrice: data['minimumEstimatedPrice'] as String?,
-        hammerUsd: data['hammerUsd'] as String?,
-        hammerSgd: data['hammerSgd'] as String?,
-        hammerHkd: data['hammerHkd'] as String?,
-        hammerGbp: data['hammerGbp'] as String?,
-        hammerEur: data['hammerEur'] as String?,
-        hammerChf: data['hammerChf'] as String?,
-        hammerAed: data['hammerAed'] as String?,
-        hammerJpy: data['hammerJpy'] as String?,
+        minEstAed: castToType<int>(data['minEstAed']),
+        maxEstAed: castToType<int>(data['maxEstAed']),
+        minEstJpy: castToType<int>(data['minEstJpy']),
+        maxEstJpy: castToType<int>(data['maxEstJpy']),
+        maximumEstimatedPrice: data['maximumEstimatedPrice'] as double?,
+        minimumEstimatedPrice: data['minimumEstimatedPrice'] as double?,
+        hammerUsd: data['hammerUsd'] as double?,
+        hammerSgd: data['hammerSgd'] as double?,
+        hammerHkd: data['hammerHkd'] as double?,
+        hammerGbp: data['hammerGbp'] as double?,
+        hammerEur: data['hammerEur'] as double?,
+        hammerChf: data['hammerChf'] as double?,
+        hammerAed: data['hammerAed'] as double?,
+        hammerJpy: data['hammerJpy'] as double?,
         auctionIsDeleted: data['auctionIsDeleted'] as String?,
-        soldPrice: data['soldPrice'] as String?,
+        soldPrice: data['soldPrice'] as double?,
         isResultPending: data['isResultPending'] as bool?,
         lotStatusId: data['lotStatusId'] as int?,
         lotStatusName: data['lotStatusName'] as String?,
@@ -2038,8 +2041,8 @@ class WatchListingStruct extends BaseStruct {
         slug: data['slug'] as String?,
         sellerOrganizationName: data['sellerOrganizationName'] as String?,
         lastSeenDate: data['lastSeenDate'] as String?,
-        retailCurrencyId: data['retailCurrencyId'] as String?,
-        retailPrice: data['retailPrice'] as String?,
+        retailCurrencyId: data['retailCurrencyId'] as int?,
+        retailPrice: data['retailPrice'] as double?,
         braceletMaterialId: castToType<int>(data['braceletMaterialId']),
         defaultBraceletMaterialId:
             castToType<int>(data['defaultBraceletMaterialId']),
@@ -2300,7 +2303,7 @@ class WatchListingStruct extends BaseStruct {
         ),
         'modelParentId': serializeParam(
           _modelParentId,
-          ParamType.String,
+          ParamType.int,
         ),
         'isActiveModel': serializeParam(
           _isActiveModel,
@@ -2336,7 +2339,7 @@ class WatchListingStruct extends BaseStruct {
         ),
         'referenceParentId': serializeParam(
           _referenceParentId,
-          ParamType.String,
+          ParamType.int,
         ),
         'isActiveReferenceNumber': serializeParam(
           _isActiveReferenceNumber,
@@ -2378,10 +2381,8 @@ class WatchListingStruct extends BaseStruct {
           _imageUrl,
           ParamType.String,
         ),
-        'watchImages': serializeParam(
-          _watchImages,
-          ParamType.String,
-        ),
+        'watchImages':
+            serializeParam(_watchImages, ParamType.DataStruct, isList: true),
         'sourceLink': serializeParam(
           _sourceLink,
           ParamType.String,
@@ -2856,59 +2857,59 @@ class WatchListingStruct extends BaseStruct {
         ),
         'minEstAed': serializeParam(
           _minEstAed,
-          ParamType.String,
+          ParamType.int,
         ),
         'maxEstAed': serializeParam(
           _maxEstAed,
-          ParamType.String,
+          ParamType.int,
         ),
         'minEstJpy': serializeParam(
           _minEstJpy,
-          ParamType.String,
+          ParamType.int,
         ),
         'maxEstJpy': serializeParam(
           _maxEstJpy,
-          ParamType.String,
+          ParamType.int,
         ),
         'maximumEstimatedPrice': serializeParam(
           _maximumEstimatedPrice,
-          ParamType.String,
+          ParamType.double,
         ),
         'minimumEstimatedPrice': serializeParam(
           _minimumEstimatedPrice,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerUsd': serializeParam(
           _hammerUsd,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerSgd': serializeParam(
           _hammerSgd,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerHkd': serializeParam(
           _hammerHkd,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerGbp': serializeParam(
           _hammerGbp,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerEur': serializeParam(
           _hammerEur,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerChf': serializeParam(
           _hammerChf,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerAed': serializeParam(
           _hammerAed,
-          ParamType.String,
+          ParamType.double,
         ),
         'hammerJpy': serializeParam(
           _hammerJpy,
-          ParamType.String,
+          ParamType.double,
         ),
         'auctionIsDeleted': serializeParam(
           _auctionIsDeleted,
@@ -2916,7 +2917,7 @@ class WatchListingStruct extends BaseStruct {
         ),
         'soldPrice': serializeParam(
           _soldPrice,
-          ParamType.String,
+          ParamType.double,
         ),
         'isResultPending': serializeParam(
           _isResultPending,
@@ -2992,11 +2993,11 @@ class WatchListingStruct extends BaseStruct {
         ),
         'retailCurrencyId': serializeParam(
           _retailCurrencyId,
-          ParamType.String,
+          ParamType.int,
         ),
         'retailPrice': serializeParam(
           _retailPrice,
-          ParamType.String,
+          ParamType.double,
         ),
         'braceletMaterialId': serializeParam(
           _braceletMaterialId,
@@ -3081,7 +3082,7 @@ class WatchListingStruct extends BaseStruct {
         ),
         modelParentId: deserializeParam(
           data['modelParentId'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         isActiveModel: deserializeParam(
@@ -3126,7 +3127,7 @@ class WatchListingStruct extends BaseStruct {
         ),
         referenceParentId: deserializeParam(
           data['referenceParentId'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         isActiveReferenceNumber: deserializeParam(
@@ -3182,8 +3183,8 @@ class WatchListingStruct extends BaseStruct {
         ),
         watchImages: deserializeParam(
           data['watchImages'],
-          ParamType.String,
-          false,
+          ParamType.DataStruct,
+          true,
         ),
         sourceLink: deserializeParam(
           data['sourceLink'],
@@ -3777,72 +3778,72 @@ class WatchListingStruct extends BaseStruct {
         ),
         minEstAed: deserializeParam(
           data['minEstAed'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         maxEstAed: deserializeParam(
           data['maxEstAed'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         minEstJpy: deserializeParam(
           data['minEstJpy'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         maxEstJpy: deserializeParam(
           data['maxEstJpy'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         maximumEstimatedPrice: deserializeParam(
           data['maximumEstimatedPrice'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         minimumEstimatedPrice: deserializeParam(
           data['minimumEstimatedPrice'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerUsd: deserializeParam(
           data['hammerUsd'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerSgd: deserializeParam(
           data['hammerSgd'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerHkd: deserializeParam(
           data['hammerHkd'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerGbp: deserializeParam(
           data['hammerGbp'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerEur: deserializeParam(
           data['hammerEur'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerChf: deserializeParam(
           data['hammerChf'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerAed: deserializeParam(
           data['hammerAed'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         hammerJpy: deserializeParam(
           data['hammerJpy'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         auctionIsDeleted: deserializeParam(
@@ -3852,7 +3853,7 @@ class WatchListingStruct extends BaseStruct {
         ),
         soldPrice: deserializeParam(
           data['soldPrice'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         isResultPending: deserializeParam(
@@ -3947,12 +3948,12 @@ class WatchListingStruct extends BaseStruct {
         ),
         retailCurrencyId: deserializeParam(
           data['retailCurrencyId'],
-          ParamType.String,
+          ParamType.int,
           false,
         ),
         retailPrice: deserializeParam(
           data['retailPrice'],
-          ParamType.String,
+          ParamType.double,
           false,
         ),
         braceletMaterialId: deserializeParam(
@@ -3977,6 +3978,7 @@ class WatchListingStruct extends BaseStruct {
 
   @override
   bool operator ==(Object other) {
+    const listEquality = ListEquality();
     return other is WatchListingStruct &&
         id == other.id &&
         watchId == other.watchId &&
@@ -4013,7 +4015,7 @@ class WatchListingStruct extends BaseStruct {
             other.defaultReferenceNumberParentName &&
         primaryImage == other.primaryImage &&
         imageUrl == other.imageUrl &&
-        watchImages == other.watchImages &&
+        listEquality.equals(watchImages, other.watchImages) &&
         sourceLink == other.sourceLink &&
         description == other.description &&
         descriptionHtml == other.descriptionHtml &&
@@ -4383,7 +4385,7 @@ WatchListingStruct createWatchListingStruct({
   String? defaultManufacturerName,
   int? modelId,
   String? modelName,
-  String? modelParentId,
+  int? modelParentId,
   String? isActiveModel,
   String? modelSlug,
   String? modelURL,
@@ -4392,7 +4394,7 @@ WatchListingStruct createWatchListingStruct({
   String? defaultModelName,
   int? referenceNumberId,
   String? referenceNumber,
-  String? referenceParentId,
+  int? referenceParentId,
   String? isActiveReferenceNumber,
   String? referenceNumberSlug,
   String? referenceNumberURL,
@@ -4403,7 +4405,7 @@ WatchListingStruct createWatchListingStruct({
   String? defaultReferenceNumberParentName,
   PrimaryImageStruct? primaryImage,
   String? imageUrl,
-  String? watchImages,
+  List<PrimaryImageStruct>? watchImages,
   String? sourceLink,
   String? description,
   String? descriptionHtml,
@@ -4522,22 +4524,22 @@ WatchListingStruct createWatchListingStruct({
   int? maxEstChf,
   int? minEstSgd,
   int? maxEstSgd,
-  String? minEstAed,
-  String? maxEstAed,
-  String? minEstJpy,
-  String? maxEstJpy,
-  String? maximumEstimatedPrice,
-  String? minimumEstimatedPrice,
-  String? hammerUsd,
-  String? hammerSgd,
-  String? hammerHkd,
-  String? hammerGbp,
-  String? hammerEur,
-  String? hammerChf,
-  String? hammerAed,
-  String? hammerJpy,
+  int? minEstAed,
+  int? maxEstAed,
+  int? minEstJpy,
+  int? maxEstJpy,
+  double? maximumEstimatedPrice,
+  double? minimumEstimatedPrice,
+  double? hammerUsd,
+  double? hammerSgd,
+  double? hammerHkd,
+  double? hammerGbp,
+  double? hammerEur,
+  double? hammerChf,
+  double? hammerAed,
+  double? hammerJpy,
   String? auctionIsDeleted,
-  String? soldPrice,
+  double? soldPrice,
   bool? isResultPending,
   int? lotStatusId,
   String? lotStatusName,
@@ -4556,8 +4558,8 @@ WatchListingStruct createWatchListingStruct({
   String? slug,
   String? sellerOrganizationName,
   String? lastSeenDate,
-  String? retailCurrencyId,
-  String? retailPrice,
+  int? retailCurrencyId,
+  double? retailPrice,
   int? braceletMaterialId,
   int? defaultBraceletMaterialId,
   int? organizationId,

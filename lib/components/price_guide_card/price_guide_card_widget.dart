@@ -223,8 +223,8 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           children: [
                             Text(
                               valueOrDefault<String>(
-                                widget.brand,
-                                'Rolex',
+                                truncateString(widget.brand, 19),
+                                '',
                               ),
                               textAlign: TextAlign.start,
                               style: FlutterFlowTheme.of(context)
@@ -269,8 +269,8 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           children: [
                             Text(
                               valueOrDefault<String>(
-                                widget.model,
-                                'GMT-Master II',
+                                truncateString(widget.model, 19),
+                                '',
                               ),
                               textAlign: TextAlign.start,
                               style: FlutterFlowTheme.of(context)
@@ -315,8 +315,8 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           children: [
                             Text(
                               valueOrDefault<String>(
-                                widget.referenceNumber,
-                                '116710BLNR',
+                                truncateString(widget.referenceNumber, 19),
+                                '',
                               ),
                               textAlign: TextAlign.start,
                               style: FlutterFlowTheme.of(context)
