@@ -78,6 +78,27 @@ enum DecimalType {
   commaDecimal,
 }
 
+int calculateMonthDifference(DateTime startDate, DateTime endDate) {
+  return (endDate.year * 12 + endDate.month) -
+      (startDate.year * 12 + startDate.month);
+}
+
+String formatAbbrevNumber(double? number) {
+  if (number == null) {
+    return '';
+  }
+  // Check if number is a million or more
+  if (number >= 1000000) {
+    return "${(number / 1000000).toStringAsFixed(2)}M";
+  }
+  // Check if number is a thousand or more
+  else if (number >= 1000) {
+    return "${(number / 1000).toStringAsFixed(2)}K";
+  }
+  // If number is less than a thousand, return it with no abbreviation
+  return number.toStringAsFixed(2);
+}
+
 String formatNumber(
   num? value, {
   required FormatType formatType,

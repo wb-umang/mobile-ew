@@ -6,24 +6,24 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class PriceMedianStruct extends BaseStruct {
   PriceMedianStruct(
-      {double? realUsd,
-      double? realHkd,
-      double? realEur,
-      double? realGbp,
-      double? realChf,
-      double? realSgd,
-      double? minPriceUsd,
-      double? maxPriceUsd,
-      double? minPriceHkd,
-      double? maxPriceHkd,
-      double? minPriceEur,
-      double? maxPriceEur,
-      double? minPriceGbp,
-      double? maxPriceGbp,
-      double? minPriceChf,
-      double? maxPriceChf,
-      double? minPriceSgd,
-      double? maxPriceSgd,
+      {num? realUsd,
+      num? realHkd,
+      num? realEur,
+      num? realGbp,
+      num? realChf,
+      num? realSgd,
+      num? minPriceUsd,
+      num? maxPriceUsd,
+      num? minPriceHkd,
+      num? maxPriceHkd,
+      num? minPriceEur,
+      num? maxPriceEur,
+      num? minPriceGbp,
+      num? maxPriceGbp,
+      num? minPriceChf,
+      num? maxPriceChf,
+      num? minPriceSgd,
+      num? maxPriceSgd,
       int? count})
       : _realUsd = realUsd,
         _realHkd = realHkd,
@@ -45,77 +45,77 @@ class PriceMedianStruct extends BaseStruct {
         _maxPriceSgd = maxPriceSgd,
         _count = count;
 
-  double? _realUsd;
-  double get realUsd => _realUsd ?? 0.0;
-  set realUsd(double? value) => _realUsd = value;
+  num? _realUsd;
+  num get realUsd => _realUsd ?? 0.0;
+  set realUsd(num? value) => _realUsd = value;
 
-  double? _realHkd;
-  double get realHkd => _realHkd ?? 0.0;
-  set realHkd(double? value) => _realHkd = value;
+  num? _realHkd;
+  num get realHkd => _realHkd ?? 0.0;
+  set realHkd(num? value) => _realHkd = value;
 
-  double? _realEur;
-  double get realEur => _realEur ?? 0.0;
-  set realEur(double? value) => _realEur = value;
+  num? _realEur;
+  num get realEur => _realEur ?? 0.0;
+  set realEur(num? value) => _realEur = value;
 
-  double? _realGbp;
-  double get realGbp => _realGbp ?? 0.0;
-  set realGbp(double? value) => _realGbp = value;
+  num? _realGbp;
+  num get realGbp => _realGbp ?? 0.0;
+  set realGbp(num? value) => _realGbp = value;
 
-  double? _realChf;
-  double get realChf => _realChf ?? 0.0;
-  set realChf(double? value) => _realChf = value;
+  num? _realChf;
+  num get realChf => _realChf ?? 0.0;
+  set realChf(num? value) => _realChf = value;
 
-  double? _realSgd;
-  double get realSgd => _realSgd ?? 0.0;
-  set realSgd(double? value) => _realSgd = value;
+  num? _realSgd;
+  num get realSgd => _realSgd ?? 0.0;
+  set realSgd(num? value) => _realSgd = value;
 
-  double? _minPriceUsd;
-  double get minPriceUsd => _minPriceUsd ?? 0.0;
-  set minPriceUsd(double? value) => _minPriceUsd = value;
+  num? _minPriceUsd;
+  num get minPriceUsd => _minPriceUsd ?? 0.0;
+  set minPriceUsd(num? value) => _minPriceUsd = value;
 
-  double? _maxPriceUsd;
-  double get maxPriceUsd => _maxPriceUsd ?? 0.0;
-  set maxPriceUsd(double? value) => _maxPriceUsd = value;
+  num? _maxPriceUsd;
+  num get maxPriceUsd => _maxPriceUsd ?? 0.0;
+  set maxPriceUsd(num? value) => _maxPriceUsd = value;
 
-  double? _minPriceHkd;
-  double get minPriceHkd => _minPriceHkd ?? 0.0;
-  set minPriceHkd(double? value) => _minPriceHkd = value;
+  num? _minPriceHkd;
+  num get minPriceHkd => _minPriceHkd ?? 0.0;
+  set minPriceHkd(num? value) => _minPriceHkd = value;
 
-  double? _maxPriceHkd;
-  double get maxPriceHkd => _maxPriceHkd ?? 0.0;
-  set maxPriceHkd(double? value) => _maxPriceHkd = value;
+  num? _maxPriceHkd;
+  num get maxPriceHkd => _maxPriceHkd ?? 0.0;
+  set maxPriceHkd(num? value) => _maxPriceHkd = value;
 
-  double? _minPriceEur;
-  double get minPriceEur => _minPriceEur ?? 0.0;
-  set minPriceEur(double? value) => _minPriceEur = value;
+  num? _minPriceEur;
+  num get minPriceEur => _minPriceEur ?? 0.0;
+  set minPriceEur(num? value) => _minPriceEur = value;
 
-  double? _maxPriceEur;
-  double get maxPriceEur => _maxPriceEur ?? 0.0;
-  set maxPriceEur(double? value) => _maxPriceEur = value;
+  num? _maxPriceEur;
+  num get maxPriceEur => _maxPriceEur ?? 0.0;
+  set maxPriceEur(num? value) => _maxPriceEur = value;
 
-  double? _minPriceGbp;
-  double get minPriceGbp => _minPriceGbp ?? 0.0;
-  set minPriceGbp(double? value) => _minPriceGbp = value;
+  num? _minPriceGbp;
+  num get minPriceGbp => _minPriceGbp ?? 0.0;
+  set minPriceGbp(num? value) => _minPriceGbp = value;
 
-  double? _maxPriceGbp;
-  double get maxPriceGbp => _maxPriceGbp ?? 0.0;
-  set maxPriceGbp(double? value) => _maxPriceGbp = value;
+  num? _maxPriceGbp;
+  num get maxPriceGbp => _maxPriceGbp ?? 0.0;
+  set maxPriceGbp(num? value) => _maxPriceGbp = value;
 
-  double? _minPriceChf;
-  double get minPriceChf => _minPriceChf ?? 0.0;
-  set minPriceChf(double? value) => _minPriceChf = value;
+  num? _minPriceChf;
+  num get minPriceChf => _minPriceChf ?? 0.0;
+  set minPriceChf(num? value) => _minPriceChf = value;
 
-  double? _maxPriceChf;
-  double get maxPriceChf => _maxPriceChf ?? 0.0;
-  set maxPriceChf(double? value) => _maxPriceChf = value;
+  num? _maxPriceChf;
+  num get maxPriceChf => _maxPriceChf ?? 0.0;
+  set maxPriceChf(num? value) => _maxPriceChf = value;
 
-  double? _minPriceSgd;
-  double get minPriceSgd => _minPriceSgd ?? 0.0;
-  set minPriceSgd(double? value) => _minPriceSgd = value;
+  num? _minPriceSgd;
+  num get minPriceSgd => _minPriceSgd ?? 0.0;
+  set minPriceSgd(num? value) => _minPriceSgd = value;
 
-  double? _maxPriceSgd;
-  double get maxPriceSgd => _maxPriceSgd ?? 0.0;
-  set maxPriceSgd(double? value) => _maxPriceSgd = value;
+  num? _maxPriceSgd;
+  num get maxPriceSgd => _maxPriceSgd ?? 0.0;
+  set maxPriceSgd(num? value) => _maxPriceSgd = value;
 
   int? _count;
   int get count => _count ?? 0;
@@ -123,24 +123,24 @@ class PriceMedianStruct extends BaseStruct {
 
   static PriceMedianStruct fromMap(Map<String, dynamic> data) {
     return PriceMedianStruct(
-      realUsd: data['realUsd'] as double?,
-      realHkd: data['realHkd'] as double?,
-      realEur: data['realEur'] as double?,
-      realGbp: data['realGbp'] as double?,
-      realChf: data['realChf'] as double?,
-      realSgd: data['realSgd'] as double?,
-      minPriceUsd: data['minPriceUsd'] as double?,
-      maxPriceUsd: data['maxPriceUsd'] as double?,
-      minPriceHkd: data['minPriceHkd'] as double?,
-      maxPriceHkd: data['maxPriceHkd'] as double?,
-      minPriceEur: data['minPriceEur'] as double?,
-      maxPriceEur: data['maxPriceEur'] as double?,
-      minPriceGbp: data['minPriceGbp'] as double?,
-      maxPriceGbp: data['maxPriceGbp'] as double?,
-      minPriceChf: data['minPriceChf'] as double?,
-      maxPriceChf: data['maxPriceChf'] as double?,
-      minPriceSgd: data['minPriceSgd'] as double?,
-      maxPriceSgd: data['maxPriceSgd'] as double?,
+      realUsd: data['realUsd'] as num?,
+      realHkd: data['realHkd'] as num?,
+      realEur: data['realEur'] as num?,
+      realGbp: data['realGbp'] as num?,
+      realChf: data['realChf'] as num?,
+      realSgd: data['realSgd'] as num?,
+      minPriceUsd: data['minPriceUsd'] as num?,
+      maxPriceUsd: data['maxPriceUsd'] as num?,
+      minPriceHkd: data['minPriceHkd'] as num?,
+      maxPriceHkd: data['maxPriceHkd'] as num?,
+      minPriceEur: data['minPriceEur'] as num?,
+      maxPriceEur: data['maxPriceEur'] as num?,
+      minPriceGbp: data['minPriceGbp'] as num?,
+      maxPriceGbp: data['maxPriceGbp'] as num?,
+      minPriceChf: data['minPriceChf'] as num?,
+      maxPriceChf: data['maxPriceChf'] as num?,
+      minPriceSgd: data['minPriceSgd'] as num?,
+      maxPriceSgd: data['maxPriceSgd'] as num?,
       count: data['count'] as int?,
     );
   }
@@ -280,24 +280,24 @@ class PriceMedianStruct extends BaseStruct {
 }
 
 PriceMedianStruct createPriceMedianStruct(
-        {double? realUsd,
-        double? realHkd,
-        double? realEur,
-        double? realGbp,
-        double? realChf,
-        double? realSgd,
-        double? minPriceUsd,
-        double? maxPriceUsd,
-        double? minPriceHkd,
-        double? maxPriceHkd,
-        double? minPriceEur,
-        double? maxPriceEur,
-        double? minPriceGbp,
-        double? maxPriceGbp,
-        double? minPriceChf,
-        double? maxPriceChf,
-        double? minPriceSgd,
-        double? maxPriceSgd,
+        {num? realUsd,
+        num? realHkd,
+        num? realEur,
+        num? realGbp,
+        num? realChf,
+        num? realSgd,
+        num? minPriceUsd,
+        num? maxPriceUsd,
+        num? minPriceHkd,
+        num? maxPriceHkd,
+        num? minPriceEur,
+        num? maxPriceEur,
+        num? minPriceGbp,
+        num? maxPriceGbp,
+        num? minPriceChf,
+        num? maxPriceChf,
+        num? minPriceSgd,
+        num? maxPriceSgd,
         int? count}) =>
     PriceMedianStruct(
         realUsd: realUsd,

@@ -1805,16 +1805,16 @@ class WatchListingStruct extends BaseStruct {
 
   String parsePrice() {
     var price = '\$${valueOrDefault<String>(
-      minEstUsd.toString(),
+      formatAbbrevNumber(minEstUsd.toDouble()),
       '-',
     )} - \$${valueOrDefault<String>(
-      maxEstUsd.toString(),
+      formatAbbrevNumber(maxEstUsd.toDouble()),
       '-',
     )}';
-    if (price.length > 5) {
+    if (minEstUsd > 0 || maxEstUsd > 0) {
       return price;
     }
-    return '-';
+    return 'No Estimates';
   }
 
   String parseEventDates() {

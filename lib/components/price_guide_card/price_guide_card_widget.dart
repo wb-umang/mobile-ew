@@ -9,6 +9,7 @@ export 'price_guide_card_model.dart';
 class PriceGuideCardWidget extends StatefulWidget {
   const PriceGuideCardWidget({
     super.key,
+    required this.scrollController,
     required this.watchAnalysis,
     required this.downArrow,
     required this.upArrow,
@@ -21,6 +22,7 @@ class PriceGuideCardWidget extends StatefulWidget {
         model = model ?? 'GMT-Master II',
         referenceNumber = referenceNumber ?? '116710BLNR';
 
+  final ScrollController scrollController;
   final WatchAnalysisStruct? watchAnalysis;
   final Widget? downArrow;
   final Widget? upArrow;
@@ -36,28 +38,39 @@ class PriceGuideCardWidget extends StatefulWidget {
 class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
   late PriceGuideCardModel _model;
   late PriceAnalysisStruct? _priceAnalysis;
-  String _auctionValueTitle = 'Median Auction Value';
+  final String _auctionValueTitle = 'Median Auction Value';
+  final String _salePriceTitle = 'Latest Sale Price';
+  final String _rangeTitle = 'Auction Range';
+  final String _dealersValueTitle = 'Median Dealers Value';
+  final String _dealersRangeTitle = 'Dealers Range';
   String _auctionValueSubtitle = '';
-  String _salePriceTitle = 'Latest Sale Price';
   String _salePriceSubtitle = '';
   String _salePrice = '';
-  String _rangeTitle = 'Auction Range';
   String _rangeSubtitle = '';
   String _rangePrice = '';
-  String _dealersValueTitle = 'Median Dealers Value';
   String _dealersValueSubtitle = '';
   String _dealersPrice = '';
-  String _dealersRangeTitle = 'Dealers Range';
   String _dealersRangeSubtitle = '';
   String _dealersRangePrice = '';
   String _numberOfWatches = '';
   String _numberOfWatchesDealers = '';
   String _auctionValue = '';
 
+  void _scrollDown() {
+    widget.scrollController.animateTo(
+      widget.scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
     _model.onUpdate();
+    if (_model.showPerformance) {
+      _scrollDown();
+    }
   }
 
   @override
@@ -65,6 +78,14 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
     super.initState();
     _model = createModel(context, () => PriceGuideCardModel());
     _priceAnalysis = widget.watchAnalysis?.referenceNumberPriceAnalysis;
+  }
+
+  @override
+  void didUpdateWidget(covariant PriceGuideCardWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_model.showPerformance) {
+      _scrollDown();
+    }
   }
 
   @override
@@ -83,12 +104,25 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
     } else if (_model.referenceSelected) {
       _priceAnalysis = widget.watchAnalysis?.referenceNumberPriceAnalysis;
     }
+    final int unsoldRate =
+        _priceAnalysis?.auctionPriceAnalysis?.unsoldRate.toInt() ?? 0;
+    final int unsold =
+        _priceAnalysis?.auctionPriceAnalysis?.unsold.toInt() ?? 0;
+    final int belowEstimate =
+        _priceAnalysis?.auctionPriceAnalysis?.belowEstimate.toInt() ?? 0;
+    final int aboveEstimate =
+        _priceAnalysis?.auctionPriceAnalysis?.aboveEstimate.toInt() ?? 0;
+    final int withinEstimate =
+        _priceAnalysis?.auctionPriceAnalysis?.withinEstimate.toInt() ?? 0;
+    final int withoutEstimate =
+        _priceAnalysis?.auctionPriceAnalysis?.withoutEstimate.toInt() ?? 0;
     _numberOfWatches =
         '(${_priceAnalysis?.auctionPriceMedian?.count.toString()} Watches)';
     _numberOfWatchesDealers =
         '(${_priceAnalysis?.marketPlacePriceMedian?.count.toString()} Watches)';
-    _auctionValue =
-        '(${_priceAnalysis?.auctionPriceMedian?.realUsd.toString()} USD)';
+    var formatAuctionValue = formatAbbrevNumber(
+        _priceAnalysis?.auctionPriceMedian?.realUsd.toDouble());
+    _auctionValue = '$formatAuctionValue USD';
     var now = DateTime.now();
     var auctionValueMonthsDiff =
         calculateMonthDifference(_priceAnalysis?.medianMinDate ?? now, now);
@@ -96,24 +130,40 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
         'Last $auctionValueMonthsDiff months $_numberOfWatches';
     _salePriceSubtitle = dateTimeFormat('D MMM YYYY',
         _priceAnalysis?.auctionPriceAnalysis?.auctionLatestSalesDate);
-    _salePrice =
-        '${_priceAnalysis?.auctionPriceAnalysis?.auctionLatestSalesPriceUsd} USD';
+    var formatSalePrice = formatAbbrevNumber(_priceAnalysis
+            ?.auctionPriceAnalysis?.auctionLatestSalesPriceUsd
+            .toDouble() ??
+        0.0);
+    _salePrice = '$formatSalePrice USD';
     var rangeMonthsDiff =
         calculateMonthDifference(_priceAnalysis?.analysisMinDate ?? now, now);
     _rangeSubtitle = 'Last $rangeMonthsDiff months $_numberOfWatches';
-    _rangePrice =
-        '${_priceAnalysis?.auctionPriceMedian?.minPriceUsd.toString()} - ${_priceAnalysis?.auctionPriceMedian?.maxPriceUsd.toString()} USD';
+    var formatRangeMinPrice = formatAbbrevNumber(
+        _priceAnalysis?.auctionPriceMedian?.minPriceUsd.toDouble());
+    var formatRangeMaxPrice = formatAbbrevNumber(
+        _priceAnalysis?.auctionPriceMedian?.maxPriceUsd.toDouble());
+    _rangePrice = '$formatRangeMinPrice - $formatRangeMaxPrice USD';
     _dealersValueSubtitle = 'Current price $_numberOfWatchesDealers';
-    _dealersPrice = '${_priceAnalysis?.marketPlacePriceMedian?.realUsd} USD';
+    var formatDealersPrice = formatAbbrevNumber(
+        _priceAnalysis?.marketPlacePriceMedian?.realUsd.toDouble());
+    _dealersPrice = '$formatDealersPrice USD';
     _dealersRangeSubtitle = 'Current price $_numberOfWatchesDealers';
+    var formatDealersRangeMinPrice = formatAbbrevNumber(
+        _priceAnalysis?.marketPlacePriceMedian?.minPriceUsd.toDouble());
+    var formatDealersRangeMaxPrice = formatAbbrevNumber(
+        _priceAnalysis?.marketPlacePriceMedian?.maxPriceUsd.toDouble());
     _dealersRangePrice =
-        '${_priceAnalysis?.marketPlacePriceMedian?.minPriceUsd.toString()} - ${_priceAnalysis?.marketPlacePriceMedian?.maxPriceUsd.toString()} USD';
+        '$formatDealersRangeMinPrice - $formatDealersRangeMaxPrice USD';
     final chartPieChartColorsList = [
-      FlutterFlowTheme.of(context).error,
-      FlutterFlowTheme.of(context).warm,
       FlutterFlowTheme.of(context).success,
-      FlutterFlowTheme.of(context).primary
+      FlutterFlowTheme.of(context).warm,
+      FlutterFlowTheme.of(context).error,
+      FlutterFlowTheme.of(context).primary,
+      FlutterFlowTheme.of(context).tertiary,
     ];
+    if (_model.showPerformance) {
+      _scrollDown();
+    }
     return Material(
       color: Colors.transparent,
       elevation: 0.0,
@@ -633,7 +683,11 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                               onTap: () async {
                                 _model.showPerformance =
                                     !_model.showPerformance;
-                                safeSetState(() {});
+                                safeSetState(() {
+                                  if (_model.showPerformance) {
+                                    _scrollDown();
+                                  }
+                                });
                               },
                               child: _model.showPerformance
                                   ? widget.upArrow!
@@ -643,9 +697,8 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                         ),
                         Visibility(
                             visible: _model.showPerformance,
-                            maintainState:
-                                true, // Keeps the state of the widget
-                            maintainAnimation: true, // Maintain animations
+                            maintainState: true,
+                            maintainAnimation: true,
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
@@ -676,7 +729,13 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                             height: 116.0,
                                             child: FlutterFlowPieChart(
                                               data: FFPieChartData(
-                                                values: [0, 1, 2, 3],
+                                                values: [
+                                                  aboveEstimate,
+                                                  withinEstimate,
+                                                  belowEstimate,
+                                                  unsold,
+                                                  withoutEstimate,
+                                                ],
                                                 colors: chartPieChartColorsList,
                                                 radius: [14.0],
                                                 borderColor: [
@@ -751,6 +810,45 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
+                                            Text(
+                                              'Unsold Rate',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontSize: 12.0,
+                                                    letterSpacing: 0.12,
+                                                    fontWeight: FontWeight.bold,
+                                                    lineHeight: 1.43,
+                                                  ),
+                                            ),
+                                            Text(
+                                              '$unsoldRate%',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontSize: 12.0,
+                                                    letterSpacing: 0.12,
+                                                    fontWeight: FontWeight.bold,
+                                                    lineHeight: 1.43,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
                                             Row(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
@@ -760,8 +858,200 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .lightGray,
-                                                    shape: BoxShape.circle,
+                                                        .success,
+                                                    shape: BoxShape.rectangle,
+                                                    border: Border.all(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .success,
+                                                      width: 2.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Sold above estimate',
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 2,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'DM Sans',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                        fontSize: 12.0,
+                                                        letterSpacing: 0.16,
+                                                        lineHeight: 1.33,
+                                                      ),
+                                                ),
+                                              ].divide(
+                                                  const SizedBox(width: 4.0)),
+                                            ),
+                                            Text(
+                                              aboveEstimate.toString(),
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontSize: 12.0,
+                                                    letterSpacing: 0.12,
+                                                    fontWeight: FontWeight.bold,
+                                                    lineHeight: 1.43,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: 8.0,
+                                                  height: 8.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .warm,
+                                                    shape: BoxShape.rectangle,
+                                                    border: Border.all(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .warm,
+                                                      width: 2.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Sold within estimate',
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 2,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'DM Sans',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                        fontSize: 12.0,
+                                                        letterSpacing: 0.16,
+                                                        lineHeight: 1.33,
+                                                      ),
+                                                ),
+                                              ].divide(
+                                                  const SizedBox(width: 4.0)),
+                                            ),
+                                            Text(
+                                              withinEstimate.toString(),
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontSize: 12.0,
+                                                    letterSpacing: 0.12,
+                                                    fontWeight: FontWeight.bold,
+                                                    lineHeight: 1.43,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: 8.0,
+                                                  height: 8.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .error,
+                                                    shape: BoxShape.rectangle,
+                                                    border: Border.all(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .error,
+                                                      width: 2.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Sold below estimate',
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 2,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'DM Sans',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                        fontSize: 12.0,
+                                                        letterSpacing: 0.16,
+                                                        lineHeight: 1.33,
+                                                      ),
+                                                ),
+                                              ].divide(
+                                                  const SizedBox(width: 4.0)),
+                                            ),
+                                            Text(
+                                              belowEstimate.toString(),
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontSize: 12.0,
+                                                    letterSpacing: 0.12,
+                                                    fontWeight: FontWeight.bold,
+                                                    lineHeight: 1.43,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: 8.0,
+                                                  height: 8.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    shape: BoxShape.rectangle,
                                                     border: Border.all(
                                                       color:
                                                           FlutterFlowTheme.of(
@@ -793,13 +1083,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                                   const SizedBox(width: 4.0)),
                                             ),
                                             Text(
-                                              valueOrDefault<String>(
-                                                _priceAnalysis
-                                                    ?.auctionPriceAnalysis
-                                                    ?.unsold
-                                                    .toString(),
-                                                '0',
-                                              ),
+                                              unsold.toString(),
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -830,19 +1114,19 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .lightGray,
-                                                    shape: BoxShape.circle,
+                                                        .tertiary,
+                                                    shape: BoxShape.rectangle,
                                                     border: Border.all(
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .error,
+                                                              .tertiary,
                                                       width: 2.0,
                                                     ),
                                                   ),
                                                 ),
                                                 Text(
-                                                  'Sold Below Estimate',
+                                                  'Sold without estimate',
                                                   textAlign: TextAlign.start,
                                                   maxLines: 2,
                                                   style: FlutterFlowTheme.of(
@@ -863,192 +1147,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                                                   const SizedBox(width: 4.0)),
                                             ),
                                             Text(
-                                              valueOrDefault<String>(
-                                                _priceAnalysis
-                                                    ?.auctionPriceAnalysis
-                                                    ?.belowEstimate
-                                                    .toString(),
-                                                '0',
-                                              ),
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DM Sans',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.12,
-                                                    fontWeight: FontWeight.bold,
-                                                    lineHeight: 1.43,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Container(
-                                                  width: 8.0,
-                                                  height: 8.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .lightGray,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .warm,
-                                                      width: 2.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Sold Within Estimate',
-                                                  textAlign: TextAlign.start,
-                                                  maxLines: 2,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'DM Sans',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.16,
-                                                        lineHeight: 1.33,
-                                                      ),
-                                                ),
-                                              ].divide(
-                                                  const SizedBox(width: 4.0)),
-                                            ),
-                                            Text(
-                                              valueOrDefault<String>(
-                                                _priceAnalysis
-                                                    ?.auctionPriceAnalysis
-                                                    ?.withinEstimate
-                                                    .toString(),
-                                                '0',
-                                              ),
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DM Sans',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.12,
-                                                    fontWeight: FontWeight.bold,
-                                                    lineHeight: 1.43,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Container(
-                                                  width: 8.0,
-                                                  height: 8.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .lightGray,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .success,
-                                                      width: 2.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Sold Above Estimate',
-                                                  textAlign: TextAlign.start,
-                                                  maxLines: 2,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'DM Sans',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.16,
-                                                        lineHeight: 1.33,
-                                                      ),
-                                                ),
-                                              ].divide(
-                                                  const SizedBox(width: 4.0)),
-                                            ),
-                                            Text(
-                                              valueOrDefault<String>(
-                                                _priceAnalysis
-                                                    ?.auctionPriceAnalysis
-                                                    ?.aboveEstimate
-                                                    .toString(),
-                                                '0',
-                                              ),
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DM Sans',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.12,
-                                                    fontWeight: FontWeight.bold,
-                                                    lineHeight: 1.43,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Unsold Rate',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'DM Sans',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.12,
-                                                    fontWeight: FontWeight.bold,
-                                                    lineHeight: 1.43,
-                                                  ),
-                                            ),
-                                            Text(
-                                              '${_priceAnalysis?.auctionPriceAnalysis?.unsoldRate.toInt()}%',
+                                              withoutEstimate.toString(),
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -1082,9 +1181,4 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
       ),
     );
   }
-}
-
-int calculateMonthDifference(DateTime startDate, DateTime endDate) {
-  return (endDate.year * 12 + endDate.month) -
-      (startDate.year * 12 + startDate.month);
 }

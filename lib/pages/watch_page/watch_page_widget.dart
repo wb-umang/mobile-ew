@@ -28,8 +28,8 @@ class WatchPageWidget extends StatefulWidget {
 class _WatchPageWidgetState extends State<WatchPageWidget> {
   late WatchPageModel _model;
   late WatchListingStruct _watch;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -41,9 +41,10 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
   @override
   void dispose() {
-    _model.dispose();
-
     super.dispose();
+
+    _model.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -110,6 +111,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                   color: FlutterFlowTheme.of(context).primaryBackground,
                 ),
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -428,6 +430,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   updateCallback: () =>
                                                       safeSetState(() {}),
                                                   child: PriceGuideCardWidget(
+                                                    scrollController:
+                                                        _scrollController,
                                                     watchAnalysis:
                                                         watchAnalysis,
                                                     downArrow: Icon(
