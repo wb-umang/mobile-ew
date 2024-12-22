@@ -1,5 +1,3 @@
-import 'package:every_watch/app_state.dart';
-
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/icon_button/icon_button_widget.dart';
@@ -353,6 +351,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                       ],
                                                                     ),
                                                                 );
+
                                                                 _model.isAvailable =
                                                                     true;
                                                                 safeSetState(
@@ -618,32 +617,145 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                 CrossAxisAlignment
                                                                     .center,
                                                             children: [
-                                                              FlutterFlowIconButton(
-                                                                borderColor:
-                                                                    FlutterFlowTheme.of(
+                                                              PopupMenuButton<
+                                                                  String>(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .appBar,
+                                                                onSelected:
+                                                                    (String
+                                                                        result) {
+                                                                  var sortColumn =
+                                                                      'relevance';
+                                                                  var sortType =
+                                                                      'asc';
+                                                                  var sortText =
+                                                                      'Relevance';
+                                                                  if (result ==
+                                                                      'newest') {
+                                                                    sortColumn =
+                                                                        'newest';
+                                                                    sortType =
+                                                                        'desc';
+                                                                    sortText =
+                                                                        'Newest';
+                                                                  } else if (result ==
+                                                                      'price-high') {
+                                                                    sortColumn =
+                                                                        'price';
+                                                                    sortType =
+                                                                        'desc';
+                                                                    sortText =
+                                                                        'Price: High to Low';
+                                                                  } else if (result ==
+                                                                      'price-low') {
+                                                                    sortColumn =
+                                                                        'price';
+                                                                    sortType =
+                                                                        'asc';
+                                                                    sortText =
+                                                                        'Price: Low to High';
+                                                                  }
+                                                                  safeSetState(
+                                                                      () {
+                                                                    FFAppState()
+                                                                        .update(
+                                                                            () {
+                                                                      FFAppState()
+                                                                          .watchListingFilter
+                                                                          .sortColumn = sortColumn;
+                                                                      FFAppState()
+                                                                          .watchListingFilter
+                                                                          .sortType = sortType;
+                                                                    });
+                                                                  });
+
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                        content:
+                                                                            Text('Sort by $sortText')),
+                                                                  );
+                                                                },
+                                                                itemBuilder: (BuildContext
+                                                                        context) =>
+                                                                    <PopupMenuEntry<
+                                                                        String>>[
+                                                                  const PopupMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        'relevance',
+                                                                    child: Text(
+                                                                        'Relevance'),
+                                                                  ),
+                                                                  const PopupMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        'newest',
+                                                                    child: Text(
+                                                                        'Newest'),
+                                                                  ),
+                                                                  const PopupMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        'price-high',
+                                                                    child: Text(
+                                                                        'Price: High to Low'),
+                                                                  ),
+                                                                  const PopupMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        'price-low',
+                                                                    child: Text(
+                                                                        'Price: Low to High'),
+                                                                  ),
+                                                                ],
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12.0),
+                                                                  side:
+                                                                      BorderSide(
+                                                                    color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .border,
-                                                                borderRadius:
-                                                                    12.0,
-                                                                borderWidth:
-                                                                    1.0,
-                                                                buttonSize:
-                                                                    32.0,
-                                                                fillColor:
-                                                                    FlutterFlowTheme.of(
+                                                                    width: 1.0,
+                                                                  ),
+                                                                ),
+                                                                child:
+                                                                    Container(
+                                                                  height: 32.0,
+                                                                  width: 32.0,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .appBar,
-                                                                icon: Icon(
-                                                                  FFIcons.ksort,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
-                                                                  size: 16.0,
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .border,
+                                                                      width:
+                                                                          1.0,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12.0),
+                                                                  ),
+                                                                  child: Icon(
+                                                                    FFIcons
+                                                                        .ksort,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryText,
+                                                                    size: 16.0,
+                                                                  ),
                                                                 ),
-                                                                onPressed: () {
-                                                                  print(
-                                                                      'IconButton pressed ...');
-                                                                },
                                                               ),
                                                               Align(
                                                                 alignment:

@@ -166,7 +166,7 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                     model: _model.watchTagModel,
                     updateCallback: () => safeSetState(() {}),
                     child: WatchTagWidget(
-                      title: widget.auctionLotType == 'UPCOMING'
+                      title: widget.auctionLotType == 'RESULT'
                           ? 'LIVE AUCTION'
                           : 'MARKETPLACE',
                     ),
