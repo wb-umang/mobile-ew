@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_getters_setters
 
-
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
@@ -53,7 +52,7 @@ class WatchListingFilterStruct extends BaseStruct {
 
   // "size" field.
   int? _size;
-  int get size => _size ?? 30;
+  int get size => _size ?? 1000;
   set size(int? val) => _size = val;
 
   void incrementSize(int amount) => size = size + amount;

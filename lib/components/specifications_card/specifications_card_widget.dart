@@ -8,7 +8,10 @@ import 'specifications_card_model.dart';
 export 'specifications_card_model.dart';
 
 class SpecificationsCardWidget extends StatefulWidget {
-  const SpecificationsCardWidget({super.key});
+  SpecificationsCardWidget({super.key, List<String>? excludedFieldsWatchDetail})
+      : excludedFieldsWatchDetail = excludedFieldsWatchDetail ?? [];
+
+  final List<String> excludedFieldsWatchDetail;
 
   @override
   State<SpecificationsCardWidget> createState() =>
@@ -41,6 +44,8 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
+    final excludedFieldsWatchDetail = widget.excludedFieldsWatchDetail;
     return Material(
       color: Colors.transparent,
       elevation: 0.0,
@@ -82,20 +87,31 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                 lineHeight: 1.43,
                               ),
                         ),
-                        Text(
-                          valueOrDefault<String>(
-                            _watch.infoSourceName,
-                            'Locked',
+                        Visibility(
+                          visible: isPremium,
+                          child: Text(
+                            valueOrDefault<String>(
+                              _watch.infoSourceName,
+                              '',
+                            ),
+                            textAlign: TextAlign.start,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'DM Sans',
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.08,
+                                  lineHeight: 1.43,
+                                ),
                           ),
-                          textAlign: TextAlign.start,
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'DM Sans',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.08,
-                                    lineHeight: 1.43,
-                                  ),
                         ),
+                        Visibility(
+                            visible: !isPremium,
+                            child: Icon(
+                              FFIcons.klock,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 16.0,
+                            ))
                       ].divide(const SizedBox(height: 4.0)),
                     ),
                   ),
@@ -119,7 +135,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         Text(
                           valueOrDefault<String>(
                             _watch.conditionName,
-                            'Locked',
+                            '-',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -159,7 +175,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         Text(
                           valueOrDefault<String>(
                             _watch.yearOfProduction.toString(),
-                            'Locked',
+                            '-',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -193,7 +209,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         Text(
                           valueOrDefault<String>(
                             _watch.caseSizeName,
-                            'Locked',
+                            '-',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -233,7 +249,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         Text(
                           valueOrDefault<String>(
                             _watch.caseMaterialName,
-                            'Locked',
+                            '-',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -267,7 +283,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                         Text(
                           valueOrDefault<String>(
                             _watch.dialColorName,
-                            'Locked',
+                            '-',
                           ),
                           textAlign: TextAlign.start,
                           style:
@@ -315,7 +331,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                   Text(
                                     valueOrDefault<String>(
                                       _watch.braceletMaterialName,
-                                      'Locked',
+                                      '-',
                                     ),
                                     textAlign: TextAlign.start,
                                     style: FlutterFlowTheme.of(context)
@@ -352,7 +368,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                   Text(
                                     valueOrDefault<String>(
                                       _watch.movementName,
-                                      'Locked',
+                                      '-',
                                     ),
                                     textAlign: TextAlign.start,
                                     style: FlutterFlowTheme.of(context)
@@ -395,7 +411,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                   Text(
                                     valueOrDefault<String>(
                                       _watch.box,
-                                      'Locked',
+                                      '-',
                                     ),
                                     textAlign: TextAlign.start,
                                     style: FlutterFlowTheme.of(context)
@@ -432,7 +448,7 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                   Text(
                                     valueOrDefault<String>(
                                       _watch.paper,
-                                      'Locked',
+                                      '-',
                                     ),
                                     textAlign: TextAlign.start,
                                     maxLines: 1,
@@ -473,22 +489,33 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                           lineHeight: 1.43,
                                         ),
                                   ),
-                                  Text(
-                                    valueOrDefault<String>(
-                                      _watch.lotNumber,
-                                      'Locked',
-                                    ),
-                                    textAlign: TextAlign.start,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'DM Sans',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          letterSpacing: 0.08,
-                                          lineHeight: 1.43,
+                                  Visibility(
+                                      visible: isPremium,
+                                      child: Text(
+                                        valueOrDefault<String>(
+                                          _watch.lotNumber,
+                                          '-',
                                         ),
-                                  ),
+                                        textAlign: TextAlign.start,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DM Sans',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              letterSpacing: 0.08,
+                                              lineHeight: 1.43,
+                                            ),
+                                      )),
+                                  Visibility(
+                                      visible: !isPremium,
+                                      child: Icon(
+                                        FFIcons.klock,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        size: 16.0,
+                                      ))
                                 ].divide(const SizedBox(height: 4.0)),
                               ),
                             ),
@@ -510,23 +537,34 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                                           lineHeight: 1.43,
                                         ),
                                   ),
-                                  Text(
-                                    valueOrDefault<String>(
-                                      _watch.eventPublishTitle,
-                                      'Locked',
-                                    ),
-                                    textAlign: TextAlign.start,
-                                    maxLines: 1,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'DM Sans',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          letterSpacing: 0.08,
-                                          lineHeight: 1.43,
+                                  Visibility(
+                                      visible: isPremium,
+                                      child: Text(
+                                        valueOrDefault<String>(
+                                          _watch.eventPublishTitle,
+                                          '-',
                                         ),
-                                  ),
+                                        textAlign: TextAlign.start,
+                                        maxLines: 1,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DM Sans',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              letterSpacing: 0.08,
+                                              lineHeight: 1.43,
+                                            ),
+                                      )),
+                                  Visibility(
+                                      visible: !isPremium,
+                                      child: Icon(
+                                        FFIcons.klock,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        size: 16.0,
+                                      ))
                                 ].divide(const SizedBox(height: 4.0)),
                               ),
                             ),
@@ -590,10 +628,19 @@ class _SpecificationsCardWidgetState extends State<SpecificationsCardWidget> {
                       ),
                       Expanded(
                         child: FFButtonWidget(
-                          onPressed: () async {
-                            await launchURL(_watch.sourceLink);
-                          },
+                          onPressed: isPremium
+                              ? () async {
+                                  await launchURL(_watch.sourceLink);
+                                }
+                              : null,
                           text: 'Go to Source',
+                          icon: isPremium
+                              ? null
+                              : const Icon(
+                                  FFIcons.klock,
+                                  color: Colors.white,
+                                  size: 16.0,
+                                ),
                           options: FFButtonOptions(
                             width: MediaQuery.sizeOf(context).width * 0.4,
                             height: 36.0,

@@ -62,6 +62,7 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
     return Material(
       color: Colors.transparent,
       elevation: 0.0,
@@ -110,7 +111,7 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                       child: Text(
                         valueOrDefault<String>(
                           widget.brand,
-                          'Brand',
+                          '-',
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -126,7 +127,7 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                     Text(
                       valueOrDefault<String>(
                         widget.model,
-                        'Model',
+                        '-',
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
@@ -218,7 +219,7 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                         Text(
                           valueOrDefault<String>(
                             widget.price,
-                            '\$80.6K - \$98K',
+                            '-',
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -232,39 +233,57 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                                   ),
                         ),
                         if (_model.isAuction)
-                          Text(
-                            valueOrDefault<String>(
-                              widget.auctionLocation,
-                              'Phillips Bacs & Russo, Switzerland',
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'DM Sans',
-                                  fontSize: 12.0,
-                                  letterSpacing: 0.16,
-                                  lineHeight: 1.33,
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                valueOrDefault<String>(
+                                  widget.auctionLocation,
+                                  '-',
                                 ),
-                          ),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      fontSize: 12.0,
+                                      letterSpacing: 0.16,
+                                      lineHeight: 1.33,
+                                    ),
+                              )),
+                        Visibility(
+                            visible: !isPremium,
+                            child: Icon(
+                              FFIcons.klock,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 16.0,
+                            )),
                         if (_model.isAuction)
-                          Text(
-                            valueOrDefault<String>(
-                              widget.auctionDate,
-                              'May 14 - May 18',
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'DM Sans',
-                                  fontSize: 12.0,
-                                  letterSpacing: 0.16,
-                                  lineHeight: 1.33,
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                valueOrDefault<String>(
+                                  widget.auctionDate,
+                                  '-',
                                 ),
-                          ),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      fontSize: 12.0,
+                                      letterSpacing: 0.16,
+                                      lineHeight: 1.33,
+                                    ),
+                              )),
+                        Visibility(
+                            visible: !isPremium,
+                            child: Icon(
+                              FFIcons.klock,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 16.0,
+                            )),
                       ],
                     ),
                   ),

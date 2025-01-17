@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/arrow_button/arrow_button_widget.dart';
@@ -28,12 +30,18 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
+    var emailText = '';
+    var passwordText = '';
+    if (kDebugMode) {
+      emailText = 'arildo.junior@ziveit.com';
+      passwordText = 'iatb0102@!';
+    }
     _model.emailTextFieldTextController ??=
-        TextEditingController(text: 'arildo.junior@ziveit.com');
+        TextEditingController(text: emailText);
     _model.emailTextFieldFocusNode ??= FocusNode();
 
     _model.passwordTextFieldTextController ??=
-        TextEditingController(text: '12345678');
+        TextEditingController(text: passwordText);
     _model.passwordTextFieldFocusNode ??= FocusNode();
   }
 

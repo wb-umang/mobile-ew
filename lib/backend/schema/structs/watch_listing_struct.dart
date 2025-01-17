@@ -1841,8 +1841,7 @@ class WatchListingStruct extends BaseStruct {
     return '-';
   }
 
-  String parseLocation() =>
-      valueOrDefault<String>(eventPublishTitle, 'Location Locked');
+  String parseLocation() => valueOrDefault<String>(eventPublishTitle, '');
 
   static WatchListingStruct fromMap(Map<String, dynamic> data) =>
       WatchListingStruct(

@@ -1700,12 +1700,12 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                         FFAppState()
                                                             .loginData
                                                             .firstName,
-                                                        'Cameron',
+                                                        '',
                                                       )} ${valueOrDefault<String>(
                                                         FFAppState()
                                                             .loginData
                                                             .lastName,
-                                                        'Williamson',
+                                                        '',
                                                       )}',
                                                       textAlign:
                                                           TextAlign.center,
@@ -1770,161 +1770,161 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                           scrollDirection:
                                                               Axis.vertical,
                                                           children: [
-                                                            Align(
-                                                              alignment:
-                                                                  const AlignmentDirectional(
-                                                                      0.0, 0.0),
-                                                              child: Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .lightGray,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              24.0),
-                                                                ),
-                                                                alignment:
-                                                                    const AlignmentDirectional(
-                                                                        0.0,
-                                                                        0.0),
-                                                                child: Align(
-                                                                  alignment:
-                                                                      const AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        8.0,
-                                                                        0.0,
-                                                                        8.0),
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Container(
-                                                                          width:
-                                                                              double.infinity,
-                                                                          height:
-                                                                              44.0,
-                                                                          decoration:
-                                                                              const BoxDecoration(
-                                                                            color:
-                                                                                Color(0x00FFFFFF),
-                                                                          ),
-                                                                          child:
-                                                                              wrapWithModel(
-                                                                            model:
-                                                                                _model.profileRowModel1,
-                                                                            updateCallback: () =>
-                                                                                safeSetState(() {}),
-                                                                            child:
-                                                                                ProfileRowWidget(
-                                                                              title: 'Compare',
-                                                                              label: '6',
-                                                                              icon: Icon(
-                                                                                FFIcons.kicon1,
-                                                                                color: FlutterFlowTheme.of(context).primary,
-                                                                                size: 24.0,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        wrapWithModel(
-                                                                          model:
-                                                                              _model.separatorIconModel1,
-                                                                          updateCallback: () =>
-                                                                              safeSetState(() {}),
-                                                                          child:
-                                                                              SeparatorIconWidget(
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).border3,
-                                                                          ),
-                                                                        ),
-                                                                        Container(
-                                                                          width:
-                                                                              double.infinity,
-                                                                          height:
-                                                                              44.0,
-                                                                          decoration:
-                                                                              const BoxDecoration(
-                                                                            color:
-                                                                                Color(0x00FFFFFF),
-                                                                          ),
-                                                                          child:
-                                                                              wrapWithModel(
-                                                                            model:
-                                                                                _model.profileRowModel2,
-                                                                            updateCallback: () =>
-                                                                                safeSetState(() {}),
-                                                                            child:
-                                                                                ProfileRowWidget(
-                                                                              title: 'Collection',
-                                                                              label: '18',
-                                                                              icon: Icon(
-                                                                                FFIcons.kbox,
-                                                                                color: FlutterFlowTheme.of(context).primary,
-                                                                                size: 24.0,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        wrapWithModel(
-                                                                          model:
-                                                                              _model.separatorIconModel2,
-                                                                          updateCallback: () =>
-                                                                              safeSetState(() {}),
-                                                                          child:
-                                                                              SeparatorIconWidget(
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).border3,
-                                                                          ),
-                                                                        ),
-                                                                        Container(
-                                                                          width:
-                                                                              double.infinity,
-                                                                          height:
-                                                                              44.0,
-                                                                          decoration:
-                                                                              const BoxDecoration(
-                                                                            color:
-                                                                                Color(0x00FFFFFF),
-                                                                          ),
-                                                                          child:
-                                                                              wrapWithModel(
-                                                                            model:
-                                                                                _model.profileRowModel3,
-                                                                            updateCallback: () =>
-                                                                                safeSetState(() {}),
-                                                                            child:
-                                                                                ProfileRowWidget(
-                                                                              title: 'Favorite',
-                                                                              label: '24',
-                                                                              icon: Icon(
-                                                                                FFIcons.kicon2,
-                                                                                color: FlutterFlowTheme.of(context).primary,
-                                                                                size: 24.0,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
+                                                            // Align(
+                                                            //   alignment:
+                                                            //       const AlignmentDirectional(
+                                                            //           0.0, 0.0),
+                                                            //   child: Container(
+                                                            //     width: double
+                                                            //         .infinity,
+                                                            //     decoration:
+                                                            //         BoxDecoration(
+                                                            //       color: FlutterFlowTheme.of(
+                                                            //               context)
+                                                            //           .lightGray,
+                                                            //       borderRadius:
+                                                            //           BorderRadius
+                                                            //               .circular(
+                                                            //                   24.0),
+                                                            //     ),
+                                                            //     alignment:
+                                                            //         const AlignmentDirectional(
+                                                            //             0.0,
+                                                            //             0.0),
+                                                            //     child: Align(
+                                                            //       alignment:
+                                                            //           const AlignmentDirectional(
+                                                            //               0.0,
+                                                            //               0.0),
+                                                            //       child:
+                                                            //           Padding(
+                                                            //         padding: const EdgeInsetsDirectional
+                                                            //             .fromSTEB(
+                                                            //             0.0,
+                                                            //             8.0,
+                                                            //             0.0,
+                                                            //             8.0),
+                                                            //         child:
+                                                            //             Column(
+                                                            //           mainAxisSize:
+                                                            //               MainAxisSize
+                                                            //                   .max,
+                                                            //           mainAxisAlignment:
+                                                            //               MainAxisAlignment
+                                                            //                   .center,
+                                                            //           children: [
+                                                            //             Container(
+                                                            //               width:
+                                                            //                   double.infinity,
+                                                            //               height:
+                                                            //                   44.0,
+                                                            //               decoration:
+                                                            //                   const BoxDecoration(
+                                                            //                 color:
+                                                            //                     Color(0x00FFFFFF),
+                                                            //               ),
+                                                            //               child:
+                                                            //                   wrapWithModel(
+                                                            //                 model:
+                                                            //                     _model.profileRowModel1,
+                                                            //                 updateCallback: () =>
+                                                            //                     safeSetState(() {}),
+                                                            //                 child:
+                                                            //                     ProfileRowWidget(
+                                                            //                   title: 'Compare',
+                                                            //                   label: '6',
+                                                            //                   icon: Icon(
+                                                            //                     FFIcons.kicon1,
+                                                            //                     color: FlutterFlowTheme.of(context).primary,
+                                                            //                     size: 24.0,
+                                                            //                   ),
+                                                            //                 ),
+                                                            //               ),
+                                                            //             ),
+                                                            //             wrapWithModel(
+                                                            //               model:
+                                                            //                   _model.separatorIconModel1,
+                                                            //               updateCallback: () =>
+                                                            //                   safeSetState(() {}),
+                                                            //               child:
+                                                            //                   SeparatorIconWidget(
+                                                            //                 color:
+                                                            //                     FlutterFlowTheme.of(context).border3,
+                                                            //               ),
+                                                            //             ),
+                                                            //             Container(
+                                                            //               width:
+                                                            //                   double.infinity,
+                                                            //               height:
+                                                            //                   44.0,
+                                                            //               decoration:
+                                                            //                   const BoxDecoration(
+                                                            //                 color:
+                                                            //                     Color(0x00FFFFFF),
+                                                            //               ),
+                                                            //               child:
+                                                            //                   wrapWithModel(
+                                                            //                 model:
+                                                            //                     _model.profileRowModel2,
+                                                            //                 updateCallback: () =>
+                                                            //                     safeSetState(() {}),
+                                                            //                 child:
+                                                            //                     ProfileRowWidget(
+                                                            //                   title: 'Collection',
+                                                            //                   label: '18',
+                                                            //                   icon: Icon(
+                                                            //                     FFIcons.kbox,
+                                                            //                     color: FlutterFlowTheme.of(context).primary,
+                                                            //                     size: 24.0,
+                                                            //                   ),
+                                                            //                 ),
+                                                            //               ),
+                                                            //             ),
+                                                            //             wrapWithModel(
+                                                            //               model:
+                                                            //                   _model.separatorIconModel2,
+                                                            //               updateCallback: () =>
+                                                            //                   safeSetState(() {}),
+                                                            //               child:
+                                                            //                   SeparatorIconWidget(
+                                                            //                 color:
+                                                            //                     FlutterFlowTheme.of(context).border3,
+                                                            //               ),
+                                                            //             ),
+                                                            //             Container(
+                                                            //               width:
+                                                            //                   double.infinity,
+                                                            //               height:
+                                                            //                   44.0,
+                                                            //               decoration:
+                                                            //                   const BoxDecoration(
+                                                            //                 color:
+                                                            //                     Color(0x00FFFFFF),
+                                                            //               ),
+                                                            //               child:
+                                                            //                   wrapWithModel(
+                                                            //                 model:
+                                                            //                     _model.profileRowModel3,
+                                                            //                 updateCallback: () =>
+                                                            //                     safeSetState(() {}),
+                                                            //                 child:
+                                                            //                     ProfileRowWidget(
+                                                            //                   title: 'Favorite',
+                                                            //                   label: '24',
+                                                            //                   icon: Icon(
+                                                            //                     FFIcons.kicon2,
+                                                            //                     color: FlutterFlowTheme.of(context).primary,
+                                                            //                     size: 24.0,
+                                                            //                   ),
+                                                            //                 ),
+                                                            //               ),
+                                                            //             ),
+                                                            //           ],
+                                                            //         ),
+                                                            //       ),
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
                                                             Align(
                                                               alignment:
                                                                   const AlignmentDirectional(

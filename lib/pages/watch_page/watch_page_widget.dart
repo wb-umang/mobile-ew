@@ -93,6 +93,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 .data
                 .watchDetails
                 .watchDetail;
+        final excludedFieldsWatchDetail =
+            WatchDetailResponseStruct.maybeFromMap(watchDetailResponse.jsonBody)
+                ?.data
+                .extractWatchDetail();
+        final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
         List<Widget> watchImages = [];
         if (watchDetail?.watchImages != null) {
           for (var image in watchDetail!.watchImages) {
@@ -434,8 +439,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                       .specificationsCardModel,
                                                   updateCallback: () =>
                                                       safeSetState(() {}),
-                                                  child:
-                                                      const SpecificationsCardWidget(),
+                                                  child: SpecificationsCardWidget(
+                                                      excludedFieldsWatchDetail:
+                                                          excludedFieldsWatchDetail),
                                                 ),
                                                 wrapWithModel(
                                                   model: _model

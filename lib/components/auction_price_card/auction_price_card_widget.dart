@@ -47,6 +47,7 @@ class _AuctionPriceCardWidgetState extends State<AuctionPriceCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
     return Material(
       color: Colors.transparent,
       elevation: 0.0,
@@ -254,17 +255,28 @@ class _AuctionPriceCardWidgetState extends State<AuctionPriceCardWidget> {
                 padding:
                     const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
                 child: FFButtonWidget(
-                  onPressed: () {
-                    setState(() {
-                      _model.showBuyersPremium = !_model.showBuyersPremium;
-                      if (_model.showBuyersPremium) {
-                        _model.buyersPremiumTitle = 'Hide Buyers Fee Details';
-                      } else {
-                        _model.buyersPremiumTitle = 'Buyers Fee Details';
-                      }
-                    });
-                  },
+                  onPressed: isPremium
+                      ? () {
+                          setState(() {
+                            _model.showBuyersPremium =
+                                !_model.showBuyersPremium;
+                            if (_model.showBuyersPremium) {
+                              _model.buyersPremiumTitle =
+                                  'Hide Buyers Fee Details';
+                            } else {
+                              _model.buyersPremiumTitle = 'Buyers Fee Details';
+                            }
+                          });
+                        }
+                      : null,
                   text: _model.buyersPremiumTitle,
+                  icon: isPremium
+                      ? null
+                      : Icon(
+                          FFIcons.klock,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 16.0,
+                        ),
                   options: FFButtonOptions(
                     width: double.infinity,
                     height: 36.0,

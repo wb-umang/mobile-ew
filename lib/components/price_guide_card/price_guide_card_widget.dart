@@ -104,6 +104,7 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
     } else if (_model.referenceSelected) {
       _priceAnalysis = widget.watchAnalysis?.referenceNumberPriceAnalysis;
     }
+    final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
     final int unsoldRate =
         _priceAnalysis?.auctionPriceAnalysis?.unsoldRate.toInt() ?? 0;
     final int unsold =
@@ -116,10 +117,13 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
         _priceAnalysis?.auctionPriceAnalysis?.withinEstimate.toInt() ?? 0;
     final int withoutEstimate =
         _priceAnalysis?.auctionPriceAnalysis?.withoutEstimate.toInt() ?? 0;
-    _numberOfWatches =
-        '(${_priceAnalysis?.auctionPriceMedian?.count.toString()} Watches)';
+    final auctionPriceMedianCount =
+        _priceAnalysis?.auctionPriceMedian?.count ?? 0;
+    final marketPlacePriceMedianCount =
+        _priceAnalysis?.marketPlacePriceMedian?.count ?? 0;
+    _numberOfWatches = '(${auctionPriceMedianCount.toString()} Watches)';
     _numberOfWatchesDealers =
-        '(${_priceAnalysis?.marketPlacePriceMedian?.count.toString()} Watches)';
+        '(${marketPlacePriceMedianCount.toString()} Watches)';
     var formatAuctionValue = formatAbbrevNumber(
         _priceAnalysis?.auctionPriceMedian?.realUsd.toDouble());
     _auctionValue = '$formatAuctionValue USD';
@@ -396,16 +400,32 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           ),
                         ],
                       ),
-                      Text(
-                        _auctionValue,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.12,
-                              fontWeight: FontWeight.bold,
-                              lineHeight: 1.43,
-                            ),
-                      ),
+                      Column(
+                        children: [
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                _auctionValue,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.12,
+                                      fontWeight: FontWeight.bold,
+                                      lineHeight: 1.43,
+                                    ),
+                              )),
+                          Visibility(
+                              visible: !isPremium,
+                              child: Icon(
+                                FFIcons.klock,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 16.0,
+                              ))
+                        ],
+                      )
                     ],
                   ),
                   Row(
@@ -450,16 +470,32 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           ),
                         ],
                       ),
-                      Text(
-                        _salePrice,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.12,
-                              fontWeight: FontWeight.bold,
-                              lineHeight: 1.43,
-                            ),
-                      ),
+                      Column(
+                        children: [
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                _salePrice,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.12,
+                                      fontWeight: FontWeight.bold,
+                                      lineHeight: 1.43,
+                                    ),
+                              )),
+                          Visibility(
+                              visible: !isPremium,
+                              child: Icon(
+                                FFIcons.klock,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 16.0,
+                              ))
+                        ],
+                      )
                     ],
                   ),
                   Row(
@@ -504,16 +540,32 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           ),
                         ],
                       ),
-                      Text(
-                        _rangePrice,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.12,
-                              fontWeight: FontWeight.bold,
-                              lineHeight: 1.43,
-                            ),
-                      ),
+                      Column(
+                        children: [
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                _rangePrice,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.12,
+                                      fontWeight: FontWeight.bold,
+                                      lineHeight: 1.43,
+                                    ),
+                              )),
+                          Visibility(
+                              visible: !isPremium,
+                              child: Icon(
+                                FFIcons.klock,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 16.0,
+                              ))
+                        ],
+                      )
                     ],
                   ),
                   Row(
@@ -552,16 +604,32 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           ),
                         ],
                       ),
-                      Text(
-                        _dealersPrice,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.12,
-                              fontWeight: FontWeight.bold,
-                              lineHeight: 1.43,
-                            ),
-                      ),
+                      Column(
+                        children: [
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                _dealersPrice,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.12,
+                                      fontWeight: FontWeight.bold,
+                                      lineHeight: 1.43,
+                                    ),
+                              )),
+                          Visibility(
+                              visible: !isPremium,
+                              child: Icon(
+                                FFIcons.klock,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 16.0,
+                              ))
+                        ],
+                      )
                     ],
                   ),
                   Row(
@@ -606,16 +674,32 @@ class _PriceGuideCardWidgetState extends State<PriceGuideCardWidget> {
                           ),
                         ],
                       ),
-                      Text(
-                        _dealersRangePrice,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'DM Sans',
-                              color: FlutterFlowTheme.of(context).primary,
-                              letterSpacing: 0.12,
-                              fontWeight: FontWeight.bold,
-                              lineHeight: 1.43,
-                            ),
-                      ),
+                      Column(
+                        children: [
+                          Visibility(
+                              visible: isPremium,
+                              child: Text(
+                                _dealersRangePrice,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'DM Sans',
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.12,
+                                      fontWeight: FontWeight.bold,
+                                      lineHeight: 1.43,
+                                    ),
+                              )),
+                          Visibility(
+                              visible: !isPremium,
+                              child: Icon(
+                                FFIcons.klock,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 16.0,
+                              ))
+                        ],
+                      )
                     ],
                   ),
                   Padding(
