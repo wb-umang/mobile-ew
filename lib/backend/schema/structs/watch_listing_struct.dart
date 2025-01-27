@@ -1804,13 +1804,20 @@ class WatchListingStruct extends BaseStruct {
   bool hasOrganizationId() => _organizationId != null;
 
   String parsePrice() {
+    var min = formatAbbrevNumber(minEstUsd.toDouble());
+    var max = formatAbbrevNumber(maxEstUsd.toDouble());
+    var maxText = valueOrDefault<String>(
+      max,
+      '',
+    );
+    if (maxText.isNotEmpty) {
+      maxText += '- \$$maxText';
+    }
+
     var price = '\$${valueOrDefault<String>(
-      formatAbbrevNumber(minEstUsd.toDouble()),
+      min,
       '-',
-    )} - \$${valueOrDefault<String>(
-      formatAbbrevNumber(maxEstUsd.toDouble()),
-      '-',
-    )}';
+    )}$maxText';
     if (minEstUsd > 0 || maxEstUsd > 0) {
       return price;
     }

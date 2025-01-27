@@ -88,9 +88,9 @@ String truncateString(String text, int maxLength) {
   return '${text.substring(0, maxLength)}...'; // Add ellipsis to indicate truncation
 }
 
-String formatAbbrevNumber(double? number) {
-  if (number == null) {
-    return '';
+String? formatAbbrevNumber(double? number) {
+  if (number == null || number == 0) {
+    return null;
   }
   // Check if number is a million or more
   if (number >= 1000000) {

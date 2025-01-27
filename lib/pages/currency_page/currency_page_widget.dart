@@ -126,18 +126,7 @@ class _CurrencyPageWidgetState extends State<CurrencyPageWidget> {
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 20.0),
                           child: FFButtonWidget(
-                            onPressed: () async {
-                              context.pushNamed(
-                                'LoginPage',
-                                extra: <String, dynamic>{
-                                  kTransitionInfoKey: const TransitionInfo(
-                                    hasTransition: true,
-                                    transitionType:
-                                        PageTransitionType.rightToLeft,
-                                  ),
-                                },
-                              );
-                            },
+                            onPressed: () async {},
                             text: 'Save',
                             options: FFButtonOptions(
                               width: double.infinity,

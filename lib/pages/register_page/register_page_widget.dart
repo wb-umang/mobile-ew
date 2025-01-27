@@ -86,8 +86,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                   Align(
                     alignment: const AlignmentDirectional(-1.0, 0.0),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 16.0, 0.0, 0.0),
                       child: Text(
                         'New Account',
                         textAlign: TextAlign.start,
@@ -104,8 +104,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                   Align(
                     alignment: const AlignmentDirectional(-1.0, 0.0),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 8.0, 0.0, 0.0),
                       child: Text(
                         'Please log in to your account',
                         textAlign: TextAlign.start,
@@ -119,274 +119,6 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                     ),
                   ),
                   Form(
-                    key: _model.formKey2,
-                    autovalidateMode: AutovalidateMode.disabled,
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Flexible(
-                            child: Align(
-                              alignment: const AlignmentDirectional(-1.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: const AlignmentDirectional(-1.0, 0.0),
-                                    child: Text(
-                                      'First Name',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DM Sans',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            letterSpacing: 0.12,
-                                            fontWeight: FontWeight.bold,
-                                            lineHeight: 1.43,
-                                          ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 200.0,
-                                    decoration: const BoxDecoration(),
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 4.0, 0.0, 0.0),
-                                      child: TextFormField(
-                                        controller: _model
-                                            .firstNameTextFieldTextController,
-                                        focusNode:
-                                            _model.firstNameTextFieldFocusNode,
-                                        onFieldSubmitted: (_) async {
-                                          if (_model.formKey2.currentState ==
-                                                  null ||
-                                              !_model.formKey2.currentState!
-                                                  .validate()) {
-                                            return;
-                                          }
-                                        },
-                                        autofocus: true,
-                                        textInputAction: TextInputAction.next,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          labelText: 'e.g. John',
-                                          labelStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .labelMedium
-                                              .override(
-                                                fontFamily: 'DM Sans',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .alternate,
-                                                letterSpacing: 0.08,
-                                                lineHeight: 1.43,
-                                              ),
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'DM Sans',
-                                                    letterSpacing: 0.0,
-                                                  ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .border,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'DM Sans',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              letterSpacing: 0.08,
-                                              lineHeight: 1.43,
-                                            ),
-                                        validator: _model
-                                            .firstNameTextFieldTextControllerValidator
-                                            .asValidator(context),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: Align(
-                              alignment: const AlignmentDirectional(-1.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: const AlignmentDirectional(-1.0, 0.0),
-                                    child: Text(
-                                      'Last Name',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DM Sans',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            letterSpacing: 0.12,
-                                            fontWeight: FontWeight.bold,
-                                            lineHeight: 1.43,
-                                          ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 200.0,
-                                    decoration: const BoxDecoration(),
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 4.0, 0.0, 0.0),
-                                      child: TextFormField(
-                                        controller: _model
-                                            .lastNameTextFieldTextController,
-                                        focusNode:
-                                            _model.lastNameTextFieldFocusNode,
-                                        onFieldSubmitted: (_) async {
-                                          if (_model.formKey2.currentState ==
-                                                  null ||
-                                              !_model.formKey2.currentState!
-                                                  .validate()) {
-                                            return;
-                                          }
-                                        },
-                                        autofocus: true,
-                                        textInputAction: TextInputAction.next,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          labelText: 'e.g. Dawny',
-                                          labelStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .labelMedium
-                                              .override(
-                                                fontFamily: 'DM Sans',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .alternate,
-                                                letterSpacing: 0.08,
-                                                lineHeight: 1.43,
-                                              ),
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'DM Sans',
-                                                    letterSpacing: 0.0,
-                                                  ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .border,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                          ),
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'DM Sans',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              letterSpacing: 0.08,
-                                              lineHeight: 1.43,
-                                            ),
-                                        validator: _model
-                                            .lastNameTextFieldTextControllerValidator
-                                            .asValidator(context),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ].divide(const SizedBox(width: 12.0)),
-                      ),
-                    ),
-                  ),
-                  Form(
                     key: _model.formKey1,
                     autovalidateMode: AutovalidateMode.disabled,
                     child: Column(
@@ -396,7 +128,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                           alignment: const AlignmentDirectional(-1.0, 0.0),
                           child: Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
+                                0.0, 32.0, 0.0, 0.0),
                             child: Text(
                               'Email',
                               style: FlutterFlowTheme.of(context)
@@ -595,11 +327,283 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                       ],
                     ),
                   ),
+                  Form(
+                    key: _model.formKey2,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 16.0, 0.0, 0.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Flexible(
+                            child: Align(
+                              alignment: const AlignmentDirectional(-1.0, 0.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment:
+                                        const AlignmentDirectional(-1.0, 0.0),
+                                    child: Text(
+                                      'First Name',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'DM Sans',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            letterSpacing: 0.12,
+                                            fontWeight: FontWeight.bold,
+                                            lineHeight: 1.43,
+                                          ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 200.0,
+                                    decoration: const BoxDecoration(),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 4.0, 0.0, 0.0),
+                                      child: TextFormField(
+                                        controller: _model
+                                            .firstNameTextFieldTextController,
+                                        focusNode:
+                                            _model.firstNameTextFieldFocusNode,
+                                        onFieldSubmitted: (_) async {
+                                          if (_model.formKey2.currentState ==
+                                                  null ||
+                                              !_model.formKey2.currentState!
+                                                  .validate()) {
+                                            return;
+                                          }
+                                        },
+                                        autofocus: true,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'e.g. John',
+                                          labelStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .labelMedium
+                                              .override(
+                                                fontFamily: 'DM Sans',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
+                                                letterSpacing: 0.08,
+                                                lineHeight: 1.43,
+                                              ),
+                                          hintStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .border,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DM Sans',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              letterSpacing: 0.08,
+                                              lineHeight: 1.43,
+                                            ),
+                                        validator: _model
+                                            .firstNameTextFieldTextControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            child: Align(
+                              alignment: const AlignmentDirectional(-1.0, 0.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment:
+                                        const AlignmentDirectional(-1.0, 0.0),
+                                    child: Text(
+                                      'Last Name',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'DM Sans',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            letterSpacing: 0.12,
+                                            fontWeight: FontWeight.bold,
+                                            lineHeight: 1.43,
+                                          ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 200.0,
+                                    decoration: const BoxDecoration(),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 4.0, 0.0, 0.0),
+                                      child: TextFormField(
+                                        controller: _model
+                                            .lastNameTextFieldTextController,
+                                        focusNode:
+                                            _model.lastNameTextFieldFocusNode,
+                                        onFieldSubmitted: (_) async {
+                                          if (_model.formKey2.currentState ==
+                                                  null ||
+                                              !_model.formKey2.currentState!
+                                                  .validate()) {
+                                            return;
+                                          }
+                                        },
+                                        autofocus: true,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'e.g. Dawny',
+                                          labelStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .labelMedium
+                                              .override(
+                                                fontFamily: 'DM Sans',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
+                                                letterSpacing: 0.08,
+                                                lineHeight: 1.43,
+                                              ),
+                                          hintStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .override(
+                                                    fontFamily: 'DM Sans',
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .border,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'DM Sans',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              letterSpacing: 0.08,
+                                              lineHeight: 1.43,
+                                            ),
+                                        validator: _model
+                                            .lastNameTextFieldTextControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ].divide(const SizedBox(width: 12.0)),
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: const AlignmentDirectional(-1.0, 0.0),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 16.0, 0.0, 0.0),
                       child: Text(
                         'Invitation Code',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -615,8 +619,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                   Align(
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 4.0, 0.0, 0.0),
                       child: wrapWithModel(
                         model: _model.inviteFieldModel,
                         updateCallback: () => safeSetState(() {}),
@@ -627,8 +631,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                   Align(
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 40.0, 0.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
                           _model.registerResult =
@@ -707,8 +711,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                   Align(
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 32.0, 0.0, 0.0),
                       child: Text(
                         'Join us before?',
                         textAlign: TextAlign.start,
@@ -722,15 +726,15 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 16.0, 0.0, 0.0),
                     child: InkWell(
                       splashColor: Colors.transparent,
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        context.pushNamed('MainPage');
+                        context.pushNamed('LoginPage');
                       },
                       child: wrapWithModel(
                         model: _model.arrowButtonModel,
@@ -742,8 +746,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 32.0, 0.0, 0.0),
                     child: wrapWithModel(
                       model: _model.socialLoginButtonsModel,
                       updateCallback: () => safeSetState(() {}),

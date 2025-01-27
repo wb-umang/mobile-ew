@@ -36,6 +36,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
   var isHistoricalSelected = false;
   var isUpcomingSelected = false;
   var isMarketplaceSelected = false;
+  Timer? _debounce;
   final TextEditingController _searchController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -77,15 +78,20 @@ class _MainPageWidgetState extends State<MainPageWidget>
   @override
   void dispose() {
     _model.dispose();
-
+    _searchController.removeListener(_handleTextChange);
+    _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
   void _handleTextChange() async {
-    String text = _searchBarModel.textController?.text ?? '';
-    _model.searchResults.query = text;
-    isLoadingSearch = true;
-    safeSetState(() {});
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      String text = _searchBarModel.textController?.text ?? '';
+      _model.searchResults.query = text;
+      isLoadingSearch = true;
+      safeSetState(() {});
+    });
   }
 
   void clearSearch([bool clearQuery = true]) {
