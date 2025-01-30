@@ -344,15 +344,15 @@ extension FFStringExt on String {
 
 extension UniqueStringListExtension on List<String> {
   List<String> addUnique(String newString) {
-    if (!contains(newString)) {
-      add(newString);
+    if (!this.contains(newString)) {
+      this.add(newString);
     }
     return this;
   }
 
   List<String> removeUnique(String stringToRemove) {
     // Check if the list contains the string and remove it
-    remove(stringToRemove);
+    this.remove(stringToRemove);
     return this;
   }
 }

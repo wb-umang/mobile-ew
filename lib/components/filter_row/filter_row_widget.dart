@@ -1,3 +1,4 @@
+import 'package:every_watch/app_state.dart';
 import 'package:provider/provider.dart';
 
 import '/backend/schema/structs/index.dart';

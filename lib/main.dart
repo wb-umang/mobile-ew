@@ -30,8 +30,6 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  
-
   static _MyAppState of(BuildContext context) =>
       context.findAncestorStateOfType<_MyAppState>()!;
 }
@@ -44,8 +42,7 @@ class _MyAppState extends State<MyApp> {
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
 
-  bool displaySplashImage = false;
-
+  bool displaySplashImage = true;
 
   @override
   void initState() {
@@ -54,7 +51,7 @@ class _MyAppState extends State<MyApp> {
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
 
-    Future.delayed(const Duration(milliseconds: 0),
+    Future.delayed(const Duration(milliseconds: 1000),
         () => safeSetState(() => _appStateNotifier.stopShowingSplashImage()));
   }
 

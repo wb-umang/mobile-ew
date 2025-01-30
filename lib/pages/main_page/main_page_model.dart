@@ -1,6 +1,7 @@
 import 'package:every_watch/backend/schema/structs/search_results_struct.dart';
 
 import '/backend/api_requests/api_calls.dart';
+import '/backend/schema/structs/index.dart';
 import '/components/icon_button/icon_button_widget.dart';
 import '/components/pill_button/pill_button_widget.dart';
 import '/components/profile_row/profile_row_widget.dart';

@@ -24,7 +24,6 @@ class AppStateNotifier extends ChangeNotifier {
   void stopShowingSplashImage() {
     showSplashImage = false;
     notifyListeners();
-    print("hello");
   }
 }
 
@@ -47,7 +46,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => false
+          builder: (context, _) => appStateNotifier.showSplashImage
               ? Builder(
                   builder: (context) => Container(
                     color: Colors.transparent,
