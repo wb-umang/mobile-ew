@@ -1,0 +1,63 @@
+group 'com.tekartik.sqflite'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+def PLUGIN = "sqflite"
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 33
+    namespace 'com.tekartik.sqflite'
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.5.0'
+}
+
+afterEvaluate {
+    def containsErroneousNamespace = false
+    android.sourceSets.each { sourceSet ->
+        sourceSet.manifestFile.withReader { reader ->
+            def manifest = new XmlSlurper().parse(reader)
+            if (manifest.@package != "") {
+                containsErroneousNamespace = true
+            }
+        }
+    }
+    if (containsErroneousNamespace) {
+        throw new GradleException("Please remove 'package' attribute from AndroidManifest.xml as it's now defined in the namespace property")
+    }
+} 

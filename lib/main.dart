@@ -19,7 +19,7 @@ void main() async {
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
-    child: const MyApp(),
+    child: const MyApp(), 
   ));
 }
 
@@ -39,20 +39,15 @@ class _MyAppState extends State<MyApp> {
 
   ThemeMode _themeMode = FlutterFlowTheme.themeMode;
 
-  late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
-
-  bool displaySplashImage = true;
 
   @override
   void initState() {
-    super.initState();
+  super.initState();
 
-    _appStateNotifier = AppStateNotifier.instance;
-    _router = createRouter(_appStateNotifier);
-
-    Future.delayed(const Duration(milliseconds: 1000),
-        () => safeSetState(() => _appStateNotifier.stopShowingSplashImage()));
+  final appStateNotifier = AppStateNotifier.instance;
+    _router = createRouter(appStateNotifier);
+    safeSetState(() => appStateNotifier.stopShowingSplashImage());
   }
 
   void setLocale(String language) {

@@ -1,5 +1,6 @@
 import 'package:every_watch/backend/schema/structs/index.dart';
 import 'package:every_watch/backend/schema/structs/watch_analysis_response_struct.dart';
+import 'package:high_chart/high_chart.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/components/auction_price_card/auction_price_card_widget.dart';
@@ -30,6 +31,46 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   late WatchListingStruct _watch;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
+
+  final String _chartData = '''{
+      credits: {
+          enabled: false
+      },
+      title: {
+          text: 'Combination chart'
+      },
+      xAxis: {
+          categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+      },
+      yAxis: {
+        title: {
+          text: null
+        },
+      },
+      labels: {
+          items: [{
+              html: 'Total fruit consumption',
+              style: {
+                  left: '50px',
+                  top: '18px',
+                  color: ( // theme
+                      Highcharts.defaultOptions.title.style &&
+                      Highcharts.defaultOptions.title.style.color
+                  ) || 'black'
+              }
+          }]
+      },
+      series: [{
+          type: 'spline',
+          name: 'Average',
+          data: [3, 2.67, 3, 6.33, 3.33],
+          marker: {
+              lineWidth: 2,
+              lineColor: Highcharts.getOptions().colors[3],
+              fillColor: 'white'
+          }
+      },]
+    }''';
 
   @override
   void initState() {
@@ -401,6 +442,33 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                       child: const TwoButtonPageMenuWidget(
                                         firstTitle: 'Details',
                                         secondTitle: 'Description',
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8.0),
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [
+                                          HighCharts(
+                                            loader: const SizedBox(
+                                              width: 200,
+                                              child: LinearProgressIndicator(),
+                                            ),
+                                            size: Size(
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                400),
+                                            data: _chartData,
+                                            scripts: const [
+                                              "https://code.highcharts.com/highcharts.js",
+                                              // 'https://code.highcharts.com/modules/networkgraph.js',
+                                              // 'https://code.highcharts.com/modules/exporting.js',
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

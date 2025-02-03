@@ -33,8 +33,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     var emailText = '';
     var passwordText = '';
     if (kDebugMode) {
-      emailText = 'arildo.junior@ziveit.com';
-      passwordText = 'iatb0102@!';
+      emailText = 'yash@everywatch.com';
+      passwordText = '1234567';
     }
     _model.emailTextFieldTextController ??=
         TextEditingController(text: emailText);

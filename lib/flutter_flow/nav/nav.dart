@@ -16,47 +16,54 @@ const kTransitionInfoKey = '__transition_info__';
 class AppStateNotifier extends ChangeNotifier {
   AppStateNotifier._();
 
-  static AppStateNotifier? _instance;
   static AppStateNotifier get instance => _instance ??= AppStateNotifier._();
+  static AppStateNotifier? _instance;
 
-  bool showSplashImage = true;
+  bool _showSplashImage = true;
+  bool get showSplashImage => _showSplashImage;
 
   void stopShowingSplashImage() {
-    showSplashImage = false;
-    notifyListeners();
+  Future.delayed(const Duration(milliseconds: 1000),
+    () {
+      _showSplashImage = false;
+      notifyListeners();
+    });
   }
 }
+
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) => appStateNotifier.showSplashImage
-          ? Builder(
-              builder: (context) => Container(
-                color: Colors.transparent,
-                child: Image.asset(
-                  'assets/images/Splas_Screen.jpg',
-                  fit: BoxFit.fill,
-                ),
-              ),
-            )
-          : const WelcomePageWidget(),
+      redirect: (context, state) {
+
+        // Add a redirect handler that will force router to evaluate routes
+        if (appStateNotifier.showSplashImage) {
+          return '/';
+        } else {
+          return state.fullPath == '/' ? '/welcomePage' : state.fullPath;
+        }
+
+      },
+      errorBuilder: (context, state) =>Container(
+      color: Colors.transparent,
+      child: Image.asset(
+        'assets/images/Splas_Screen.jpg',
+        fit: BoxFit.fill,
+      ),
+    ),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => appStateNotifier.showSplashImage
-              ? Builder(
-                  builder: (context) => Container(
-                    color: Colors.transparent,
-                    child: Image.asset(
-                      'assets/images/Splas_Screen.jpg',
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                )
-              : const WelcomePageWidget(),
+          builder: (context, _) => Container(
+              color: Colors.transparent,
+              child: Image.asset(
+                'assets/images/Splas_Screen.jpg',
+                fit: BoxFit.fill,
+              ),
+            ),
         ),
         FFRoute(
           name: 'WelcomePage',
