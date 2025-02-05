@@ -1,5 +1,8 @@
 import 'package:every_watch/backend/schema/structs/index.dart';
 import 'package:every_watch/backend/schema/structs/watch_analysis_response_struct.dart';
+import 'package:every_watch/backend/schema/structs/watch_price_analysis_filter_struct.dart';
+import 'package:every_watch/backend/schema/structs/watch_price_analysis_response_struct.dart';
+import 'package:every_watch/pages/watch_page/chart_filter_button.dart';
 import 'package:high_chart/high_chart.dart';
 
 import '/backend/api_requests/api_calls.dart';
@@ -31,46 +34,317 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   late WatchListingStruct _watch;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
+  int _selectedButtonIndex = 0;
+  late String _chartData;
+  bool _isChartLoading = false;
+  bool _isInitialLoading = true;
+  WatchPriceAnalysisResponseStruct? _priceAnalysis;
 
-  final String _chartData = '''{
+  String _generateChartData(List<DealerPriceAnalysisStruct> priceAnalysis) {
+    // Create a map to store unique date entries with their latest values
+    final Map<String, double> uniqueDateValues = {};
+
+    // Filter non-zero values and get unique entries for each date
+    for (var data in priceAnalysis) {
+      if (data.medians.medianUsd != 0) {
+        final parsedDate = DateTime.parse(data.timeRange);
+        final dateKey = DateTime.utc(parsedDate.year, parsedDate.month,
+                parsedDate.day, 0, 0, 0, 0, 0)
+            .toIso8601String()
+            .split('T')[0];
+
+        uniqueDateValues[dateKey] = data.medians.medianUsd;
+      }
+    }
+
+    // If no non-zero values found, return empty chart with message
+    if (uniqueDateValues.isEmpty) {
+      return '''{
+        chart: {
+          backgroundColor: '#faf8f6',
+          spacingLeft: -30,
+          spacingRight: 20,
+          spacingTop: 50,
+          spacingBottom: 5,
+          height: 400,
+          borderRadius: 12,
+          type: 'scatter',
+          events: {
+            load: function() {
+              const chart = this;
+              chart.renderer.text('No data available for selected time period', 
+                chart.plotWidth / 2 + chart.plotLeft, 
+                chart.plotHeight / 2 + chart.plotTop)
+                .css({
+                  color: '#666666',
+                  fontSize: '14px'
+                })
+                .attr({
+                  align: 'center'
+                })
+                .add();
+            }
+          }
+        },
+        series: [{
+          data: []
+        }]
+      }''';
+    }
+
+    // Convert the map entries to sorted list
+    final sortedEntries = uniqueDateValues.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+
+    // Calculate x-axis values
+    final dates = sortedEntries.map((e) => DateTime.parse(e.key)).toList();
+    final startDate = dates.first;
+    final endDate = dates.last; // Use last data point instead of current date
+    final totalDuration = endDate.difference(startDate).inMilliseconds;
+    final tickInterval = (totalDuration / 3).round();
+
+    // Calculate y-axis max value
+    final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
+    final yAxisMax = (maxPrice * 1.8).round();
+
+    // Generate series data from unique entries
+    final seriesData = sortedEntries.map((entry) {
+      final parsedDate = DateTime.parse(entry.key);
+      final date = DateTime.utc(
+          parsedDate.year, parsedDate.month, parsedDate.day, 0, 0, 0, 0, 0);
+      return '''{
+        x: ${date.millisecondsSinceEpoch},
+        y: ${entry.value}
+      }''';
+    }).join(',\n');
+
+    return '''{
+      chart: {
+          backgroundColor: '#faf8f6',
+          spacingLeft: -30,
+          spacingRight: 20,
+          spacingTop: 50,
+          spacingBottom: 5,
+          height: 400,
+          borderRadius: 12,
+          type: 'scatter',
+          zooming: {
+              pinchType: 'xy',
+              type: 'xy'
+          },
+          loading: {
+              hideDuration: 0,
+              showDuration: 0,
+              labelStyle: {
+                  display: 'none'
+              }
+          },
+          events: {
+            load: function () {
+                const chart = this;
+                const x = chart.plotLeft + chart.plotWidth / 2; // Center X
+                const y = chart.plotTop + chart.plotHeight / 2; // Center Y
+                chart.renderer
+                    .text('E V E R Y W A T C H', x, y)
+                    .css({
+                        color: '#DFDEE0',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        textAlign: 'center'
+                    })
+                    .attr({
+                        zIndex: -1,
+                        align: 'center'
+                    })
+                    .add();
+          }
+        }
+      },
       credits: {
-          enabled: false
+        enabled: false
       },
       title: {
-          text: 'Combination chart'
+          text: ''
       },
       xAxis: {
-          categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              millisecond: '%b %Y',
+              second: '%b %Y',
+              minute: '%b %Y',
+              hour: '%b %Y',
+              week: '%e %b %Y',
+              day: '%b %Y',
+              month: '%b %Y',
+              year: '%Y'
+          },
+          labels: {
+              style: {
+                  color: '#001633'
+              }
+          },
+          lineColor: '#999999',
+          tickColor: '#999999',
+          tickAmount: 3,
+          startOnTick: false,
+          endOnTick: false,
+          min: ${startDate.millisecondsSinceEpoch},
+          max: ${endDate.millisecondsSinceEpoch},
+          tickPositions: [
+            ${startDate.millisecondsSinceEpoch},
+            ${startDate.millisecondsSinceEpoch + totalDuration ~/ 2},
+            ${endDate.millisecondsSinceEpoch}
+          ]
       },
       yAxis: {
-        title: {
-          text: null
-        },
-      },
-      labels: {
-          items: [{
-              html: 'Total fruit consumption',
+          min: 0,
+          max: $yAxisMax,
+          minPadding: 0.1,
+          maxPadding: 0,
+          softThreshold: false,
+          title: {
+              text: 'Price',
+              align: 'high',
+              verticalAlign: 'top',
+              x: 40,
+              y: -20,
+              rotation: 0,
               style: {
-                  left: '50px',
-                  top: '18px',
-                  color: ( // theme
-                      Highcharts.defaultOptions.title.style &&
-                      Highcharts.defaultOptions.title.style.color
-                  ) || 'black'
+                  color: '#001633'
               }
-          }]
+          },
+          lineColor: '#999999',
+          tickColor: '#999999',
+          alignTicks: false,
+          endOnTick: true,
+          showLastLabel: true,
       },
-      series: [{
+      legend: {
+          enabled: true
+      },
+      tooltip: {
+          followPointer: false,
+          followTouchMove: false,
+          useHTML: true,
+          borderRadius: 12,
+          padding: 10,
+          style: {
+              pointerEvents: 'auto'
+          },
+          hideDelay: 800,
+          stickOnContact: true
+      },
+      series: [
+      {
+          data: [$seriesData],
+          name: 'Dealer median',
           type: 'spline',
-          name: 'Average',
-          data: [3, 2.67, 3, 6.33, 3.33],
+          dashStyle: 'Solid',
+          color: '#5F9EA0',
+          lineWidth: 3,
           marker: {
-              lineWidth: 2,
-              lineColor: Highcharts.getOptions().colors[3],
-              fillColor: 'white'
-          }
-      },]
+              enabled: false
+          },
+          stickyTracking: false,
+      },
+      {
+          data: [],
+          name: "Auction median",
+          type: "spline",
+          dashStyle: "ShortDash",
+          color: "#001633",
+          lineWidth: 3,
+          marker: {
+            enabled: false
+          },
+          stickyTracking: false,
+        }]
     }''';
+  }
+
+  String _getDateRange(int selectedButton) {
+    final now = DateTime.now();
+    late DateTime startDate;
+
+    switch (selectedButton) {
+      case 0: // 3 months
+        startDate = now.subtract(const Duration(days: 90));
+        break;
+      case 1: // 6 months
+        startDate = now.subtract(const Duration(days: 180));
+        break;
+      case 2: // 1 year
+        startDate = now.subtract(const Duration(days: 365));
+        break;
+      case 3: // 2 years
+        startDate = now.subtract(const Duration(days: 730));
+        break;
+      case 4: // 5 years
+        startDate = now.subtract(const Duration(days: 1825));
+        break;
+      default: // Max (same as 5 years for now)
+        startDate = now.subtract(const Duration(days: 1825));
+    }
+
+    return "${startDate.day.toString().padLeft(2, '0')}-"
+        "${startDate.month.toString().padLeft(2, '0')}-"
+        "${startDate.year}_"
+        "${now.day.toString().padLeft(2, '0')}-"
+        "${now.month.toString().padLeft(2, '0')}-"
+        "${now.year}";
+  }
+
+  void _getChartPriceAnalysisClicked() async {
+    setState(() {
+      _isChartLoading = true;
+    });
+
+    try {
+      final watchDetail = WatchDetailResponseStruct.maybeFromMap(
+        (await MutualWatchGroup.getWatchDetailByIdCall.call(
+          accessToken: FFAppState().loginData.accessToken,
+          variablesJson: _model.filter?.toMap(),
+        ))
+            .jsonBody,
+      )?.data.data.data.watchDetails.watchDetail;
+
+      final custFilter = WatchPriceAnalysisFilterStruct((b) => b
+        ..model = [watchDetail?.defaultModelId.toString() ?? '']
+        ..manufacturer = [watchDetail?.manufacturerId.toString() ?? '']
+        ..auctionType = ["result"]
+        ..referenceNumber = [
+          watchDetail?.defaultReferenceNumberId.toString() ?? ''
+        ]
+        ..childReferenceNumber = [
+          watchDetail?.referenceNumberId.toString() ?? ''
+        ]
+        ..caseMaterial = [watchDetail?.defaultCaseMaterialId.toString() ?? '']
+        ..currencyMode = "USD"
+        ..eventDateRange = _getDateRange(_selectedButtonIndex));
+
+      final response =
+          await MutualWatchGroup.apiWatchGetWatchPriceAnalysisGETCall.call(
+        variablesJson: custFilter.toMap(),
+      );
+
+      if (response.succeeded && mounted) {
+        _priceAnalysis =
+            WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
+        setState(() {
+          _chartData =
+              _generateChartData(_priceAnalysis!.data.dealersPriceAnalysis);
+          // print(_priceAnalysis.data.)
+          _isChartLoading = false;
+          _isInitialLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isChartLoading = false;
+        _isInitialLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -78,6 +352,33 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
     _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
+    _selectedButtonIndex = 0;
+
+    // Initialize with empty chart structure
+    _chartData = '''{
+      chart: {
+          backgroundColor: '#faf8f6',
+          spacingLeft: -30,
+          spacingRight: 20,
+          spacingTop: 50,
+          spacingBottom: 5,
+          height: 400,
+          borderRadius: 12,
+          type: 'scatter'
+      },
+      series: [{
+          data: [],
+          name: 'Dealer median',
+          type: 'spline',
+          color: '#5F9EA0'
+      }]
+    }''';
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _getChartPriceAnalysisClicked();
+      }
+    });
   }
 
   @override
@@ -104,7 +405,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         )
       ]),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        // Show loading screen only on initial load
+        if (!snapshot.hasData || _isInitialLoading) {
           return Scaffold(
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
             body: Center(
@@ -112,6 +414,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 width: 50.0,
                 height: 50.0,
                 child: CircularProgressIndicator(
+                  color: Colors.white,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     FlutterFlowTheme.of(context).primary,
                   ),
@@ -120,6 +423,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             ),
           );
         }
+
         final watchAnalysisResponse = snapshot.data![0];
         final watchAnalysis = WatchAnalysisResponseStruct.maybeFromMap(
                 watchAnalysisResponse.jsonBody)
@@ -134,6 +438,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 .data
                 .watchDetails
                 .watchDetail;
+
         final excludedFieldsWatchDetail =
             WatchDetailResponseStruct.maybeFromMap(watchDetailResponse.jsonBody)
                 ?.data
@@ -446,26 +751,151 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 8.0),
+                                    padding: EdgeInsets.only(top: 28.0),
                                     child: Container(
                                       color: Colors.white,
                                       child: Column(
                                         children: [
-                                          HighCharts(
-                                            loader: const SizedBox(
-                                              width: 200,
-                                              child: LinearProgressIndicator(),
-                                            ),
-                                            size: Size(
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                400),
-                                            data: _chartData,
-                                            scripts: const [
-                                              "https://code.highcharts.com/highcharts.js",
-                                              // 'https://code.highcharts.com/modules/networkgraph.js',
-                                              // 'https://code.highcharts.com/modules/exporting.js',
+                                          // if (_priceAnalysis != null &&
+                                          //     !_priceAnalysis!
+                                          //         .data.dealersPriceAnalysis
+                                          //         .every((data) =>
+                                          //             data.medians.medianUsd ==
+                                          //             0))
+
+                                          Column(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: SizedBox(
+                                                  width: double.infinity,
+                                                  child: IntrinsicHeight(
+                                                    child: Row(
+                                                      children: [
+                                                        ChartFilterButton(
+                                                          text: '3M',
+                                                          color: Colors.red,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  0,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    0);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '6M',
+                                                          color: Colors.blue,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  1,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    1);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '1Y',
+                                                          color: Colors.green,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  2,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    2);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '2Y',
+                                                          color: Colors.yellow,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  3,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    3);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '5Y',
+                                                          color: Colors.purple,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  4,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    4);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: 'Max',
+                                                          color: Colors.orange,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  5,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    5);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              if (_isChartLoading)
+                                                const SizedBox(
+                                                  height: 440,
+                                                  child: Center(
+                                                    child: SizedBox(
+                                                      width: 30.0,
+                                                      height: 30.0,
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                  ),
+                                                )
+                                              else
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 14),
+                                                  child: HighCharts(
+                                                    size: Size(
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                        420),
+                                                    data: _chartData,
+                                                    loader: SizedBox(
+                                                      height: 440,
+                                                      child: Center(
+                                                        child: SizedBox(
+                                                          width: 30.0,
+                                                          height: 30.0,
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    scripts: const [
+                                                      "https://code.highcharts.com/highcharts.js",
+                                                      'https://code.highcharts.com/modules/networkgraph.js',
+                                                    ],
+                                                  ),
+                                                ),
                                             ],
                                           ),
                                         ],

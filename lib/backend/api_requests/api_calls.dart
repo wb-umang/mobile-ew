@@ -264,6 +264,9 @@ class MutualWatchGroup {
       GetWatchAnalysisByIdCall();
   static GetWatchDetailByIdCall getWatchDetailByIdCall =
       GetWatchDetailByIdCall();
+  static ApiWatchGetWatchPriceAnalysisGETCall
+      apiWatchGetWatchPriceAnalysisGETCall =
+      ApiWatchGetWatchPriceAnalysisGETCall();
   static ApiWatchGetWatchDetailByIdGETCall apiWatchGetWatchDetailByIdGETCall =
       ApiWatchGetWatchDetailByIdGETCall();
   static ApiWatchGetWatchAnalysisByIdGETCall
@@ -3690,6 +3693,36 @@ class ApiWatchGetTotalWatchCountGETCall {
         'Authorization': '$authorization',
       },
       params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class ApiWatchGetWatchPriceAnalysisGETCall {
+  Future<ApiCallResponse> call({
+    dynamic variablesJson,
+    String? authorization = '',
+  }) async {
+    final baseUrl = MutualWatchGroup.getBaseUrl();
+
+    final variables = _serializeJson(variablesJson);
+
+    return ApiManager.instance.makeApiCall(
+      callName: '/api/Watch/PriceAnalysis GET',
+      apiUrl: '$baseUrl/api/Watch/PriceAnalysis',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': '$authorization',
+      },
+      params: {
+        'variables': variables,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
