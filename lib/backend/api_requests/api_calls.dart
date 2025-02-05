@@ -3706,7 +3706,7 @@ class ApiWatchGetTotalWatchCountGETCall {
 class ApiWatchGetWatchPriceAnalysisGETCall {
   Future<ApiCallResponse> call({
     dynamic variablesJson,
-    String? authorization = '',
+    String? accessToken = '',
   }) async {
     final baseUrl = MutualWatchGroup.getBaseUrl();
 
@@ -3718,7 +3718,7 @@ class ApiWatchGetWatchPriceAnalysisGETCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-type': 'application/json',
-        'Authorization': '$authorization',
+        'Authorization': 'Bearer $accessToken',
       },
       params: {
         'variables': variables,

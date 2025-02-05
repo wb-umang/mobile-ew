@@ -268,22 +268,30 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     switch (selectedButton) {
       case 0: // 3 months
-        startDate = now.subtract(const Duration(days: 90));
+        startDate = DateTime(now.year, now.month - 3, now.day);
         break;
       case 1: // 6 months
-        startDate = now.subtract(const Duration(days: 180));
+        startDate = DateTime(now.year, now.month - 6, now.day);
         break;
       case 2: // 1 year
-        startDate = now.subtract(const Duration(days: 365));
+        startDate = DateTime(now.year - 1, now.month, now.day);
         break;
       case 3: // 2 years
-        startDate = now.subtract(const Duration(days: 730));
+        startDate = DateTime(now.year - 2, now.month, now.day);
         break;
       case 4: // 5 years
-        startDate = now.subtract(const Duration(days: 1825));
+        startDate = DateTime(now.year - 5, now.month, now.day);
         break;
       default: // Max (same as 5 years for now)
-        startDate = now.subtract(const Duration(days: 1825));
+        return "${now.day.toString().padLeft(2, '0')}-"
+            "${now.month.toString().padLeft(2, '0')}-"
+            "${now.year}_"; // Return current date with underscore
+    }
+
+    // Adjust the startDate to ensure the day is valid for the month
+    if (startDate.day > DateTime(startDate.year, startDate.month + 1, 0).day) {
+      startDate = DateTime(
+          startDate.year, startDate.month + 1, 0); // Last day of the month
     }
 
     return "${startDate.day.toString().padLeft(2, '0')}-"
@@ -324,6 +332,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
       final response =
           await MutualWatchGroup.apiWatchGetWatchPriceAnalysisGETCall.call(
+        accessToken: FFAppState().loginData.accessToken,
         variablesJson: custFilter.toMap(),
       );
 
