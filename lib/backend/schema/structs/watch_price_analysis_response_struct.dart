@@ -123,6 +123,8 @@ class PriceAnalysisDataStruct extends BaseStruct {
   bool hasPriceAnalysisGraph() => _priceAnalysisGraph != null;
 
   List<AuctionAnalysisMedianStruct>? _auctionAnalysisMedians;
+  List<AuctionAnalysisMedianStruct> get auctionAnalysisMedians =>
+      _auctionAnalysisMedians ?? [];
 
   static PriceAnalysisDataStruct? maybeFromMap(dynamic data) => data is Map
       ? PriceAnalysisDataStruct.fromMap(data.cast<String, dynamic>())

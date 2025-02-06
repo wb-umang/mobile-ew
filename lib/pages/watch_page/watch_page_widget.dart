@@ -248,7 +248,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           stickyTracking: false,
       },
       {
-          data: [],
+          data: [$seriesData],//Here's goes auctionSeriesData
           name: "Auction median",
           type: "spline",
           dashStyle: "ShortDash",
@@ -302,6 +302,20 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         "${now.year}";
   }
 
+  String _generateAuctionSeriesData(
+      List<AuctionAnalysisMedianStruct> auctionAnalysisMedians) {
+    // Generate series data from auction analysis medians
+    final auctionSeriesData = auctionAnalysisMedians.map((entry) {
+      final parsedDate = DateTime.parse(entry.timeRange);
+      return '''{
+            x: ${parsedDate.millisecondsSinceEpoch},
+            y: ${entry.medians.medianUsd}
+        }''';
+    }).join(',\n');
+
+    return auctionSeriesData;
+  }
+
   void _getChartPriceAnalysisClicked() async {
     setState(() {
       _isChartLoading = true;
@@ -339,10 +353,13 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       if (response.succeeded && mounted) {
         _priceAnalysis =
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
+        final auctionSeriesData = _generateAuctionSeriesData(
+            _priceAnalysis!.data.auctionAnalysisMedians);
+        print(
+            "&&&######%%%%%Auction Series Data: $auctionSeriesData"); // Debugging line
         setState(() {
           _chartData =
               _generateChartData(_priceAnalysis!.data.dealersPriceAnalysis);
-          // print(_priceAnalysis.data.)
           _isChartLoading = false;
           _isInitialLoading = false;
         });
@@ -352,6 +369,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         _isChartLoading = false;
         _isInitialLoading = false;
       });
+      print("Error: $e"); // Log any errors
     }
   }
 
