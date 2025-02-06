@@ -87,10 +87,12 @@ class PriceAnalysisDataStruct extends BaseStruct {
     CurrentValueStruct? currentValueAllCurrencies,
     CurrentValueStruct? firstValueAllCurrencies,
     PriceAnalysisGraphStruct? priceAnalysisGraph,
+    List<AuctionAnalysisMedianStruct>? auctionAnalysisMedians,
   })  : _dealersPriceAnalysis = dealersPriceAnalysis,
         _currentValueAllCurrencies = currentValueAllCurrencies,
         _firstValueAllCurrencies = firstValueAllCurrencies,
-        _priceAnalysisGraph = priceAnalysisGraph;
+        _priceAnalysisGraph = priceAnalysisGraph,
+        _auctionAnalysisMedians = auctionAnalysisMedians;
 
   List<DealerPriceAnalysisStruct>? _dealersPriceAnalysis;
   List<DealerPriceAnalysisStruct> get dealersPriceAnalysis =>
@@ -120,6 +122,8 @@ class PriceAnalysisDataStruct extends BaseStruct {
       _priceAnalysisGraph = val;
   bool hasPriceAnalysisGraph() => _priceAnalysisGraph != null;
 
+  List<AuctionAnalysisMedianStruct>? _auctionAnalysisMedians;
+
   static PriceAnalysisDataStruct? maybeFromMap(dynamic data) => data is Map
       ? PriceAnalysisDataStruct.fromMap(data.cast<String, dynamic>())
       : null;
@@ -135,6 +139,9 @@ class PriceAnalysisDataStruct extends BaseStruct {
       firstValueAllCurrencies:
           CurrentValueStruct.fromMap(graphData['firstValueAllCurrencies']),
       priceAnalysisGraph: PriceAnalysisGraphStruct.fromMap(graphData),
+      auctionAnalysisMedians: (graphData['auctionAnalysisMedians'] as List?)
+          ?.map((e) => AuctionAnalysisMedianStruct.fromMap(e))
+          .toList(),
     );
   }
 
@@ -144,6 +151,8 @@ class PriceAnalysisDataStruct extends BaseStruct {
         'currentValueAllCurrencies': _currentValueAllCurrencies?.toMap(),
         'firstValueAllCurrencies': _firstValueAllCurrencies?.toMap(),
         'priceAnalysisGraph': _priceAnalysisGraph?.toMap(),
+        'auctionAnalysisMedians':
+            _auctionAnalysisMedians?.map((e) => e.toMap()).toList(),
       }.withoutNulls;
 
   @override
@@ -156,6 +165,8 @@ class PriceAnalysisDataStruct extends BaseStruct {
             serializeParam(_firstValueAllCurrencies, ParamType.DataStruct),
         'priceAnalysisGraph':
             serializeParam(_priceAnalysisGraph, ParamType.DataStruct),
+        'auctionAnalysisMedians':
+            serializeParam(_auctionAnalysisMedians, ParamType.DataStruct),
       }.withoutNulls;
 }
 
