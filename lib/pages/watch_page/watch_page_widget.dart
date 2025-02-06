@@ -101,8 +101,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     final startDate = dates.first;
     final endDate = dates.last; // Use last data point instead of current date
     final totalDuration = endDate.difference(startDate).inMilliseconds;
-    final tickInterval = (totalDuration / 3).round();
-
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
     final yAxisMax = (maxPrice * 1.8).round();
@@ -232,7 +230,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
               pointerEvents: 'auto'
           },
           hideDelay: 800,
-          stickOnContact: true
+          stickOnContact: true,
       },
       series: [
       {
@@ -246,19 +244,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
               enabled: false
           },
           stickyTracking: false,
-      },
-      {
-          data: [$seriesData],//Here's goes auctionSeriesData
-          name: "Auction median",
-          type: "spline",
-          dashStyle: "ShortDash",
-          color: "#001633",
-          lineWidth: 3,
-          marker: {
-            enabled: false
-          },
-          stickyTracking: false,
-        }]
+      }]
     }''';
   }
 
@@ -283,9 +269,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         startDate = DateTime(now.year - 5, now.month, now.day);
         break;
       default: // Max (same as 5 years for now)
-        return "${now.day.toString().padLeft(2, '0')}-"
+        return "_${now.day.toString().padLeft(2, '0')}-"
             "${now.month.toString().padLeft(2, '0')}-"
-            "${now.year}_"; // Return current date with underscore
+            "${now.year}"; // Return current date with underscore
     }
 
     // Adjust the startDate to ensure the day is valid for the month
@@ -302,18 +288,215 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         "${now.year}";
   }
 
-  String _generateAuctionSeriesData(
-      List<AuctionAnalysisMedianStruct> auctionAnalysisMedians) {
-    // Generate series data from auction analysis medians
-    final auctionSeriesData = auctionAnalysisMedians.map((entry) {
-      final parsedDate = DateTime.parse(entry.timeRange);
+  String _generateAuctionChartData(
+      List<AuctionAnalysisMedianStruct> auctionAnalysis) {
+    // Create a map to store unique date entries with their latest values
+    final Map<String, double> uniqueDateValues = {};
+
+    // Filter non-zero values and get unique entries for each date
+    for (var data in auctionAnalysis) {
+      if (data.medians.medianUsd != 0) {
+        final parsedDate = DateTime.parse(data.timeRange);
+        final dateKey = DateTime.utc(parsedDate.year, parsedDate.month,
+                parsedDate.day, 0, 0, 0, 0, 0)
+            .toIso8601String()
+            .split('T')[0];
+
+        uniqueDateValues[dateKey] = data.medians.medianUsd;
+      }
+    }
+
+    // If no non-zero values found, return empty chart with message
+    if (uniqueDateValues.isEmpty) {
       return '''{
-            x: ${parsedDate.millisecondsSinceEpoch},
-            y: ${entry.medians.medianUsd}
-        }''';
+        chart: {
+          backgroundColor: '#faf8f6',
+          spacingLeft: -30,
+          spacingRight: 20,
+          spacingTop: 50,
+          spacingBottom: 5,
+          height: 400,
+          borderRadius: 12,
+          type: 'scatter',
+          events: {
+            load: function() {
+              const chart = this;
+              chart.renderer.text('No data available for selected time period', 
+                chart.plotWidth / 2 + chart.plotLeft, 
+                chart.plotHeight / 2 + chart.plotTop)
+                .css({
+                  color: '#666666',
+                  fontSize: '14px'
+                })
+                .attr({
+                  align: 'center'
+                })
+                .add();
+            }
+          }
+        },
+        series: [{
+          data: []
+        }]
+      }''';
+    }
+
+    // Convert the map entries to sorted list
+    final sortedEntries = uniqueDateValues.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+
+    // Calculate x-axis values
+    final dates = sortedEntries.map((e) => DateTime.parse(e.key)).toList();
+    final startDate = dates.first;
+    final endDate = dates.last; // Use last data point instead of current date
+    final totalDuration = endDate.difference(startDate).inMilliseconds;
+
+    // Calculate y-axis max value
+    final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
+    final yAxisMax = (maxPrice * 1.8).round();
+
+    // Generate series data from unique entries
+    final seriesData = sortedEntries.map((entry) {
+      final parsedDate = DateTime.parse(entry.key);
+      final date = DateTime.utc(
+          parsedDate.year, parsedDate.month, parsedDate.day, 0, 0, 0, 0, 0);
+      return '''{
+        x: ${date.millisecondsSinceEpoch},
+        y: ${entry.value}
+      }''';
     }).join(',\n');
 
-    return auctionSeriesData;
+    return '''{
+      chart: {
+        backgroundColor: '#faf8f6',
+        spacingLeft: -30,
+        spacingRight: 20,
+        spacingTop: 50,
+        spacingBottom: 5,
+        height: 400,
+        borderRadius: 12,
+        type: 'scatter',
+        zooming: {
+          pinchType: 'xy',
+          type: 'xy'
+        },
+        loading: {
+          hideDuration: 0,
+          showDuration: 0,
+          labelStyle: {
+            display: 'none'
+          }
+        },
+        events: {
+          load: function () {
+            const chart = this;
+            const x = chart.plotLeft + chart.plotWidth / 2; // Center X
+            const y = chart.plotTop + chart.plotHeight / 2; // Center Y
+            chart.renderer
+                .text('E V E R Y W A T C H', x, y)
+                .css({
+                  color: '#DFDEE0',
+                  fontSize: '24px',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                })
+                .attr({
+                  zIndex: -1,
+                  align: 'center'
+                })
+                .add();
+          }
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      title: {
+        text: ''
+      },
+      xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: {
+          millisecond: '%b %Y',
+          second: '%b %Y',
+          minute: '%b %Y',
+          hour: '%b %Y',
+          week: '%e %b %Y',
+          day: '%b %Y',
+          month: '%b %Y',
+          year: '%Y'
+        },
+        labels: {
+          style: {
+            color: '#001633'
+          }
+        },
+        lineColor: '#999999',
+        tickColor: '#999999',
+        tickAmount: 3,
+        startOnTick: false,
+        endOnTick: false,
+        min: ${startDate.millisecondsSinceEpoch},
+        max: ${endDate.millisecondsSinceEpoch},
+        tickPositions: [
+          ${startDate.millisecondsSinceEpoch},
+          ${startDate.millisecondsSinceEpoch + totalDuration ~/ 2},
+          ${endDate.millisecondsSinceEpoch}
+        ]
+      },
+      yAxis: {
+        min: 0,
+        max: $yAxisMax,
+        minPadding: 0.1,
+        maxPadding: 0,
+        softThreshold: false,
+        title: {
+          text: 'Price',
+          align: 'high',
+          verticalAlign: 'top',
+          x: 40,
+          y: -20,
+          rotation: 0,
+          style: {
+            color: '#001633'
+          }
+        },
+        lineColor: '#999999',
+        tickColor: '#999999',
+        alignTicks: false,
+        endOnTick: true,
+        showLastLabel: true,
+      },
+      legend: {
+        enabled: true
+      },
+      tooltip: {
+        followPointer: false,
+        followTouchMove: false,
+        useHTML: true,
+        borderRadius: 12,
+        padding: 10,
+        style: {
+          pointerEvents: 'auto'
+        },
+        hideDelay: 800,
+        stickOnContact: true
+      },
+      series: [
+        {
+          data: [$seriesData],
+          name: "Auction median",
+          type: "spline",
+          dashStyle: "ShortDash",
+          color: "#001633",
+          lineWidth: 3,
+          marker: {
+            enabled: false
+          },
+          stickyTracking: false,
+        }
+      ]
+    }''';
   }
 
   void _getChartPriceAnalysisClicked() async {
@@ -353,13 +536,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       if (response.succeeded && mounted) {
         _priceAnalysis =
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
-        final auctionSeriesData = _generateAuctionSeriesData(
-            _priceAnalysis!.data.auctionAnalysisMedians);
-        print(
-            "&&&######%%%%%Auction Series Data: $auctionSeriesData"); // Debugging line
+
         setState(() {
-          _chartData =
-              _generateChartData(_priceAnalysis!.data.dealersPriceAnalysis);
+          if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+            _chartData =
+                _generateChartData(_priceAnalysis!.data.dealersPriceAnalysis);
+          } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+            _chartData = _generateAuctionChartData(
+                _priceAnalysis!.data.auctionAnalysisMedians);
+          } else {
+            _chartData = _generateChartData([]);
+          }
+
           _isChartLoading = false;
           _isInitialLoading = false;
         });
