@@ -40,7 +40,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool _isInitialLoading = true;
   WatchPriceAnalysisResponseStruct? _priceAnalysis;
 
-  String _generateChartData(List<DealerPriceAnalysisStruct> priceAnalysis) {
+  String _generateDealersChartData(
+      List<DealerPriceAnalysisStruct> priceAnalysis) {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -539,13 +540,13 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
         setState(() {
           if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
-            _chartData =
-                _generateChartData(_priceAnalysis!.data.dealersPriceAnalysis);
+            _chartData = _generateDealersChartData(
+                _priceAnalysis!.data.dealersPriceAnalysis);
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.auctionAnalysisMedians);
           } else {
-            _chartData = _generateChartData([]);
+            _chartData = _generateDealersChartData([]);
           }
 
           _isChartLoading = false;
@@ -971,148 +972,159 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                       color: Colors.white,
                                       child: Column(
                                         children: [
-                                          // if (_priceAnalysis != null &&
-                                          //     !_priceAnalysis!
-                                          //         .data.dealersPriceAnalysis
-                                          //         .every((data) =>
-                                          //             data.medians.medianUsd ==
-                                          //             0))
-
-                                          Column(
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: SizedBox(
-                                                  width: double.infinity,
-                                                  child: IntrinsicHeight(
-                                                    child: Row(
-                                                      children: [
-                                                        ChartFilterButton(
-                                                          text: '3M',
-                                                          color: Colors.red,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  0,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    0);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
+                                          // Hidding the chart if there is no data
+                                          if (_priceAnalysis == null ||
+                                              (_priceAnalysis!
+                                                      .data.dealersPriceAnalysis
+                                                      .any((data) =>
+                                                          data.medians
+                                                              .medianUsd !=
+                                                          0) ||
+                                                  _priceAnalysis!.data
+                                                      .auctionAnalysisMedians
+                                                      .any((data) =>
+                                                          data.medians
+                                                              .medianUsd !=
+                                                          0)))
+                                            Column(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  child: SizedBox(
+                                                    width: double.infinity,
+                                                    child: IntrinsicHeight(
+                                                      child: Row(
+                                                        children: [
+                                                          ChartFilterButton(
+                                                            text: '3M',
+                                                            color: Colors.red,
+                                                            isSelected:
+                                                                _selectedButtonIndex ==
+                                                                    0,
+                                                            onPressed: () {
+                                                              setState(() =>
+                                                                  _selectedButtonIndex =
+                                                                      0);
+                                                              _getChartPriceAnalysisClicked();
+                                                            },
+                                                          ),
+                                                          ChartFilterButton(
+                                                            text: '6M',
+                                                            color: Colors.blue,
+                                                            isSelected:
+                                                                _selectedButtonIndex ==
+                                                                    1,
+                                                            onPressed: () {
+                                                              setState(() =>
+                                                                  _selectedButtonIndex =
+                                                                      1);
+                                                              _getChartPriceAnalysisClicked();
+                                                            },
+                                                          ),
+                                                          ChartFilterButton(
+                                                            text: '1Y',
+                                                            color: Colors.green,
+                                                            isSelected:
+                                                                _selectedButtonIndex ==
+                                                                    2,
+                                                            onPressed: () {
+                                                              setState(() =>
+                                                                  _selectedButtonIndex =
+                                                                      2);
+                                                              _getChartPriceAnalysisClicked();
+                                                            },
+                                                          ),
+                                                          ChartFilterButton(
+                                                            text: '2Y',
+                                                            color:
+                                                                Colors.yellow,
+                                                            isSelected:
+                                                                _selectedButtonIndex ==
+                                                                    3,
+                                                            onPressed: () {
+                                                              setState(() =>
+                                                                  _selectedButtonIndex =
+                                                                      3);
+                                                              _getChartPriceAnalysisClicked();
+                                                            },
+                                                          ),
+                                                          ChartFilterButton(
+                                                            text: '5Y',
+                                                            color:
+                                                                Colors.purple,
+                                                            isSelected:
+                                                                _selectedButtonIndex ==
+                                                                    4,
+                                                            onPressed: () {
+                                                              setState(() =>
+                                                                  _selectedButtonIndex =
+                                                                      4);
+                                                              _getChartPriceAnalysisClicked();
+                                                            },
+                                                          ),
+                                                          ChartFilterButton(
+                                                            text: 'Max',
+                                                            color:
+                                                                Colors.orange,
+                                                            isSelected:
+                                                                _selectedButtonIndex ==
+                                                                    5,
+                                                            onPressed: () {
+                                                              setState(() =>
+                                                                  _selectedButtonIndex =
+                                                                      5);
+                                                              _getChartPriceAnalysisClicked();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (_isChartLoading)
+                                                  const SizedBox(
+                                                    height: 440,
+                                                    child: Center(
+                                                      child: SizedBox(
+                                                        width: 30.0,
+                                                        height: 30.0,
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      ),
+                                                    ),
+                                                  )
+                                                else
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 14),
+                                                    child: HighCharts(
+                                                      size: Size(
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                          420),
+                                                      data: _chartData,
+                                                      loader: SizedBox(
+                                                        height: 440,
+                                                        child: Center(
+                                                          child: SizedBox(
+                                                            width: 30.0,
+                                                            height: 30.0,
+                                                            child:
+                                                                CircularProgressIndicator(),
+                                                          ),
                                                         ),
-                                                        ChartFilterButton(
-                                                          text: '6M',
-                                                          color: Colors.blue,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  1,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    1);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '1Y',
-                                                          color: Colors.green,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  2,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    2);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '2Y',
-                                                          color: Colors.yellow,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  3,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    3);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '5Y',
-                                                          color: Colors.purple,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  4,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    4);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: 'Max',
-                                                          color: Colors.orange,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  5,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    5);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
+                                                      ),
+                                                      scripts: const [
+                                                        "https://code.highcharts.com/highcharts.js",
+                                                        'https://code.highcharts.com/modules/networkgraph.js',
                                                       ],
                                                     ),
                                                   ),
-                                                ),
-                                              ),
-                                              if (_isChartLoading)
-                                                const SizedBox(
-                                                  height: 440,
-                                                  child: Center(
-                                                    child: SizedBox(
-                                                      width: 30.0,
-                                                      height: 30.0,
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    ),
-                                                  ),
-                                                )
-                                              else
-                                                Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 14),
-                                                  child: HighCharts(
-                                                    size: Size(
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                        420),
-                                                    data: _chartData,
-                                                    loader: SizedBox(
-                                                      height: 440,
-                                                      child: Center(
-                                                        child: SizedBox(
-                                                          width: 30.0,
-                                                          height: 30.0,
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    scripts: const [
-                                                      "https://code.highcharts.com/highcharts.js",
-                                                      'https://code.highcharts.com/modules/networkgraph.js',
-                                                    ],
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
+                                              ],
+                                            ),
                                         ],
                                       ),
                                     ),
