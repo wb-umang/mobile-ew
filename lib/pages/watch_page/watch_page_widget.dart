@@ -567,7 +567,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
-    _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
+    _model.filter = createWatchAnalysisFilterStruct(watchId: 2415857);
     _selectedButtonIndex = 0;
 
     // Initialize with empty chart structure
@@ -966,32 +966,330 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 28.0),
-                                    child: Container(
-                                      color: Colors.white,
-                                      child: Column(
-                                        children: [
-                                          // Hidding the chart if there is no data
-                                          if (_priceAnalysis == null ||
-                                              (_priceAnalysis!
-                                                      .data.dealersPriceAnalysis
-                                                      .any((data) =>
-                                                          data.medians
-                                                              .medianUsd !=
-                                                          0) ||
-                                                  _priceAnalysis!.data
-                                                      .auctionAnalysisMedians
-                                                      .any((data) =>
-                                                          data.medians
-                                                              .medianUsd !=
-                                                          0)))
+                                  // Hidding the chart if there is no data
+                                  if (_priceAnalysis == null ||
+                                      (_priceAnalysis!.data.dealersPriceAnalysis
+                                              .any((data) =>
+                                                  data.medians.medianUsd !=
+                                                  0) ||
+                                          _priceAnalysis!
+                                              .data.auctionAnalysisMedians
+                                              .any((data) =>
+                                                  data.medians.medianUsd != 0)))
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 16.0),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Column(
+                                          children: [
                                             Column(
                                               children: [
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                      child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 12, bottom: 12),
+                                                    child: Text(
+                                                      "Price Chart",
+                                                      style: TextStyle(
+                                                        fontFamily: 'DM Sans',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize:
+                                                            20, // Set your desired font size here
+                                                      ),
+                                                    ),
+                                                  )),
+                                                ),
+                                                //Background color for the Price Chart Title Bottom Container
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 12),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Container(
+                                                        width: double.infinity,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .lightGray,
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 12,
+                                                                  right: 12,
+                                                                  top: 6,
+                                                                  bottom: 6),
+                                                          child: Text(
+                                                              style: FlutterFlowTheme
+                                                                      .of(
+                                                                          context)
+                                                                  .titleSmall
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'DM Sans',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    fontSize:
+                                                                        16.0,
+                                                                    letterSpacing:
+                                                                        0.08,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                              watchDetail !=
+                                                                      null
+                                                                  ? "${watchDetail.defaultManufacturerName} ${watchDetail.modelName} ${watchDetail.referenceNumber} | ${watchDetail.defaultCaseMaterialName}"
+                                                                  : "-"),
+                                                        )),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 12),
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 100,
+                                                        height: 100,
+                                                        child: Image.network(
+                                                          watchDetail
+                                                                  ?.watchImages[
+                                                                      0]
+                                                                  .url ??
+                                                              '',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 10),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                "Current value",
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'DM Sans',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryText,
+                                                                      fontSize:
+                                                                          16.0,
+                                                                      letterSpacing:
+                                                                          0.08,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              Text(
+                                                                "109,139 USD",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'DM Sans',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize:
+                                                                      18, // Set your desired font size here
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                "+65,635 USD (150.87%)",
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'DM Sans',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .liveAuction,
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      letterSpacing:
+                                                                          0.08,
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 12),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .lightGray,
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 12,
+                                                                      right: 12,
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Auction High"),
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryText,
+                                                                            fontSize:
+                                                                                16.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                      "546,222 USD"),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 12,
+                                                      ),
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .lightGray,
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 12,
+                                                                      right: 12,
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Auction Low"),
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryText,
+                                                                            fontSize:
+                                                                                16.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                      "22,000 USD"),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 12),
+                                                  child: Container(
+                                                    height: 1,
+                                                    width: double.infinity,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .lightGray,
+                                                  ),
+                                                ),
                                                 ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          8.0),
+                                                          12.0),
                                                   child: SizedBox(
                                                     width: double.infinity,
                                                     child: IntrinsicHeight(
@@ -1125,10 +1423,10 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   ),
                                               ],
                                             ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
                                   Stack(
                                     children: [
                                       if (_model.twoButtonPageMenuModel
