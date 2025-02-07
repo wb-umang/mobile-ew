@@ -88,11 +88,13 @@ class PriceAnalysisDataStruct extends BaseStruct {
     CurrentValueStruct? firstValueAllCurrencies,
     PriceAnalysisGraphStruct? priceAnalysisGraph,
     List<AuctionAnalysisMedianStruct>? auctionAnalysisMedians,
+    List<AuctionPriceAnalysisStruct>? auctionPriceAnalysis,
   })  : _dealersPriceAnalysis = dealersPriceAnalysis,
         _currentValueAllCurrencies = currentValueAllCurrencies,
         _firstValueAllCurrencies = firstValueAllCurrencies,
         _priceAnalysisGraph = priceAnalysisGraph,
-        _auctionAnalysisMedians = auctionAnalysisMedians;
+        _auctionAnalysisMedians = auctionAnalysisMedians,
+        _auctionPriceAnalysis = auctionPriceAnalysis;
 
   List<DealerPriceAnalysisStruct>? _dealersPriceAnalysis;
   List<DealerPriceAnalysisStruct> get dealersPriceAnalysis =>
@@ -126,6 +128,12 @@ class PriceAnalysisDataStruct extends BaseStruct {
   List<AuctionAnalysisMedianStruct> get auctionAnalysisMedians =>
       _auctionAnalysisMedians ?? [];
 
+  List<AuctionPriceAnalysisStruct>? _auctionPriceAnalysis;
+  List<AuctionPriceAnalysisStruct> get auctionPriceAnalysis =>
+      _auctionPriceAnalysis ?? [];
+  set auctionPriceAnalysis(List<AuctionPriceAnalysisStruct>? val) =>
+      _auctionPriceAnalysis = val;
+
   static PriceAnalysisDataStruct? maybeFromMap(dynamic data) => data is Map
       ? PriceAnalysisDataStruct.fromMap(data.cast<String, dynamic>())
       : null;
@@ -144,6 +152,9 @@ class PriceAnalysisDataStruct extends BaseStruct {
       auctionAnalysisMedians: (graphData['auctionAnalysisMedians'] as List?)
           ?.map((e) => AuctionAnalysisMedianStruct.fromMap(e))
           .toList(),
+      auctionPriceAnalysis: (data['auctionPriceAnalysis'] as List?)
+          ?.map((e) => AuctionPriceAnalysisStruct.fromMap(e))
+          .toList(),
     );
   }
 
@@ -155,6 +166,8 @@ class PriceAnalysisDataStruct extends BaseStruct {
         'priceAnalysisGraph': _priceAnalysisGraph?.toMap(),
         'auctionAnalysisMedians':
             _auctionAnalysisMedians?.map((e) => e.toMap()).toList(),
+        'auctionPriceAnalysis':
+            _auctionPriceAnalysis?.map((e) => e.toMap()).toList(),
       }.withoutNulls;
 
   @override
@@ -169,6 +182,8 @@ class PriceAnalysisDataStruct extends BaseStruct {
             serializeParam(_priceAnalysisGraph, ParamType.DataStruct),
         'auctionAnalysisMedians':
             serializeParam(_auctionAnalysisMedians, ParamType.DataStruct),
+        'auctionPriceAnalysis':
+            serializeParam(_auctionPriceAnalysis, ParamType.DataStruct),
       }.withoutNulls;
 }
 
@@ -491,4 +506,164 @@ double getLowestDealerPrice(List<DealerPriceAnalysisStruct>? dealersMedians) {
   return hasValidPrice
       ? lowestPrice
       : 0.0; // Return the lowest price or 0 if all were zero
+}
+
+class AuctionPriceAnalysisStruct {
+  final int watchId;
+  final DateTime eventPublishEndDate;
+  final String slug;
+  final String modelSlug;
+  final String manufacturerSlug;
+  final double netPayableUsd;
+  final double netPayableSgd;
+  final double netPayableHkd;
+  final double netPayableGbp;
+  final double netPayableEur;
+  final double netPayableChf;
+  final double? netPayableAed;
+  final double? netPayableJpy;
+  final int referenceNumberId;
+  final int modelId;
+  final int manufacturerId;
+  final String manufactureName;
+  final String modelName;
+  final String referenceNumber;
+  final PrimaryImage primaryImage;
+  final int lotStatusId;
+  final String infoSourceName;
+
+  AuctionPriceAnalysisStruct({
+    required this.watchId,
+    required this.eventPublishEndDate,
+    required this.slug,
+    required this.modelSlug,
+    required this.manufacturerSlug,
+    required this.netPayableUsd,
+    required this.netPayableSgd,
+    required this.netPayableHkd,
+    required this.netPayableGbp,
+    required this.netPayableEur,
+    required this.netPayableChf,
+    this.netPayableAed,
+    this.netPayableJpy,
+    required this.referenceNumberId,
+    required this.modelId,
+    required this.manufacturerId,
+    required this.manufactureName,
+    required this.modelName,
+    required this.referenceNumber,
+    required this.primaryImage,
+    required this.lotStatusId,
+    required this.infoSourceName,
+  });
+
+  factory AuctionPriceAnalysisStruct.fromMap(Map<String, dynamic> map) {
+    return AuctionPriceAnalysisStruct(
+      watchId: map['watchId'],
+      eventPublishEndDate: DateTime.parse(map['eventPublishEndDate']),
+      slug: map['slug'],
+      modelSlug: map['modelSlug'],
+      manufacturerSlug: map['manufacturerSlug'],
+      netPayableUsd: map['netPayableUsd'].toDouble(),
+      netPayableSgd: map['netPayableSgd'].toDouble(),
+      netPayableHkd: map['netPayableHkd'].toDouble(),
+      netPayableGbp: map['netPayableGbp'].toDouble(),
+      netPayableEur: map['netPayableEur'].toDouble(),
+      netPayableChf: map['netPayableChf'].toDouble(),
+      netPayableAed: map['netPayableAed']?.toDouble(),
+      netPayableJpy: map['netPayableJpy']?.toDouble(),
+      referenceNumberId: map['referenceNumberId'],
+      modelId: map['modelId'],
+      manufacturerId: map['manufacturerId'],
+      manufactureName: map['manufactureName'],
+      modelName: map['modelName'],
+      referenceNumber: map['referenceNumber'],
+      primaryImage: PrimaryImage.fromMap(map['primaryImage']),
+      lotStatusId: map['lotStatusId'],
+      infoSourceName: map['infoSourceName'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'watchId': watchId,
+      'eventPublishEndDate': eventPublishEndDate.toIso8601String(),
+      'slug': slug,
+      'modelSlug': modelSlug,
+      'manufacturerSlug': manufacturerSlug,
+      'netPayableUsd': netPayableUsd,
+      'netPayableSgd': netPayableSgd,
+      'netPayableHkd': netPayableHkd,
+      'netPayableGbp': netPayableGbp,
+      'netPayableEur': netPayableEur,
+      'netPayableChf': netPayableChf,
+      'netPayableAed': netPayableAed,
+      'netPayableJpy': netPayableJpy,
+      'referenceNumberId': referenceNumberId,
+      'modelId': modelId,
+      'manufacturerId': manufacturerId,
+      'manufactureName': manufactureName,
+      'modelName': modelName,
+      'referenceNumber': referenceNumber,
+      'primaryImage': primaryImage.toMap(),
+      'lotStatusId': lotStatusId,
+      'infoSourceName': infoSourceName,
+    };
+  }
+}
+
+class PrimaryImage {
+  final String url;
+  final String previewEmail320;
+  final String preview320;
+  final String preview480;
+  final String preview768;
+  final String preview960;
+  final String preview1366;
+  final String original;
+  final bool? isPrimary;
+  final bool? isDeleted;
+
+  PrimaryImage({
+    required this.url,
+    required this.previewEmail320,
+    required this.preview320,
+    required this.preview480,
+    required this.preview768,
+    required this.preview960,
+    required this.preview1366,
+    required this.original,
+    this.isPrimary,
+    this.isDeleted,
+  });
+
+  factory PrimaryImage.fromMap(Map<String, dynamic> map) {
+    return PrimaryImage(
+      url: map['url'],
+      previewEmail320: map['previewEmail320'],
+      preview320: map['preview320'],
+      preview480: map['preview480'],
+      preview768: map['preview768'],
+      preview960: map['preview960'],
+      preview1366: map['preview1366'],
+      original: map['original'],
+      isPrimary: map['isPrimary'],
+      isDeleted: map['isDeleted'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'url': url,
+      'previewEmail320': previewEmail320,
+      'preview320': preview320,
+      'preview480': preview480,
+      'preview768': preview768,
+      'preview960': preview960,
+      'preview1366': preview1366,
+      'original': original,
+      'isPrimary': isPrimary,
+      'isDeleted': isDeleted,
+    };
+  }
 }
