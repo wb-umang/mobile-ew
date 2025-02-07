@@ -508,6 +508,36 @@ double getLowestDealerPrice(List<DealerPriceAnalysisStruct>? dealersMedians) {
       : 0.0; // Return the lowest price or 0 if all were zero
 }
 
+double getHighestAuctionPrice(
+    List<AuctionPriceAnalysisStruct> auctionPriceAnalysis) {
+  // Filter the auctionPriceAnalysis to include only those with lotStatusId == 2
+  var filteredPrices =
+      auctionPriceAnalysis.where((item) => item.lotStatusId == 2);
+
+  // Check if the filtered list is empty
+  if (filteredPrices.isEmpty) return 0.0;
+
+  // Find the maximum netPayableUsd value
+  return filteredPrices
+      .map((item) => item.netPayableUsd)
+      .reduce((a, b) => a > b ? a : b);
+}
+
+double getLowestAuctionPrice(
+    List<AuctionPriceAnalysisStruct> auctionPriceAnalysis) {
+  // Filter the auctionPriceAnalysis to include only those with lotStatusId == 2
+  var filteredPrices =
+      auctionPriceAnalysis.where((item) => item.lotStatusId == 2);
+
+  // Check if the filtered list is empty
+  if (filteredPrices.isEmpty) return 0.0;
+
+  // Find the minimum netPayableUsd value
+  return filteredPrices
+      .map((item) => item.netPayableUsd)
+      .reduce((a, b) => a < b ? a : b);
+}
+
 class AuctionPriceAnalysisStruct extends BaseStruct {
   final int watchId;
   final DateTime eventPublishEndDate;

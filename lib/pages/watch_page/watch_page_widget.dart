@@ -521,6 +521,42 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     {
       x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
       y: ${item.netPayableUsd},
+      item: {
+        watchId: ${item.watchId},
+        eventPublishEndDate: "${item.eventPublishEndDate}",
+        slug: "${item.slug}",
+        modelSlug: "${item.modelSlug}",
+        manufacturerSlug: "${item.manufacturerSlug}",
+        netPayableUsd: ${item.netPayableUsd},
+        netPayableSgd: ${item.netPayableSgd},
+        netPayableHkd: ${item.netPayableHkd},
+        netPayableGbp: ${item.netPayableGbp},
+        netPayableEur: ${item.netPayableEur},
+        netPayableChf: ${item.netPayableChf},
+        netPayableAed: ${item.netPayableAed},
+        netPayableJpy: ${item.netPayableJpy},
+        referenceNumberId: ${item.referenceNumberId},
+        modelId: ${item.modelId},
+        manufacturerId: ${item.manufacturerId},
+        manufacturerName: "${item.manufactureName}",
+        modelName: "${item.modelName}",
+        referenceNumber: "${item.referenceNumber}",
+        primaryImage: {
+          url: "${item.primaryImage.url}",
+          previewEmail320: "${item.primaryImage.previewEmail320}",
+          preview320: "${item.primaryImage.preview320}",
+          preview480: "${item.primaryImage.preview480}",
+          preview768: "${item.primaryImage.preview768}",
+          preview960: "${item.primaryImage.preview960}",
+          preview1366: "${item.primaryImage.preview1366}",
+          original: "${item.primaryImage.original}",
+          isPrimary: "${item.primaryImage.isPrimary}",
+          isDeleted: "${item.primaryImage.isDeleted}",
+
+        },
+        lotStatusId: ${item.lotStatusId},
+        infoSourceName: "${item.infoSourceName}",
+      }
     }
     ''';
     }).join(',');
@@ -556,6 +592,42 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     {
       x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
       y: ${item.netPayableUsd},
+      item: {
+        watchId: ${item.watchId},
+        eventPublishEndDate: "${item.eventPublishEndDate}",
+        slug: "${item.slug}",
+        modelSlug: "${item.modelSlug}",
+        manufacturerSlug: "${item.manufacturerSlug}",
+        netPayableUsd: ${item.netPayableUsd},
+        netPayableSgd: ${item.netPayableSgd},
+        netPayableHkd: ${item.netPayableHkd},
+        netPayableGbp: ${item.netPayableGbp},
+        netPayableEur: ${item.netPayableEur},
+        netPayableChf: ${item.netPayableChf},
+        netPayableAed: ${item.netPayableAed},
+        netPayableJpy: ${item.netPayableJpy},
+        referenceNumberId: ${item.referenceNumberId},
+        modelId: ${item.modelId},
+        manufacturerId: ${item.manufacturerId},
+        manufacturerName: "${item.manufactureName}",
+        modelName: "${item.modelName}",
+        referenceNumber: "${item.referenceNumber}",
+        primaryImage: {
+          url: "${item.primaryImage.url}",
+          previewEmail320: "${item.primaryImage.previewEmail320}",
+          preview320: "${item.primaryImage.preview320}",
+          preview480: "${item.primaryImage.preview480}",
+          preview768: "${item.primaryImage.preview768}",
+          preview960: "${item.primaryImage.preview960}",
+          preview1366: "${item.primaryImage.preview1366}",
+          original: "${item.primaryImage.original}",
+          isPrimary: "${item.primaryImage.isPrimary}",
+          isDeleted: "${item.primaryImage.isDeleted}",
+
+        },
+        lotStatusId: ${item.lotStatusId},
+        infoSourceName: "${item.infoSourceName}",
+      }
     }
     ''';
     }).join(',');
@@ -620,14 +692,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
 
         setState(() {
-          // print("#########################");
-          // debugPrint(
-          //     _generateWatchPriceAnalysisChartData(
-          //         _priceAnalysis!.data.priceAnalysisGraph),
-          //     wrapWidth: 1024); // You can change wrapWidth to fit your needs
-
-          // print("#########################");
-
           if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
             _chartData = _generateDealersChartData(
                 _priceAnalysis!.data.dealersPriceAnalysis,
@@ -1301,6 +1365,145 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                     ),
                                                               ),
                                                             ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 12),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .lightGray,
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 12,
+                                                                      right: 12,
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Auction High"),
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryText,
+                                                                            fontSize:
+                                                                                16.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                      "${NumberFormat('#,##0', 'en_US').format(getHighestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"), //Print the highest dealer price
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 12,
+                                                      ),
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .lightGray,
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 12,
+                                                                      right: 12,
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Auction Low"),
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryText,
+                                                                            fontSize:
+                                                                                16.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                      "${NumberFormat('#,##0', 'en_US').format(getLowestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"),
+                                                                ],
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
