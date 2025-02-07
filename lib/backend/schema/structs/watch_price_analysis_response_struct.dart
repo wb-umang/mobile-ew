@@ -443,3 +443,52 @@ class PriceAnalysisGraphStruct extends BaseStruct {
   @override
   Map<String, dynamic> toSerializableMap() => toMap();
 }
+
+// Function to get the highest dealer price from dealersMedians
+double getHighestDealerPrice(List<DealerPriceAnalysisStruct>? dealersMedians) {
+  if (dealersMedians == null || dealersMedians.isEmpty) {
+    return 0.0; // Return 0 if there are no dealers
+  }
+
+  double highestPrice = 0.0;
+
+  for (var dealer in dealersMedians) {
+    // Assuming medians is a property of DealerPriceAnalysisStruct
+    double dealerMedianPrice = dealer
+        .medians.medianUsd; // Change this if the property name is different
+    if (dealerMedianPrice > highestPrice) {
+      highestPrice = dealerMedianPrice;
+    }
+  }
+
+  return highestPrice;
+}
+
+// Function to get the lowest dealer price from dealersMedians
+double getLowestDealerPrice(List<DealerPriceAnalysisStruct>? dealersMedians) {
+  if (dealersMedians == null || dealersMedians.isEmpty) {
+    return 0.0; // Return 0 if there are no dealers
+  }
+
+  double lowestPrice = double.infinity; // Start with the highest possible value
+  bool hasValidPrice = false; // Flag to check if we have any valid prices
+
+  for (var dealer in dealersMedians) {
+    // Ensure that the medians property exists and is not null
+    double dealerMedianPrice =
+        dealer.medians.medianUsd; // Ensure this property exists
+
+    // Only compare if the dealer median price is greater than zero
+    if (dealerMedianPrice > 0) {
+      hasValidPrice = true; // We found at least one valid price
+      if (dealerMedianPrice < lowestPrice) {
+        lowestPrice = dealerMedianPrice;
+      }
+    }
+  }
+
+  // If no valid prices were found, return 0
+  return hasValidPrice
+      ? lowestPrice
+      : 0.0; // Return the lowest price or 0 if all were zero
+}
