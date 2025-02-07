@@ -41,7 +41,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   WatchPriceAnalysisResponseStruct? _priceAnalysis;
 
   String _generateDealersChartData(
-      List<DealerPriceAnalysisStruct> priceAnalysis) {
+      List<DealerPriceAnalysisStruct> priceAnalysis,
+      String scatterChartData,
+      String unsoldScatterChartData) {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -234,6 +236,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           stickOnContact: true,
       },
       series: [
+      $scatterChartData,
+      $unsoldScatterChartData,
       {
           data: [$seriesData],
           name: 'Dealer median',
@@ -245,7 +249,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
               enabled: false
           },
           stickyTracking: false,
-      }]
+      }
+      ]
     }''';
   }
 
@@ -290,7 +295,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   }
 
   String _generateAuctionChartData(
-      List<AuctionAnalysisMedianStruct> auctionAnalysis) {
+      List<AuctionAnalysisMedianStruct> auctionAnalysis,
+      String scatterChartData,
+      String unsoldScatterChartData) {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -484,6 +491,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         stickOnContact: true
       },
       series: [
+        $scatterChartData,
+        $unsoldScatterChartData,
         {
           data: [$seriesData],
           name: "Auction median",
@@ -498,6 +507,78 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         }
       ]
     }''';
+  }
+
+  String _generateWatchPriceAnalysisChartData(
+      PriceAnalysisGraphStruct priceAnalysisGraph) {
+    final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
+
+    // Construct data points for the chart without quotes around keys
+    final dataPoints = auctionData
+        .where((item) => item.lotStatusId == 2) // Filter condition
+        .map((item) {
+      return '''
+    {
+      x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
+      y: ${item.netPayableUsd},
+    }
+    ''';
+    }).join(',');
+
+    // Return the HighChart data string
+    return '''
+  {
+    data: [$dataPoints],
+    name: "Sold auction lots",
+    color: "#4682B466",
+    type: "scatter",
+    marker: {
+      symbol: "circle",
+      radius: 5,
+      lineWidth: 1,
+      lineColor: "#4682B4"
+    },
+    stickyTracking: false,
+    cursor: "pointer"
+  }
+  ''';
+  }
+
+  String _generateUnsoldWatchPriceAnalysisChartData(
+      PriceAnalysisGraphStruct priceAnalysisGraph) {
+    final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
+
+    // Construct data points for the chart without quotes around keys
+    final dataPoints = auctionData
+        .where((item) => item.lotStatusId != 2) // Filter condition
+        .map((item) {
+      return '''
+    {
+      x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
+      y: ${item.netPayableUsd},
+    }
+    ''';
+    }).join(',');
+
+    // Return the HighChart data string
+    return '''
+  {
+    data: [$dataPoints],
+    visible: false,
+    showInLegend: true,
+    name: "Unsold auction lots",
+    color: "#B7787266",
+    type: "scatter",
+    marker: {
+      symbol: "circle",
+      radius: 5,
+      lineWidth: 1,
+      lineColor: "#B77872"
+    },
+    stickyTracking: false,
+    cursor: "pointer"
+  }
+  ''';
   }
 
   void _getChartPriceAnalysisClicked() async {
@@ -539,14 +620,30 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
 
         setState(() {
+          // print("#########################");
+          // debugPrint(
+          //     _generateWatchPriceAnalysisChartData(
+          //         _priceAnalysis!.data.priceAnalysisGraph),
+          //     wrapWidth: 1024); // You can change wrapWidth to fit your needs
+
+          // print("#########################");
+
           if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
             _chartData = _generateDealersChartData(
-                _priceAnalysis!.data.dealersPriceAnalysis);
+                _priceAnalysis!.data.dealersPriceAnalysis,
+                _generateWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph),
+                _generateUnsoldWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph));
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
-                _priceAnalysis!.data.auctionAnalysisMedians);
+                _priceAnalysis!.data.auctionAnalysisMedians,
+                _generateWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph),
+                _generateUnsoldWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph));
           } else {
-            _chartData = _generateDealersChartData([]);
+            _chartData = _generateDealersChartData([], '', '');
           }
 
           _isChartLoading = false;

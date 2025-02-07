@@ -1,0 +1,22 @@
+{
+    "data": [
+        {
+            "x": AuctionPriceAnalysisStruct.eventPublishEndDate,// in milliseconds
+            "y": AuctionPriceAnalysisStruct.netPayableUsd,
+            "item": AuctionPriceAnalysisStruct // whole object of auctionPriceAnalysis[n] itself
+        },
+        ... rest of the data
+
+    ],
+    "name": "Sold auction lots",
+    "color": "#4682B466",
+    "type": "scatter",
+    "marker": {
+        "symbol": "circle",
+        "radius": 5,
+        "lineWidth": 1,
+        "lineColor": "#4682B4"
+    },
+    "stickyTracking": false,
+    "cursor": "pointer"
+}

@@ -508,7 +508,7 @@ double getLowestDealerPrice(List<DealerPriceAnalysisStruct>? dealersMedians) {
       : 0.0; // Return the lowest price or 0 if all were zero
 }
 
-class AuctionPriceAnalysisStruct {
+class AuctionPriceAnalysisStruct extends BaseStruct {
   final int watchId;
   final DateTime eventPublishEndDate;
   final String slug;
@@ -610,6 +610,34 @@ class AuctionPriceAnalysisStruct {
       'infoSourceName': infoSourceName,
     };
   }
+
+  @override
+  Map<String, dynamic> toSerializableMap() {
+    return {
+      'watchId': watchId,
+      'eventPublishEndDate': eventPublishEndDate.toIso8601String(),
+      'slug': slug,
+      'modelSlug': modelSlug,
+      'manufacturerSlug': manufacturerSlug,
+      'netPayableUsd': netPayableUsd,
+      'netPayableSgd': netPayableSgd,
+      'netPayableHkd': netPayableHkd,
+      'netPayableGbp': netPayableGbp,
+      'netPayableEur': netPayableEur,
+      'netPayableChf': netPayableChf,
+      'netPayableAed': netPayableAed,
+      'netPayableJpy': netPayableJpy,
+      'referenceNumberId': referenceNumberId,
+      'modelId': modelId,
+      'manufacturerId': manufacturerId,
+      'manufactureName': manufactureName,
+      'modelName': modelName,
+      'referenceNumber': referenceNumber,
+      'primaryImage': primaryImage.toSerializableMap(),
+      'lotStatusId': lotStatusId,
+      'infoSourceName': infoSourceName,
+    };
+  }
 }
 
 class PrimaryImage {
@@ -653,6 +681,21 @@ class PrimaryImage {
   }
 
   Map<String, dynamic> toMap() {
+    return {
+      'url': url,
+      'previewEmail320': previewEmail320,
+      'preview320': preview320,
+      'preview480': preview480,
+      'preview768': preview768,
+      'preview960': preview960,
+      'preview1366': preview1366,
+      'original': original,
+      'isPrimary': isPrimary,
+      'isDeleted': isDeleted,
+    };
+  }
+
+  Map<String, dynamic> toSerializableMap() {
     return {
       'url': url,
       'previewEmail320': previewEmail320,
