@@ -599,7 +599,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
   String generatePriceChartDescString(int selectedButton,
       double absoluteNetPayableUsd, String percentNetPayableUsd) {
-    return '${NumberFormat('#,##0', 'en_US').format(absoluteNetPayableUsd.toInt())} USD $percentNetPayableUsd ${absoluteNetPayableUsd > 0 ? ' ↑' : absoluteNetPayableUsd < 0 ? ' ↓' : ''}${getTimeFilterDescription(selectedButton)}';
+    return '${(absoluteNetPayableUsd > 0 ? "+" : "") + NumberFormat('#,##0', 'en_US').format(absoluteNetPayableUsd.toInt())} USD $percentNetPayableUsd ${absoluteNetPayableUsd > 0 ? ' ↑' : absoluteNetPayableUsd < 0 ? ' ↓' : ''}${getTimeFilterDescription(selectedButton)}';
   }
 
   Color renderPriceChartDescColor(int absoluteNetPayableUsd) {
