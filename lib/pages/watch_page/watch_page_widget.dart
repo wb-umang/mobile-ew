@@ -3,6 +3,7 @@ import 'package:every_watch/backend/schema/structs/watch_analysis_response_struc
 import 'package:every_watch/backend/schema/structs/watch_price_analysis_filter_struct.dart';
 import 'package:every_watch/backend/schema/structs/watch_price_analysis_response_struct.dart';
 import 'package:every_watch/pages/watch_page/chart_filter_button.dart';
+import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:high_chart/high_chart.dart';
 
 import '/backend/api_requests/api_calls.dart';
@@ -39,11 +40,19 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool _isChartLoading = false;
   bool _isInitialLoading = true;
   WatchPriceAnalysisResponseStruct? _priceAnalysis;
+  final _unsoldController = ValueNotifier<bool>(false);
+  final _outliersController = ValueNotifier<bool>(false);
+  bool _unsold = false;
+  bool _outliers = false;
+  bool _isInitialOutliersClicked = false;
+  final GlobalKey<HighChartsState> _highChartsKey =
+      GlobalKey<HighChartsState>();
 
   String _generateDealersChartData(
-      List<DealerPriceAnalysisStruct> priceAnalysis,
-      String scatterChartData,
-      String unsoldScatterChartData) {
+    List<DealerPriceAnalysisStruct> priceAnalysis,
+    String scatterChartData,
+    String unsoldScatterChartData,
+  ) {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -581,7 +590,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   }
 
   String _generateUnsoldWatchPriceAnalysisChartData(
-      PriceAnalysisGraphStruct priceAnalysisGraph) {
+      PriceAnalysisGraphStruct priceAnalysisGraph, bool isUnsold) {
     final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
 
     // Construct data points for the chart without quotes around keys
@@ -636,7 +645,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     return '''
   {
     data: [$dataPoints],
-    visible: false,
+    visible: $isUnsold,
     showInLegend: true,
     name: "Unsold auction lots",
     color: "#B7787266",
@@ -698,14 +707,14 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 _generateWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph),
                 _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph));
+                    _priceAnalysis!.data.priceAnalysisGraph, false));
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.auctionAnalysisMedians,
                 _generateWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph),
                 _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph));
+                    _priceAnalysis!.data.priceAnalysisGraph, false));
           } else {
             _chartData = _generateDealersChartData([], '', '');
           }
@@ -793,6 +802,47 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     _watch = FFAppState().watchListingStruct;
     _model.filter = createWatchAnalysisFilterStruct(watchId: 2415857);
     _selectedButtonIndex = 0;
+
+    _unsoldController.addListener(() {
+      setState(() {
+        if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+          _chartData = _generateDealersChartData(
+              _priceAnalysis!.data.dealersPriceAnalysis,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph,
+                  _unsoldController.value));
+        } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+          _chartData = _generateAuctionChartData(
+              _priceAnalysis!.data.auctionAnalysisMedians,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph,
+                  _unsoldController.value));
+        } else {
+          _chartData = _generateDealersChartData([], '', '');
+        }
+
+        if (_unsoldController.value) {
+          _unsold = false;
+        } else {
+          _unsold = true;
+        }
+      });
+    });
+
+    _outliersController.addListener(() {
+      setState(() {
+        _isInitialOutliersClicked = true;
+        if (_outliersController.value) {
+          _outliers = true;
+        } else {
+          _outliers = false;
+        }
+      });
+    });
 
     // Initialize with empty chart structure
     _chartData = '''{
@@ -1743,6 +1793,162 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                     ),
                                                   ),
                                                 ),
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 12),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                color: Color(
+                                                                    0xFFE6E8F0),
+                                                                width: 1,
+                                                              ),
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Show Unsold"),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  AdvancedSwitch(
+                                                                      width:
+                                                                          30.0,
+                                                                      height:
+                                                                          18.0,
+                                                                      controller:
+                                                                          _unsoldController,
+                                                                      activeColor:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .primary,
+                                                                      inactiveColor:
+                                                                          Color.fromRGBO(
+                                                                              4,
+                                                                              7,
+                                                                              49,
+                                                                              0.42)),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 12,
+                                                      ),
+                                                      Expanded(
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: _isInitialOutliersClicked
+                                                                  ? null
+                                                                  : Color(
+                                                                      0xFF001633),
+                                                              border:
+                                                                  Border.all(
+                                                                color: _isInitialOutliersClicked
+                                                                    ? Color(
+                                                                        0xFFE6E8F0)
+                                                                    : Color(
+                                                                        0xFF001633),
+                                                                width: 1,
+                                                              ),
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color: _isInitialOutliersClicked
+                                                                                ? FlutterFlowTheme.of(context).secondaryText
+                                                                                : FlutterFlowTheme.of(context).secondaryBackground,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Show Outliers"),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  AdvancedSwitch(
+                                                                      width:
+                                                                          30.0,
+                                                                      height:
+                                                                          18.0,
+                                                                      controller:
+                                                                          _outliersController,
+                                                                      activeColor:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .primary,
+                                                                      inactiveColor: Color.from(
+                                                                          alpha:
+                                                                              0.42,
+                                                                          red:
+                                                                              0.016,
+                                                                          green:
+                                                                              0.027,
+                                                                          blue:
+                                                                              0.192)),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                                 if (_isChartLoading)
                                                   const SizedBox(
                                                     height: 440,
@@ -1758,7 +1964,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                 else
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        top: 14),
+                                                        top: 12),
                                                     child: HighCharts(
                                                       size: Size(
                                                           MediaQuery.of(context)
