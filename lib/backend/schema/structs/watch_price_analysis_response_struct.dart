@@ -558,7 +558,7 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
   final String manufactureName;
   final String modelName;
   final String referenceNumber;
-  final PrimaryImage primaryImage;
+  final PrimaryImage? primaryImage;
   final int lotStatusId;
   final String infoSourceName;
 
@@ -582,7 +582,7 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
     required this.manufactureName,
     required this.modelName,
     required this.referenceNumber,
-    required this.primaryImage,
+    this.primaryImage,
     required this.lotStatusId,
     required this.infoSourceName,
   });
@@ -608,7 +608,9 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
       manufactureName: map['manufactureName'],
       modelName: map['modelName'],
       referenceNumber: map['referenceNumber'],
-      primaryImage: PrimaryImage.fromMap(map['primaryImage']),
+      primaryImage: map['primaryImage'] != null
+          ? PrimaryImage.fromMap(map['primaryImage'])
+          : null,
       lotStatusId: map['lotStatusId'],
       infoSourceName: map['infoSourceName'],
     );
@@ -635,7 +637,7 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
       'manufactureName': manufactureName,
       'modelName': modelName,
       'referenceNumber': referenceNumber,
-      'primaryImage': primaryImage.toMap(),
+      'primaryImage': primaryImage?.toMap(),
       'lotStatusId': lotStatusId,
       'infoSourceName': infoSourceName,
     };
@@ -663,7 +665,7 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
       'manufactureName': manufactureName,
       'modelName': modelName,
       'referenceNumber': referenceNumber,
-      'primaryImage': primaryImage.toSerializableMap(),
+      'primaryImage': primaryImage?.toSerializableMap(),
       'lotStatusId': lotStatusId,
       'infoSourceName': infoSourceName,
     };

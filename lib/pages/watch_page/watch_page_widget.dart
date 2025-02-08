@@ -542,16 +542,16 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         modelName: "${item.modelName}",
         referenceNumber: "${item.referenceNumber}",
         primaryImage: {
-          url: "${item.primaryImage.url}",
-          previewEmail320: "${item.primaryImage.previewEmail320}",
-          preview320: "${item.primaryImage.preview320}",
-          preview480: "${item.primaryImage.preview480}",
-          preview768: "${item.primaryImage.preview768}",
-          preview960: "${item.primaryImage.preview960}",
-          preview1366: "${item.primaryImage.preview1366}",
-          original: "${item.primaryImage.original}",
-          isPrimary: "${item.primaryImage.isPrimary}",
-          isDeleted: "${item.primaryImage.isDeleted}",
+          url: "${item.primaryImage?.url ?? ''}",
+          previewEmail320: "${item.primaryImage?.previewEmail320 ?? ''}",
+          preview320: "${item.primaryImage?.preview320 ?? ''}",
+          preview480: "${item.primaryImage?.preview480 ?? ''}",
+          preview768: "${item.primaryImage?.preview768 ?? ''}",
+          preview960: "${item.primaryImage?.preview960 ?? ''}",
+          preview1366: "${item.primaryImage?.preview1366 ?? ''}",
+          original: "${item.primaryImage?.original ?? ''}",
+          isPrimary: "${item.primaryImage?.isPrimary ?? ''}",
+          isDeleted: "${item.primaryImage?.isDeleted ?? ''}",
 
         },
         lotStatusId: ${item.lotStatusId},
@@ -613,16 +613,16 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         modelName: "${item.modelName}",
         referenceNumber: "${item.referenceNumber}",
         primaryImage: {
-          url: "${item.primaryImage.url}",
-          previewEmail320: "${item.primaryImage.previewEmail320}",
-          preview320: "${item.primaryImage.preview320}",
-          preview480: "${item.primaryImage.preview480}",
-          preview768: "${item.primaryImage.preview768}",
-          preview960: "${item.primaryImage.preview960}",
-          preview1366: "${item.primaryImage.preview1366}",
-          original: "${item.primaryImage.original}",
-          isPrimary: "${item.primaryImage.isPrimary}",
-          isDeleted: "${item.primaryImage.isDeleted}",
+          url: "${item.primaryImage?.url ?? ''}",
+          previewEmail320: "${item.primaryImage?.previewEmail320 ?? ''}",
+          preview320: "${item.primaryImage?.preview320 ?? ''}",
+          preview480: "${item.primaryImage?.preview480 ?? ''}",
+          preview768: "${item.primaryImage?.preview768 ?? ''}",
+          preview960: "${item.primaryImage?.preview960 ?? ''}",
+          preview1366: "${item.primaryImage?.preview1366 ?? ''}",
+          original: "${item.primaryImage?.original ?? ''}",
+          isPrimary: "${item.primaryImage?.isPrimary ?? ''}",
+          isDeleted: "${item.primaryImage?.isDeleted ?? ''}",
 
         },
         lotStatusId: ${item.lotStatusId},
@@ -719,7 +719,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         _isChartLoading = false;
         _isInitialLoading = false;
       });
-      print("Error: $e"); // Log any errors
+      print("Errorrrr: $e"); // Log any errors
     }
   }
 
@@ -1250,6 +1250,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                   top: 6,
                                                                   bottom: 6),
                                                           child: Text(
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                               style: FlutterFlowTheme
                                                                       .of(
                                                                           context)
