@@ -243,22 +243,25 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           style: {
               pointerEvents: 'auto'
           },
-          hideDelay: 800,
+          hideDelay: 0,
           stickOnContact: true,
           formatter: function() {
             if (!this.point.item) {
               // For median line points
-              return '<div style="padding: 10px;">' +
-                '<div style="font-weight: bold;">' + 
+              return '<div>' +
+                '<span>' + 
+                  'Dealer median: ' +
+                '</span>' +
+                '<span style="font-weight: bold;">' + 
                 Highcharts.numberFormat(this.y, 0) + ' USD' +
-                '</div>' +
-                '<div>' + Highcharts.dateFormat('%d %b %Y', this.x) + '</div>' +
+                '</span>' +
                 '</div>';
+
             }
             
             // For scatter points (auction lots)
             var point = this.point.item;
-            return '<div class="chart-tooltip" style="width: 220px; padding: 0px;">' +
+            return '<div class="chart-tooltip">' +
               '<div style="display: flex; gap: 4px;">' +
                 '<div style="flex: 0 0 60px;">' +
                   '<img src="' + (point.primaryImage.preview480 || '') + '" ' +
@@ -269,7 +272,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                   '<div style="color: #666; font-size: 12px;">' + 
                     point.modelName + ' ' + point.referenceNumber +
                   '</div>' +
-                  '<div style="color: #666; font-size: 12px;">Source: ' + point.infoSourceName + '</div>' +
+                  '<div style="color: #666; font-weight: 700; color: rgba(4, 7, 49, .722); font-size: 12px;">Source: ' + point.infoSourceName + '</div>' +
                   '<div style="margin-top: 8px;">' +
                     '<span style="font-weight: bold;">' + 
                       Highcharts.numberFormat(point.netPayableUsd, 0) + ' USD' +
@@ -554,22 +557,24 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         style: {
           pointerEvents: 'auto'
         },
-        hideDelay: 800,
+        hideDelay: 0,
         stickOnContact: true,
         formatter: function() {
           if (!this.point.item) {
             // For median line points
-            return '<div style="padding: 10px;">' +
-              '<div style="font-weight: bold;">' + 
+            return '<div>' +
+              '<span>' + 
+                'Auction median: ' +
+              '</span>' +
+              '<span style="font-weight: bold;">' + 
               Highcharts.numberFormat(this.y, 0) + ' USD' +
-              '</div>' +
-              '<div>' + Highcharts.dateFormat('%d %b %Y', this.x) + '</div>' +
+              '</span>' +
               '</div>';
           }
           
           // For scatter points (auction lots)
           var point = this.point.item;
-          return '<div class="chart-tooltip" style="width: 220px; padding: 0px;">' +
+          return '<div class="chart-tooltip">' +
             '<div style="display: flex; gap: 4px;">' +
               '<div style="flex: 0 0 60px;">' +
                 '<img src="' + (point.primaryImage.preview480 || '') + '" ' +
@@ -581,7 +586,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 '<div style="color: #666; font-size: 12px;">' + 
                   point.modelName + ' ' + point.referenceNumber +
                 '</div>' +
-                '<div style="color: #666; font-size: 12px;">Source: ' + point.infoSourceName + '</div>' +
+                '<div style="color: #666; font-weight: 700; color: rgba(4, 7, 49, .722); font-size: 12px;">Source: ' + point.infoSourceName + '</div>' +
                 '<div style="margin-top: 8px;">' +
                   '<span style="font-weight: bold;">' + 
                     Highcharts.numberFormat(point.netPayableUsd, 0) + ' USD' +
