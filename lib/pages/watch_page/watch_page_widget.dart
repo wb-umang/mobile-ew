@@ -282,23 +282,23 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                       Highcharts.dateFormat('%d %b %Y', this.x) +
                     '</span>' +
                   '</div>' +
-                  '<div style="color: #666; font-size: 12px; margin-top: 4px;">' +
-                    'Click to view details' +
-                  '</div>' +
                 '</div>' +
               '</div>' +
             '</div>';
           }
       },
       plotOptions: {
-        scatter: {
+        spline: {
           cursor: 'pointer',
           point: {
             events: {
               click: function() {
                 if (this.item && this.item.slug) {
-                  window.open('/' + this.item.manufacturerSlug + '/' + 
-                    this.item.modelSlug + '/watch-' + this.item.watchId, '_blank');
+                  flutter_inappwebview.postMessage(JSON.stringify({
+                    manufacturerSlug: this.item.manufacturerSlug,
+                    modelSlug: this.item.modelSlug,
+                    watchId: this.item.watchId
+                  }));
                 }
               }
             }
@@ -596,9 +596,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                     Highcharts.dateFormat('%d %b %Y', this.x) +
                   '</span>' +
                 '</div>' +
-                '<div style="color: #666; font-size: 12px; margin-top: 4px;">' +
-                  'Click to view details' +
-                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -611,8 +608,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             events: {
               click: function() {
                 if (this.item && this.item.slug) {
-                  window.open('/' + this.item.manufacturerSlug + '/' + 
-                    this.item.modelSlug + '/watch-' + this.item.watchId, '_blank');
+                  window.flutter_inappwebview.postMessage(JSON.stringify({
+                    manufacturerSlug: this.item.manufacturerSlug,
+                    modelSlug: this.item.modelSlug,
+                    watchId: this.item.watchId
+                  }));
                 }
               }
             }
@@ -1808,98 +1808,93 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                         .lightGray,
                                                   ),
                                                 ),
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                  child: SizedBox(
-                                                    width: double.infinity,
-                                                    child: IntrinsicHeight(
-                                                      child: Row(
-                                                        children: [
-                                                          ChartFilterButton(
-                                                            text: '3M',
-                                                            color: Colors.red,
-                                                            isSelected:
-                                                                _selectedButtonIndex ==
-                                                                    0,
-                                                            onPressed: () {
-                                                              setState(() =>
-                                                                  _selectedButtonIndex =
-                                                                      0);
-                                                              _getChartPriceAnalysisClicked();
-                                                            },
-                                                          ),
-                                                          ChartFilterButton(
-                                                            text: '6M',
-                                                            color: Colors.blue,
-                                                            isSelected:
-                                                                _selectedButtonIndex ==
-                                                                    1,
-                                                            onPressed: () {
-                                                              setState(() =>
-                                                                  _selectedButtonIndex =
-                                                                      1);
-                                                              _getChartPriceAnalysisClicked();
-                                                            },
-                                                          ),
-                                                          ChartFilterButton(
-                                                            text: '1Y',
-                                                            color: Colors.green,
-                                                            isSelected:
-                                                                _selectedButtonIndex ==
-                                                                    2,
-                                                            onPressed: () {
-                                                              setState(() =>
-                                                                  _selectedButtonIndex =
-                                                                      2);
-                                                              _getChartPriceAnalysisClicked();
-                                                            },
-                                                          ),
-                                                          ChartFilterButton(
-                                                            text: '2Y',
-                                                            color:
-                                                                Colors.yellow,
-                                                            isSelected:
-                                                                _selectedButtonIndex ==
-                                                                    3,
-                                                            onPressed: () {
-                                                              setState(() =>
-                                                                  _selectedButtonIndex =
-                                                                      3);
-                                                              _getChartPriceAnalysisClicked();
-                                                            },
-                                                          ),
-                                                          ChartFilterButton(
-                                                            text: '5Y',
-                                                            color:
-                                                                Colors.purple,
-                                                            isSelected:
-                                                                _selectedButtonIndex ==
-                                                                    4,
-                                                            onPressed: () {
-                                                              setState(() =>
-                                                                  _selectedButtonIndex =
-                                                                      4);
-                                                              _getChartPriceAnalysisClicked();
-                                                            },
-                                                          ),
-                                                          ChartFilterButton(
-                                                            text: 'Max',
-                                                            color:
-                                                                Colors.orange,
-                                                            isSelected:
-                                                                _selectedButtonIndex ==
-                                                                    5,
-                                                            onPressed: () {
-                                                              setState(() =>
-                                                                  _selectedButtonIndex =
-                                                                      5);
-                                                              _getChartPriceAnalysisClicked();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: IntrinsicHeight(
+                                                    child: Row(
+                                                      children: [
+                                                        ChartFilterButton(
+                                                          isFirst: true,
+                                                          text: '3M',
+                                                          color: Colors.red,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  0,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    0);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '6M',
+                                                          color: Colors.blue,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  1,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    1);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '1Y',
+                                                          color: Colors.green,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  2,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    2);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '2Y',
+                                                          color: Colors.yellow,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  3,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    3);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          text: '5Y',
+                                                          color: Colors.purple,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  4,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    4);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                        ChartFilterButton(
+                                                          isBorderRight: true,
+                                                          isLast: true,
+                                                          text: 'Max',
+                                                          color: Colors.orange,
+                                                          isSelected:
+                                                              _selectedButtonIndex ==
+                                                                  5,
+                                                          onPressed: () {
+                                                            setState(() =>
+                                                                _selectedButtonIndex =
+                                                                    5);
+                                                            _getChartPriceAnalysisClicked();
+                                                          },
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
@@ -1909,68 +1904,63 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   child: Row(
                                                     children: [
                                                       Expanded(
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              border:
-                                                                  Border.all(
-                                                                color: Color(
-                                                                    0xFFE6E8F0),
-                                                                width: 1,
-                                                              ),
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                            border: Border.all(
+                                                              color: Color(
+                                                                  0xFFE6E8F0),
+                                                              width: 1,
                                                             ),
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 6,
-                                                                      bottom:
-                                                                          6),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmall
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                'DM Sans',
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondaryText,
-                                                                            fontSize:
-                                                                                14.0,
-                                                                            letterSpacing:
-                                                                                0.08,
-                                                                          ),
-                                                                      "Show Unsold"),
-                                                                  SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                  AdvancedSwitch(
-                                                                      width:
-                                                                          30.0,
-                                                                      height:
-                                                                          18.0,
-                                                                      controller:
-                                                                          _unsoldController,
-                                                                      activeColor:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primary,
-                                                                      inactiveColor:
-                                                                          Color.fromRGBO(
-                                                                              4,
-                                                                              7,
-                                                                              49,
-                                                                              0.42)),
-                                                                ],
-                                                              ),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 6,
+                                                                    bottom: 6),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .titleSmall
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'DM Sans',
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryText,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.08,
+                                                                        ),
+                                                                    "Show Unsold"),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                AdvancedSwitch(
+                                                                    width: 30.0,
+                                                                    height:
+                                                                        18.0,
+                                                                    controller:
+                                                                        _unsoldController,
+                                                                    activeColor:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                    inactiveColor:
+                                                                        Color.fromRGBO(
+                                                                            4,
+                                                                            7,
+                                                                            49,
+                                                                            0.42)),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
@@ -1979,79 +1969,74 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                         width: 12,
                                                       ),
                                                       Expanded(
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                            color: _isInitialOutliersClicked
+                                                                ? null
+                                                                : Color(
+                                                                    0xFF001633),
+                                                            border: Border.all(
                                                               color: _isInitialOutliersClicked
-                                                                  ? null
+                                                                  ? Color(
+                                                                      0xFFE6E8F0)
                                                                   : Color(
                                                                       0xFF001633),
-                                                              border:
-                                                                  Border.all(
-                                                                color: _isInitialOutliersClicked
-                                                                    ? Color(
-                                                                        0xFFE6E8F0)
-                                                                    : Color(
-                                                                        0xFF001633),
-                                                                width: 1,
-                                                              ),
+                                                              width: 1,
                                                             ),
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 6,
-                                                                      bottom:
-                                                                          6),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmall
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                'DM Sans',
-                                                                            color: _isInitialOutliersClicked
-                                                                                ? FlutterFlowTheme.of(context).secondaryText
-                                                                                : FlutterFlowTheme.of(context).secondaryBackground,
-                                                                            fontSize:
-                                                                                14.0,
-                                                                            letterSpacing:
-                                                                                0.08,
-                                                                          ),
-                                                                      "Show Outliers"),
-                                                                  SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                  AdvancedSwitch(
-                                                                      width:
-                                                                          30.0,
-                                                                      height:
-                                                                          18.0,
-                                                                      controller:
-                                                                          _outliersController,
-                                                                      activeColor:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primary,
-                                                                      inactiveColor: Color.from(
-                                                                          alpha:
-                                                                              0.42,
-                                                                          red:
-                                                                              0.016,
-                                                                          green:
-                                                                              0.027,
-                                                                          blue:
-                                                                              0.192)),
-                                                                ],
-                                                              ),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 6,
+                                                                    bottom: 6),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .titleSmall
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'DM Sans',
+                                                                          color: _isInitialOutliersClicked
+                                                                              ? FlutterFlowTheme.of(context).secondaryText
+                                                                              : FlutterFlowTheme.of(context).secondaryBackground,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.08,
+                                                                        ),
+                                                                    "Show Outliers"),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                AdvancedSwitch(
+                                                                    width: 30.0,
+                                                                    height:
+                                                                        18.0,
+                                                                    controller:
+                                                                        _outliersController,
+                                                                    activeColor:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                    inactiveColor: Color.from(
+                                                                        alpha:
+                                                                            0.42,
+                                                                        red:
+                                                                            0.016,
+                                                                        green:
+                                                                            0.027,
+                                                                        blue:
+                                                                            0.192)),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),

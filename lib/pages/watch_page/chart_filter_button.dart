@@ -5,6 +5,9 @@ class ChartFilterButton extends StatefulWidget {
   final Color color;
   final bool isSelected;
   final VoidCallback onPressed;
+  final bool isFirst;
+  final bool isLast;
+  final bool isBorderRight;
 
   const ChartFilterButton({
     super.key,
@@ -12,6 +15,9 @@ class ChartFilterButton extends StatefulWidget {
     required this.color,
     required this.isSelected,
     required this.onPressed,
+    this.isFirst = false,
+    this.isLast = false,
+    this.isBorderRight = false,
   });
 
   @override
@@ -26,14 +32,45 @@ class _ChartFilterButtonState extends State<ChartFilterButton> {
         onTap: widget.onPressed,
         child: Container(
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft:
+                    widget.isFirst ? Radius.circular(12) : Radius.circular(0),
+                topRight:
+                    widget.isLast ? Radius.circular(12) : Radius.circular(0),
+                bottomLeft:
+                    widget.isFirst ? Radius.circular(12) : Radius.circular(0),
+                bottomRight:
+                    widget.isLast ? Radius.circular(12) : Radius.circular(0)),
             color: widget.isSelected
                 ? const Color(0xFF001633)
                 : Colors.transparent,
-            border: Border.all(
-              color: widget.isSelected
-                  ? const Color(0xFF001633)
-                  : const Color(0xFFE6E8F0),
-              width: 1,
+            border: Border(
+              top: BorderSide(
+                width: 1,
+                color: widget.isSelected
+                    ? const Color(0xFF001633)
+                    : const Color(0xFFE6E8F0),
+              ),
+              bottom: BorderSide(
+                width: 1,
+                color: widget.isSelected
+                    ? const Color(0xFF001633)
+                    : const Color(0xFFE6E8F0),
+              ),
+              right: widget.isBorderRight
+                  ? BorderSide(
+                      width: 1,
+                      color: widget.isSelected
+                          ? const Color(0xFF001633)
+                          : const Color(0xFFE6E8F0),
+                    )
+                  : BorderSide.none,
+              left: BorderSide(
+                width: 1,
+                color: widget.isSelected
+                    ? const Color(0xFF001633)
+                    : const Color(0xFFE6E8F0),
+              ),
             ),
           ),
           child: Padding(
