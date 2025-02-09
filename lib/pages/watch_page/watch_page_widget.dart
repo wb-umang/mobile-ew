@@ -245,6 +245,62 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           },
           hideDelay: 800,
           stickOnContact: true,
+          formatter: function() {
+            if (!this.point.item) {
+              // For median line points
+              return '<div style="padding: 10px;">' +
+                '<div style="font-weight: bold;">' + 
+                Highcharts.numberFormat(this.y, 0) + ' USD' +
+                '</div>' +
+                '<div>' + Highcharts.dateFormat('%d %b %Y', this.x) + '</div>' +
+                '</div>';
+            }
+            
+            // For scatter points (auction lots)
+            var point = this.point.item;
+            return '<div class="chart-tooltip" style="width: 220px; padding: 0px;">' +
+              '<div style="display: flex; gap: 4px;">' +
+                '<div style="flex: 0 0 60px;">' +
+                  '<img src="' + (point.primaryImage.preview480 || '') + '" ' +
+                  'style="width: 70px; height: 70px; object-fit: contain; border-radius: 8px;" />' +
+                '</div>' +
+                '<div style="flex: 1;">' +
+                  '<div style="font-weight: bold; font-size: 14px;">' + point.manufacturerName + '</div>' +
+                  '<div style="color: #666; font-size: 12px;">' + 
+                    point.modelName + ' ' + point.referenceNumber +
+                  '</div>' +
+                  '<div style="color: #666; font-size: 12px;">Source: ' + point.infoSourceName + '</div>' +
+                  '<div style="margin-top: 8px;">' +
+                    '<span style="font-weight: bold;">' + 
+                      Highcharts.numberFormat(point.netPayableUsd, 0) + ' USD' +
+                    '</span>' +
+                    '<span style="color: #666;"> | </span>' +
+                    '<span style="color: #666;">' + 
+                      Highcharts.dateFormat('%d %b %Y', this.x) +
+                    '</span>' +
+                  '</div>' +
+                  '<div style="color: #666; font-size: 12px; margin-top: 4px;">' +
+                    'Click to view details' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          }
+      },
+      plotOptions: {
+        scatter: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function() {
+                if (this.item && this.item.slug) {
+                  window.open('/' + this.item.manufacturerSlug + '/' + 
+                    this.item.modelSlug + '/watch-' + this.item.watchId, '_blank');
+                }
+              }
+            }
+          }
+        }
       },
       series: [
       $scatterChartData,
@@ -499,7 +555,64 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           pointerEvents: 'auto'
         },
         hideDelay: 800,
-        stickOnContact: true
+        stickOnContact: true,
+        formatter: function() {
+          if (!this.point.item) {
+            // For median line points
+            return '<div style="padding: 10px;">' +
+              '<div style="font-weight: bold;">' + 
+              Highcharts.numberFormat(this.y, 0) + ' USD' +
+              '</div>' +
+              '<div>' + Highcharts.dateFormat('%d %b %Y', this.x) + '</div>' +
+              '</div>';
+          }
+          
+          // For scatter points (auction lots)
+          var point = this.point.item;
+          return '<div class="chart-tooltip" style="width: 220px; padding: 0px;">' +
+            '<div style="display: flex; gap: 4px;">' +
+              '<div style="flex: 0 0 60px;">' +
+                '<img src="' + (point.primaryImage.preview480 || '') + '" ' +
+                'style="width: 70px; height: 70px; object-fit: contain; border-radius: 8px;" />' +
+              '</div>' +
+
+              '<div style="flex: 1;">' +
+                '<div style="font-weight: bold; font-size: 14px;">' + point.manufacturerName + '</div>' +
+                '<div style="color: #666; font-size: 12px;">' + 
+                  point.modelName + ' ' + point.referenceNumber +
+                '</div>' +
+                '<div style="color: #666; font-size: 12px;">Source: ' + point.infoSourceName + '</div>' +
+                '<div style="margin-top: 8px;">' +
+                  '<span style="font-weight: bold;">' + 
+                    Highcharts.numberFormat(point.netPayableUsd, 0) + ' USD' +
+                  '</span>' +
+                  '<span style="color: #666;"> | </span>' +
+                  '<span style="color: #666;">' + 
+                    Highcharts.dateFormat('%d %b %Y', this.x) +
+                  '</span>' +
+                '</div>' +
+                '<div style="color: #666; font-size: 12px; margin-top: 4px;">' +
+                  'Click to view details' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }
+      },
+      plotOptions: {
+        scatter: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function() {
+                if (this.item && this.item.slug) {
+                  window.open('/' + this.item.manufacturerSlug + '/' + 
+                    this.item.modelSlug + '/watch-' + this.item.watchId, '_blank');
+                }
+              }
+            }
+          }
+        }
       },
       series: [
         $scatterChartData,
