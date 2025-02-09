@@ -70,6 +70,7 @@ dependencies:
   high_chart: ^2.3.0
   built_value: ^8.9.0
   flutter_advanced_switch: ^3.1.0
+  skeletonizer: ^1.4.3
 
 dependency_overrides:
   http: 1.2.1
