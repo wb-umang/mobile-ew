@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
+import 'dart:math' as math;
 
 import '/backend/api_requests/api_calls.dart';
 import '/components/auction_price_card/auction_price_card_widget.dart';
@@ -47,8 +48,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool _unsold = false;
   bool _outliers = false;
   bool _isInitialOutliersClicked = false;
-  final GlobalKey<HighChartsState> _highChartsKey =
-      GlobalKey<HighChartsState>();
 
   String _generateDealersChartData(
     List<DealerPriceAnalysisStruct> priceAnalysis,
@@ -56,22 +55,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     String unsoldScatterChartData,
     bool isOutliers,
   ) {
-    // Function to calculate the median
-    double calculateMedian(List<double> numbers) {
-      if (numbers.isEmpty) return 0.0; // Return 0 if the list is empty
-      final sortedNumbers = List<double>.from(numbers)..sort();
-      final length = sortedNumbers.length;
-      final mid = length ~/ 2;
-
-      if (length % 2 == 0) {
-        // For even-length arrays, return the average of the two middle numbers
-        return (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
-      } else {
-        // For odd-length arrays, return the middle number
-        return sortedNumbers[mid];
-      }
-    }
-
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -122,9 +105,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         }]
       }''';
     }
-
-    // Example usage of calculateMedian
-    final medianPrice = calculateMedian(uniqueDateValues.values.toList());
 
     // Convert the map entries to sorted list
     final sortedEntries = uniqueDateValues.entries.toList()
@@ -665,7 +645,25 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
   String _generateWatchPriceAnalysisChartData(
       PriceAnalysisGraphStruct priceAnalysisGraph, bool isOutliers) {
-    final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
+    final auctionPriceAnalysis = priceAnalysisGraph.auctionPriceAnalysis;
+    final dealersPriceAnalysis = priceAnalysisGraph.dealersPriceAnalysis;
+    final auctionAnalysisMedians = priceAnalysisGraph.auctionAnalysisMedians;
+
+    // Function to round a value to the nearest specified magnitude
+    double roundToNearest(double value) {
+      final magnitude = math.pow(10, (math.log(value) / math.ln10).floor());
+      final remainder = value % magnitude;
+
+      final magnitudeModifier = remainder < magnitude / 2 ? 10 : 5;
+      double val = (value / (magnitude / magnitudeModifier)).round() *
+          (magnitude / magnitudeModifier);
+
+      if (val < value) {
+        val = (value / (magnitude / 10)).ceil() * (magnitude / 10);
+      }
+
+      return val;
+    }
 
     // Function to calculate the median
     double calculateMedian(List<double> numbers) {
@@ -683,19 +681,27 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }
     }
 
+    final dealerMedian =
+        dealersPriceAnalysis.map((item) => item.medians.medianUsd).toList();
+
+    final auctionMedian =
+        auctionAnalysisMedians.map((item) => item.medians.medianUsd).toList();
+
     // Calculate the median price
-    final medianPrice =
-        calculateMedian(auctionData.map((item) => item.netPayableUsd).toList());
+    final auctionPriceMedian =
+        auctionPriceAnalysis.map((item) => item.netPayableUsd).toList();
+
+    // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
+    final combinedMedians = [
+      ...dealerMedian,
+      ...auctionMedian,
+      ...auctionPriceMedian
+    ];
+    final medianPrice = roundToNearest(calculateMedian(combinedMedians));
 
     // Filter auction data based on _outliers
-    final filteredAuctionData = auctionData.where((item) {
+    final filteredAuctionData = auctionPriceAnalysis.where((item) {
       if (!isOutliers) {
-        if (item.netPayableUsd >= (medianPrice * 2)) {
-          print("#############################!!!");
-          print("medianPrice * 2: ${item.netPayableUsd}");
-          print("medianPrice: ${medianPrice * 2}");
-          print("#############################!!!");
-        }
         // If outliers are not shown, ignore items with medianUsd above double the calculated median
         return item.netPayableUsd <= (medianPrice * 2);
       }
@@ -772,7 +778,25 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       PriceAnalysisGraphStruct priceAnalysisGraph,
       bool isUnsold,
       bool isOutliers) {
-    final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
+    final auctionPriceAnalysis = priceAnalysisGraph.auctionPriceAnalysis;
+    final dealersPriceAnalysis = priceAnalysisGraph.dealersPriceAnalysis;
+    final auctionAnalysisMedians = priceAnalysisGraph.auctionAnalysisMedians;
+
+    // Function to round a value to the nearest specified magnitude
+    double roundToNearest(double value) {
+      final magnitude = math.pow(10, (math.log(value) / math.ln10).floor());
+      final remainder = value % magnitude;
+
+      final magnitudeModifier = remainder < magnitude / 2 ? 10 : 5;
+      double val = (value / (magnitude / magnitudeModifier)).round() *
+          (magnitude / magnitudeModifier);
+
+      if (val < value) {
+        val = (value / (magnitude / 10)).ceil() * (magnitude / 10);
+      }
+
+      return val;
+    }
 
     // Function to calculate the median
     double calculateMedian(List<double> numbers) {
@@ -790,12 +814,26 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }
     }
 
+    final dealerMedian =
+        dealersPriceAnalysis.map((item) => item.medians.medianUsd).toList();
+
+    final auctionMedian =
+        auctionAnalysisMedians.map((item) => item.medians.medianUsd).toList();
+
     // Calculate the median price
-    final medianPrice =
-        calculateMedian(auctionData.map((item) => item.netPayableUsd).toList());
+    final auctionPriceMedian =
+        auctionPriceAnalysis.map((item) => item.netPayableUsd).toList();
+
+    // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
+    final combinedMedians = [
+      ...dealerMedian,
+      ...auctionMedian,
+      ...auctionPriceMedian
+    ];
+    final medianPrice = roundToNearest(calculateMedian(combinedMedians));
 
     // Filter auction data based on _outliers
-    final filteredAuctionData = auctionData.where((item) {
+    final filteredAuctionData = auctionPriceAnalysis.where((item) {
       if (!isOutliers) {
         // If outliers are not shown, ignore items with medianUsd above double the calculated median
         return item.netPayableUsd <= (medianPrice * 2);
