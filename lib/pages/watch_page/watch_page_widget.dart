@@ -701,16 +701,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Filter auction data based on _outliers
     final filteredAuctionData = auctionPriceAnalysis.where((item) {
+      return item.lotStatusId == 2;
+    }).toList();
+
+    // Construct data points for the chart without quotes around keys
+    final dataPoints = filteredAuctionData.where((item) {
       if (!isOutliers) {
         // If outliers are not shown, ignore items with medianUsd above double the calculated median
         return item.netPayableUsd <= (medianPrice * 2);
       }
-      return true; // Show all items if outliers are allowed
-    }).toList();
-
-    // Construct data points for the chart without quotes around keys
-    final dataPoints =
-        filteredAuctionData.where((item) => item.lotStatusId == 2).map((item) {
+      return true;
+    }).map((item) {
       return '''
     {
       x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
@@ -834,17 +835,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Filter auction data based on _outliers
     final filteredAuctionData = auctionPriceAnalysis.where((item) {
+      // If outliers are not shown, ignore items with medianUsd above double the calculated median
+      return item.lotStatusId != 2;
+    }).toList();
+
+    // Construct data points for the chart without quotes around keys
+    final dataPoints = filteredAuctionData.where((item) {
       if (!isOutliers) {
         // If outliers are not shown, ignore items with medianUsd above double the calculated median
         return item.netPayableUsd <= (medianPrice * 2);
       }
-      return true; // Show all items if outliers are allowed
-    }).toList();
-
-    // Construct data points for the chart without quotes around keys
-    final dataPoints = filteredAuctionData
-        .where((item) => item.lotStatusId != 2) // Filter condition
-        .map((item) {
+      return true;
+    }).map((item) {
       return '''
     {
       x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
