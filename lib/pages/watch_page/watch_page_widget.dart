@@ -123,7 +123,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         ? dates.first
         : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
 
-    final endDate = dates.last; // Use last data point instead of current date
+    final endDate = dates.last.isAfter(
+            auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
+        ? dates.last
+        : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+
     final totalDuration = endDate.difference(startDate).inMilliseconds;
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
@@ -450,7 +454,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         ? dates.first
         : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
 
-    final endDate = dates.last; // Use last data point instead of current date
+    final endDate = dates.last.isAfter(
+            auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
+        ? dates.last
+        : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+
     final totalDuration = endDate.difference(startDate).inMilliseconds;
 
     // Calculate y-axis max value
