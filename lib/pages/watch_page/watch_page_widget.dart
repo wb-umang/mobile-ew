@@ -1067,6 +1067,84 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             : maxAuctionPrice;
   }
 
+  // Calculate the threshold for showing the outliers button
+  bool shouldShowOutliersButton() {
+    // Function to round a value to the nearest specified magnitude
+    double roundToNearest(double value) {
+      final magnitude = math.pow(10, (math.log(value) / math.ln10).floor());
+      final remainder = value % magnitude;
+
+      final magnitudeModifier = remainder < magnitude / 2 ? 10 : 5;
+      double val = (value / (magnitude / magnitudeModifier)).round() *
+          (magnitude / magnitudeModifier);
+
+      if (val < value) {
+        val = (value / (magnitude / 10)).ceil() * (magnitude / 10);
+      }
+
+      return val;
+    }
+
+    // Function to calculate the median
+    double calculateMedian(List<double> numbers) {
+      if (numbers.isEmpty) return 0.0; // Return 0 if the list is empty
+      final sortedNumbers = List<double>.from(numbers)..sort();
+      final length = sortedNumbers.length;
+      final mid = length ~/ 2;
+
+      if (length % 2 == 0) {
+        // For even-length arrays, return the average of the two middle numbers
+        return (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
+      } else {
+        // For odd-length arrays, return the middle number
+        return sortedNumbers[mid];
+      }
+    }
+
+    final dealerMedian = _priceAnalysis?.data.dealersPriceAnalysis
+            .map((item) => item.medians.medianUsd)
+            .toList() ??
+        [];
+
+    final auctionMedian = _priceAnalysis?.data.auctionAnalysisMedians
+            .map((item) => item.medians.medianUsd)
+            .toList() ??
+        [];
+
+    // Calculate the median price
+    final auctionPriceMedian = _priceAnalysis
+            ?.data.priceAnalysisGraph.auctionPriceAnalysis
+            .map((item) => item.netPayableUsd)
+            .toList() ??
+        [];
+
+    // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
+    final combinedMedians = [
+      ...dealerMedian,
+      ...auctionMedian,
+      ...auctionPriceMedian
+    ];
+    final medianPrice = roundToNearest(calculateMedian(combinedMedians));
+
+    final double threshold = medianPrice * 2;
+
+    // Check if any values are above the threshold
+    bool areDealersAboveThreshold = _priceAnalysis?.data.dealersPriceAnalysis
+            .any((dealer) => dealer.medians.medianUsd > threshold) ??
+        false;
+    bool areAuctionsAboveThreshold = _priceAnalysis?.data.auctionAnalysisMedians
+            .any((auction) => auction.medians.medianUsd > threshold) ??
+        false;
+    bool areAuctionPricesAboveThreshold = _priceAnalysis
+            ?.data.priceAnalysisGraph.auctionPriceAnalysis
+            .any((auctionPrice) => auctionPrice.netPayableUsd > threshold) ??
+        false;
+
+    return areDealersAboveThreshold ||
+        areAuctionsAboveThreshold ||
+        areAuctionPricesAboveThreshold;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -2147,82 +2225,88 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                           ),
                                                         ),
                                                       ),
-                                                      SizedBox(
-                                                        width: 12,
-                                                      ),
-                                                      Expanded(
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            color: _isInitialOutliersClicked
-                                                                ? null
-                                                                : Color(
-                                                                    0xFF001633),
-                                                            border: Border.all(
+                                                      if (shouldShowOutliersButton())
+                                                        SizedBox(
+                                                          width: 12,
+                                                        ),
+                                                      // Show Outliers Button
+                                                      if (shouldShowOutliersButton())
+                                                        Expanded(
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
                                                               color: _isInitialOutliersClicked
-                                                                  ? Color(
-                                                                      0xFFE6E8F0)
+                                                                  ? null
                                                                   : Color(
                                                                       0xFF001633),
-                                                              width: 1,
+                                                              border:
+                                                                  Border.all(
+                                                                color: _isInitialOutliersClicked
+                                                                    ? Color(
+                                                                        0xFFE6E8F0)
+                                                                    : Color(
+                                                                        0xFF001633),
+                                                                width: 1,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 6,
-                                                                    bottom: 6),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleSmall
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              'DM Sans',
-                                                                          color: _isInitialOutliersClicked
-                                                                              ? FlutterFlowTheme.of(context).secondaryText
-                                                                              : FlutterFlowTheme.of(context).secondaryBackground,
-                                                                          fontSize:
-                                                                              14.0,
-                                                                          letterSpacing:
-                                                                              0.08,
-                                                                        ),
-                                                                    "Show Outliers"),
-                                                                SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                AdvancedSwitch(
-                                                                    width: 30.0,
-                                                                    height:
-                                                                        18.0,
-                                                                    controller:
-                                                                        _outliersController,
-                                                                    activeColor:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .primary,
-                                                                    inactiveColor: Color.from(
-                                                                        alpha:
-                                                                            0.42,
-                                                                        red:
-                                                                            0.016,
-                                                                        green:
-                                                                            0.027,
-                                                                        blue:
-                                                                            0.192)),
-                                                              ],
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 6,
+                                                                      bottom:
+                                                                          6),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'DM Sans',
+                                                                            color: _isInitialOutliersClicked
+                                                                                ? FlutterFlowTheme.of(context).secondaryText
+                                                                                : FlutterFlowTheme.of(context).secondaryBackground,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.08,
+                                                                          ),
+                                                                      "Show Outliers"),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  AdvancedSwitch(
+                                                                      width:
+                                                                          30.0,
+                                                                      height:
+                                                                          18.0,
+                                                                      controller:
+                                                                          _outliersController,
+                                                                      activeColor:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .primary,
+                                                                      inactiveColor: Color.from(
+                                                                          alpha:
+                                                                              0.42,
+                                                                          red:
+                                                                              0.016,
+                                                                          green:
+                                                                              0.027,
+                                                                          blue:
+                                                                              0.192)),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
                                                     ],
                                                   ),
                                                 ),
