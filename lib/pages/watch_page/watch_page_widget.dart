@@ -112,7 +112,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Calculate x-axis values
     final dates = sortedEntries.map((e) => DateTime.parse(e.key)).toList();
-    final startDate = dates.first;
+    final auctionDates = _priceAnalysis
+        ?.data.priceAnalysisGraph.auctionPriceAnalysis
+        .map((data) => DateTime.parse(data.eventPublishEndDate.toString()))
+        .toList();
+
+    final startDate = dates.first.isBefore(
+            auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ??
+                dates.first)
+        ? dates.first
+        : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
+
     final endDate = dates.last; // Use last data point instead of current date
     final totalDuration = endDate.difference(startDate).inMilliseconds;
     // Calculate y-axis max value
@@ -429,7 +439,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Calculate x-axis values
     final dates = sortedEntries.map((e) => DateTime.parse(e.key)).toList();
-    final startDate = dates.first;
+    final auctionDates = _priceAnalysis
+        ?.data.priceAnalysisGraph.auctionPriceAnalysis
+        .map((data) => DateTime.parse(data.eventPublishEndDate.toString()))
+        .toList();
+
+    final startDate = dates.first.isBefore(
+            auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ??
+                dates.first)
+        ? dates.first
+        : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
+
     final endDate = dates.last; // Use last data point instead of current date
     final totalDuration = endDate.difference(startDate).inMilliseconds;
 
