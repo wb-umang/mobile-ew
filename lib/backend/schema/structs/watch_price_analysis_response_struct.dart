@@ -558,17 +558,27 @@ double getOverallHighestAuctionPrice(
 
 double getLowestAuctionPrice(
     List<AuctionPriceAnalysisStruct> auctionPriceAnalysis) {
-  // Filter the auctionPriceAnalysis to include only those with lotStatusId == 2
-  var filteredPrices =
-      auctionPriceAnalysis.where((item) => item.lotStatusId == 2);
-
   // Check if the filtered list is empty
-  if (filteredPrices.isEmpty) return 0.0;
+  if (auctionPriceAnalysis.isEmpty) return 0.0;
 
-  // Find the minimum netPayableUsd value
-  return filteredPrices
-      .map((item) => item.netPayableUsd)
-      .reduce((a, b) => a < b ? a : b);
+  double lowestPrice = double.infinity; // Start with the highest possible value
+  bool hasValidPrice = false; // Flag to check if we have any valid prices
+
+  // Iterate through the auctionPriceAnalysis
+  for (var item in auctionPriceAnalysis) {
+    // Only compare if the netPayableUsd is greater than zero and lotStatusId is 2
+    if (item.netPayableUsd > 0 && item.lotStatusId == 2) {
+      hasValidPrice = true; // We found at least one valid price
+      if (item.netPayableUsd < lowestPrice) {
+        lowestPrice = item.netPayableUsd;
+      }
+    }
+  }
+
+  // If no valid prices were found, return 0
+  return hasValidPrice
+      ? lowestPrice
+      : 0.0; // Return the lowest price or 0 if all were zero
 }
 
 class AuctionPriceAnalysisStruct extends BaseStruct {

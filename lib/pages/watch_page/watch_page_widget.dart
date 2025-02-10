@@ -1181,7 +1181,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
-    _model.filter = createWatchAnalysisFilterStruct(watchId: 2415857);
+    _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
     _selectedButtonIndex = 0;
 
     _unsoldController.addListener(() {
