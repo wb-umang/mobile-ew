@@ -2045,14 +2045,23 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                   ),
                                                 ),
                                                 if (_isChartLoading)
-                                                  const SizedBox(
-                                                    height: 440,
-                                                    child: Center(
-                                                      child: SizedBox(
-                                                        width: 30.0,
-                                                        height: 30.0,
-                                                        child:
-                                                            CircularProgressIndicator(),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 12),
+                                                    child: Skeletonizer(
+                                                      enabled: true,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        child: Container(
+                                                          height: 420,
+                                                          width:
+                                                              double.infinity,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .hint,
+                                                        ),
                                                       ),
                                                     ),
                                                   )
@@ -2067,17 +2076,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                               .width,
                                                           420),
                                                       data: _chartData,
-                                                      loader: SizedBox(
-                                                        height: 440,
-                                                        child: Center(
-                                                          child: SizedBox(
-                                                            width: 30.0,
-                                                            height: 30.0,
-                                                            child:
-                                                                CircularProgressIndicator(),
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      loader: Container(),
                                                       scripts: const [
                                                         "https://code.highcharts.com/highcharts.js",
                                                         'https://code.highcharts.com/modules/networkgraph.js',
