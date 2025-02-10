@@ -508,6 +508,26 @@ double getLowestDealerPrice(List<DealerPriceAnalysisStruct>? dealersMedians) {
       : 0.0; // Return the lowest price or 0 if all were zero
 }
 
+double getHighestAuctionMedianPrice(
+    List<AuctionAnalysisMedianStruct>? auctionAnalysisMedians) {
+  if (auctionAnalysisMedians == null || auctionAnalysisMedians.isEmpty) {
+    return 0.0; // Return 0 if there are no dealers
+  }
+
+  double highestPrice = 0.0;
+
+  for (var auction in auctionAnalysisMedians) {
+    // Assuming medians is a property of DealerPriceAnalysisStruct
+    double auctionMedianPrice = auction
+        .medians.medianUsd; // Change this if the property name is different
+    if (auctionMedianPrice > highestPrice) {
+      highestPrice = auctionMedianPrice;
+    }
+  }
+
+  return highestPrice;
+}
+
 double getHighestAuctionPrice(
     List<AuctionPriceAnalysisStruct> auctionPriceAnalysis) {
   // Filter the auctionPriceAnalysis to include only those with lotStatusId == 2

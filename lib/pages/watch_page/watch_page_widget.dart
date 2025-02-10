@@ -54,7 +54,24 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     List<DealerPriceAnalysisStruct> priceAnalysis,
     String scatterChartData,
     String unsoldScatterChartData,
+    bool isOutliers,
   ) {
+    // Function to calculate the median
+    double calculateMedian(List<double> numbers) {
+      if (numbers.isEmpty) return 0.0; // Return 0 if the list is empty
+      final sortedNumbers = List<double>.from(numbers)..sort();
+      final length = sortedNumbers.length;
+      final mid = length ~/ 2;
+
+      if (length % 2 == 0) {
+        // For even-length arrays, return the average of the two middle numbers
+        return (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
+      } else {
+        // For odd-length arrays, return the middle number
+        return sortedNumbers[mid];
+      }
+    }
+
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -106,6 +123,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }''';
     }
 
+    // Example usage of calculateMedian
+    final medianPrice = calculateMedian(uniqueDateValues.values.toList());
+
     // Convert the map entries to sorted list
     final sortedEntries = uniqueDateValues.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
@@ -117,7 +137,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     final totalDuration = endDate.difference(startDate).inMilliseconds;
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
-    final yAxisMax = (maxPrice * 1.8).round();
+    final yAxisMax = isOutliers
+        ? (getMaxPriceAnalysis(false)).round()
+        : (maxPrice * 1.8).round();
 
     // Generate series data from unique entries
     final seriesData = sortedEntries.map((entry) {
@@ -367,7 +389,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   String _generateAuctionChartData(
       List<AuctionAnalysisMedianStruct> auctionAnalysis,
       String scatterChartData,
-      String unsoldScatterChartData) {
+      String unsoldScatterChartData,
+      bool isOutliers) {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -431,7 +454,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
-    final yAxisMax = (maxPrice * 1.8).round();
+    final yAxisMax = isOutliers
+        ? (getMaxPriceAnalysis(true)).round()
+        : (maxPrice * 1.8).round();
 
     // Generate series data from unique entries
     final seriesData = sortedEntries.map((entry) {
@@ -639,13 +664,47 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   }
 
   String _generateWatchPriceAnalysisChartData(
-      PriceAnalysisGraphStruct priceAnalysisGraph) {
+      PriceAnalysisGraphStruct priceAnalysisGraph, bool isOutliers) {
     final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
 
+    // Function to calculate the median
+    double calculateMedian(List<double> numbers) {
+      if (numbers.isEmpty) return 0.0; // Return 0 if the list is empty
+      final sortedNumbers = List<double>.from(numbers)..sort();
+      final length = sortedNumbers.length;
+      final mid = length ~/ 2;
+
+      if (length % 2 == 0) {
+        // For even-length arrays, return the average of the two middle numbers
+        return (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
+      } else {
+        // For odd-length arrays, return the middle number
+        return sortedNumbers[mid];
+      }
+    }
+
+    // Calculate the median price
+    final medianPrice =
+        calculateMedian(auctionData.map((item) => item.netPayableUsd).toList());
+
+    // Filter auction data based on _outliers
+    final filteredAuctionData = auctionData.where((item) {
+      if (!isOutliers) {
+        if (item.netPayableUsd >= (medianPrice * 2)) {
+          print("#############################!!!");
+          print("medianPrice * 2: ${item.netPayableUsd}");
+          print("medianPrice: ${medianPrice * 2}");
+          print("#############################!!!");
+        }
+        // If outliers are not shown, ignore items with medianUsd above double the calculated median
+        return item.netPayableUsd <= (medianPrice * 2);
+      }
+      return true; // Show all items if outliers are allowed
+    }).toList();
+
     // Construct data points for the chart without quotes around keys
-    final dataPoints = auctionData
-        .where((item) => item.lotStatusId == 2) // Filter condition
-        .map((item) {
+    final dataPoints =
+        filteredAuctionData.where((item) => item.lotStatusId == 2).map((item) {
       return '''
     {
       x: ${item.eventPublishEndDate.millisecondsSinceEpoch},
@@ -710,11 +769,42 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   }
 
   String _generateUnsoldWatchPriceAnalysisChartData(
-      PriceAnalysisGraphStruct priceAnalysisGraph, bool isUnsold) {
+      PriceAnalysisGraphStruct priceAnalysisGraph,
+      bool isUnsold,
+      bool isOutliers) {
     final auctionData = priceAnalysisGraph.auctionPriceAnalysis;
 
+    // Function to calculate the median
+    double calculateMedian(List<double> numbers) {
+      if (numbers.isEmpty) return 0.0; // Return 0 if the list is empty
+      final sortedNumbers = List<double>.from(numbers)..sort();
+      final length = sortedNumbers.length;
+      final mid = length ~/ 2;
+
+      if (length % 2 == 0) {
+        // For even-length arrays, return the average of the two middle numbers
+        return (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
+      } else {
+        // For odd-length arrays, return the middle number
+        return sortedNumbers[mid];
+      }
+    }
+
+    // Calculate the median price
+    final medianPrice =
+        calculateMedian(auctionData.map((item) => item.netPayableUsd).toList());
+
+    // Filter auction data based on _outliers
+    final filteredAuctionData = auctionData.where((item) {
+      if (!isOutliers) {
+        // If outliers are not shown, ignore items with medianUsd above double the calculated median
+        return item.netPayableUsd <= (medianPrice * 2);
+      }
+      return true; // Show all items if outliers are allowed
+    }).toList();
+
     // Construct data points for the chart without quotes around keys
-    final dataPoints = auctionData
+    final dataPoints = filteredAuctionData
         .where((item) => item.lotStatusId != 2) // Filter condition
         .map((item) {
       return '''
@@ -825,18 +915,20 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             _chartData = _generateDealersChartData(
                 _priceAnalysis!.data.dealersPriceAnalysis,
                 _generateWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph),
+                    _priceAnalysis!.data.priceAnalysisGraph, _outliers),
                 _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph, false));
+                    _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+                _outliers);
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.auctionAnalysisMedians,
                 _generateWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph),
+                    _priceAnalysis!.data.priceAnalysisGraph, _outliers),
                 _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph, false));
+                    _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+                _outliers);
           } else {
-            _chartData = _generateDealersChartData([], '', '');
+            _chartData = _generateDealersChartData([], '', '', _outliers);
           }
 
           _isChartLoading = false;
@@ -915,6 +1007,28 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     }
   }
 
+  double getMaxPriceAnalysis(bool isAuctionData) {
+    // Get the maximum price from dealersPriceAnalysis
+    double maxDealerPrice =
+        getHighestDealerPrice(_priceAnalysis?.data.dealersPriceAnalysis);
+
+    double maxAuctionMedianPrice = getHighestAuctionMedianPrice(
+        _priceAnalysis?.data.auctionAnalysisMedians);
+
+    // Get the maximum price from auctionPriceAnalysis
+    double maxAuctionPrice = getHighestAuctionPrice(
+        _priceAnalysis?.data.priceAnalysisGraph.auctionPriceAnalysis ?? []);
+
+    // Return the maximum of both
+    return isAuctionData
+        ? maxAuctionMedianPrice > maxAuctionPrice
+            ? maxAuctionMedianPrice
+            : maxAuctionPrice
+        : maxDealerPrice > maxAuctionPrice
+            ? maxDealerPrice
+            : maxAuctionPrice;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -929,20 +1043,24 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           _chartData = _generateDealersChartData(
               _priceAnalysis!.data.dealersPriceAnalysis,
               _generateWatchPriceAnalysisChartData(
-                  _priceAnalysis!.data.priceAnalysisGraph),
+                  _priceAnalysis!.data.priceAnalysisGraph, _outliers),
               _generateUnsoldWatchPriceAnalysisChartData(
                   _priceAnalysis!.data.priceAnalysisGraph,
-                  _unsoldController.value));
+                  _unsoldController.value,
+                  _outliers),
+              _outliers);
         } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
           _chartData = _generateAuctionChartData(
               _priceAnalysis!.data.auctionAnalysisMedians,
               _generateWatchPriceAnalysisChartData(
-                  _priceAnalysis!.data.priceAnalysisGraph),
+                  _priceAnalysis!.data.priceAnalysisGraph, _outliers),
               _generateUnsoldWatchPriceAnalysisChartData(
                   _priceAnalysis!.data.priceAnalysisGraph,
-                  _unsoldController.value));
+                  _unsoldController.value,
+                  _outliers),
+              _outliers);
         } else {
-          _chartData = _generateDealersChartData([], '', '');
+          _chartData = _generateDealersChartData([], '', '', _outliers);
         }
 
         if (_unsoldController.value) {
@@ -954,6 +1072,32 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     });
 
     _outliersController.addListener(() {
+      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+        _chartData = _generateDealersChartData(
+            _priceAnalysis!.data.dealersPriceAnalysis,
+            _generateWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph,
+                _outliersController.value),
+            _generateUnsoldWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph,
+                _unsold,
+                _outliersController.value),
+            _outliersController.value);
+      } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+        _chartData = _generateAuctionChartData(
+            _priceAnalysis!.data.auctionAnalysisMedians,
+            _generateWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph,
+                _outliersController.value),
+            _generateUnsoldWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph,
+                _unsold,
+                _outliersController.value),
+            _outliersController.value);
+      } else {
+        _chartData = _generateDealersChartData([], '', '', _outliers);
+      }
+
       setState(() {
         _isInitialOutliersClicked = true;
         if (_outliersController.value) {
