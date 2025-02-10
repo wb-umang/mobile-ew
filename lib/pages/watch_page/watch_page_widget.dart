@@ -117,6 +117,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     final totalDuration = endDate.difference(startDate).inMilliseconds;
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
+
     final yAxisMax = isOutliers
         ? (getMaxPriceAnalysis(false)).round()
         : (maxPrice * 1.8).round();
@@ -1056,7 +1057,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         _priceAnalysis?.data.auctionAnalysisMedians);
 
     // Get the maximum price from auctionPriceAnalysis
-    double maxAuctionPrice = getHighestAuctionPrice(
+    double maxAuctionPrice = getOverallHighestAuctionPrice(
         _priceAnalysis?.data.priceAnalysisGraph.auctionPriceAnalysis ?? []);
 
     // Return the maximum of both

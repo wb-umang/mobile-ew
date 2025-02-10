@@ -543,6 +543,19 @@ double getHighestAuctionPrice(
       .reduce((a, b) => a > b ? a : b);
 }
 
+double getOverallHighestAuctionPrice(
+    List<AuctionPriceAnalysisStruct> auctionPriceAnalysis) {
+  // Filter the auctionPriceAnalysis to include only those with lotStatusId == 2
+
+  // Check if the filtered list is empty
+  if (auctionPriceAnalysis.isEmpty) return 0.0;
+
+  // Find the maximum netPayableUsd value
+  return auctionPriceAnalysis
+      .map((item) => item.netPayableUsd)
+      .reduce((a, b) => a > b ? a : b);
+}
+
 double getLowestAuctionPrice(
     List<AuctionPriceAnalysisStruct> auctionPriceAnalysis) {
   // Filter the auctionPriceAnalysis to include only those with lotStatusId == 2
