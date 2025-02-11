@@ -2,8 +2,10 @@ import 'package:every_watch/backend/schema/structs/index.dart';
 import 'package:every_watch/backend/schema/structs/watch_analysis_response_struct.dart';
 import 'package:every_watch/backend/schema/structs/watch_price_analysis_filter_struct.dart';
 import 'package:every_watch/backend/schema/structs/watch_price_analysis_response_struct.dart';
+import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
 import 'package:every_watch/pages/watch_page/chart_filter_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:high_chart/high_chart.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +50,69 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool _unsold = false;
   bool _outliers = false;
   bool _isInitialOutliersClicked = false;
+  bool isLandscapeMode = false;
+
+  void _switchToLandscapeMode() async {
+    // Switch to landscape and update state
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    setState(() {
+      isLandscapeMode = true;
+
+      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+        _chartData = _generateDealersChartData(
+            _priceAnalysis!.data.dealersPriceAnalysis,
+            _generateWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+            _generateUnsoldWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+            _outliers);
+      } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+        _chartData = _generateAuctionChartData(
+            _priceAnalysis!.data.auctionAnalysisMedians,
+            _generateWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+            _generateUnsoldWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+            _outliers);
+      } else {
+        _chartData = _generateDealersChartData([], '', '', _outliers);
+      }
+    });
+  }
+
+  void _exitLandscapeMode() async {
+    // Switch back to portrait and update state
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    setState(() {
+      isLandscapeMode = false;
+
+      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+        _chartData = _generateDealersChartData(
+            _priceAnalysis!.data.dealersPriceAnalysis,
+            _generateWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+            _generateUnsoldWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+            _outliers);
+      } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+        _chartData = _generateAuctionChartData(
+            _priceAnalysis!.data.auctionAnalysisMedians,
+            _generateWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+            _generateUnsoldWatchPriceAnalysisChartData(
+                _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+            _outliers);
+      } else {
+        _chartData = _generateDealersChartData([], '', '', _outliers);
+      }
+    });
+  }
 
   String _generateDealersChartData(
     List<DealerPriceAnalysisStruct> priceAnalysis,
@@ -132,6 +197,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
 
+    final chartHeight =
+        isLandscapeMode ? MediaQuery.of(context).size.width.toInt() - 40 : 400;
+
     final yAxisMax = isOutliers
         ? (getMaxPriceAnalysis(false)).round()
         : (maxPrice * 1.8).round();
@@ -154,7 +222,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           spacingRight: 20,
           spacingTop: 50,
           spacingBottom: 5,
-          height: 400,
+          height: $chartHeight,
           borderRadius: 12,
           type: 'scatter',
           zooming: {
@@ -461,6 +529,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     final totalDuration = endDate.difference(startDate).inMilliseconds;
 
+    final chartHeight =
+        isLandscapeMode ? MediaQuery.of(context).size.width.toInt() - 40 : 400;
+
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
     final yAxisMax = isOutliers
@@ -485,7 +556,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         spacingRight: 20,
         spacingTop: 50,
         spacingBottom: 5,
-        height: 400,
+        height: $chartHeight,
         borderRadius: 12,
         type: 'scatter',
         zooming: {
@@ -1364,861 +1435,432 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           child: Scaffold(
             key: scaffoldKey,
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            appBar: AppBar(
-              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-              automaticallyImplyLeading: false,
-              leading: FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderRadius: 30.0,
-                borderWidth: 1.0,
-                buttonSize: 52.0,
-                icon: Icon(
-                  FFIcons.kleft,
-                  color: FlutterFlowTheme.of(context).primary,
-                  size: 32.0,
-                ),
-                onPressed: () async {
-                  context.pop();
-                },
-              ),
-              actions: const [],
-              centerTitle: true,
-            ),
-            body: SafeArea(
-              top: true,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                ),
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
+            appBar: isLandscapeMode
+                ? null
+                : AppBar(
+                    backgroundColor:
+                        FlutterFlowTheme.of(context).secondaryBackground,
+                    automaticallyImplyLeading: false,
+                    leading: FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30.0,
+                      borderWidth: 1.0,
+                      buttonSize: 52.0,
+                      icon: Icon(
+                        FFIcons.kleft,
+                        color: FlutterFlowTheme.of(context).primary,
+                        size: 32.0,
+                      ),
+                      onPressed: () async {
+                        context.pop();
+                      },
+                    ),
+                    actions: const [],
+                    centerTitle: true,
+                  ),
+            body: isLandscapeMode
+                ? Stack(
                     children: [
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(24.0),
-                            bottomRight: Radius.circular(24.0),
-                            topLeft: Radius.circular(0.0),
-                            topRight: Radius.circular(0.0),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: 14,
                           ),
-                        ),
-                        child: Align(
-                          alignment: const AlignmentDirectional(0.0, 0.0),
-                          child: Stack(
-                            alignment: const AlignmentDirectional(0.0, 1.0),
-                            children: [
-                              Container(
-                                height: 330.0,
-                                decoration: const BoxDecoration(),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 330.0,
-                                  child: Stack(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0.0, 0.0, 0.0, 30.0),
-                                        child: PageView(
-                                          controller: _model
-                                                  .pageViewController ??=
-                                              PageController(initialPage: 0),
-                                          scrollDirection: Axis.horizontal,
-                                          children: watchImages,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: const AlignmentDirectional(
-                                            0.0, 1.0),
-                                        child: Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0.0, 0.0, 0.0, 12.0),
-                                          child: smooth_page_indicator
-                                              .SmoothPageIndicator(
-                                            controller: _model
-                                                    .pageViewController ??=
-                                                PageController(initialPage: 0),
-                                            count: watchImages.length,
-                                            axisDirection: Axis.horizontal,
-                                            onDotClicked: (i) async {
-                                              await _model.pageViewController!
-                                                  .animateToPage(
-                                                i,
-                                                duration: const Duration(
-                                                    milliseconds: 500),
-                                                curve: Curves.ease,
-                                              );
-                                              safeSetState(() {});
-                                            },
-                                            effect: smooth_page_indicator
-                                                .SlideEffect(
-                                              spacing: 13.0,
-                                              radius: 3.0,
-                                              dotWidth: 6.0,
-                                              dotHeight: 6.0,
-                                              dotColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                              activeDotColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              paintStyle: PaintingStyle.fill,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 30.0),
-                                child: wrapWithModel(
-                                  model: _model.pillBoldButtonModel,
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: PillBoldButtonWidget(
-                                    title: 'Alert Me On Similar Watches',
-                                    icon: Icon(
-                                      FFIcons.kbox1,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      size: 16.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                          child: HighCharts(
+                            size: Size(MediaQuery.of(context).size.width,
+                                MediaQuery.of(context).size.width),
+                            data: _chartData,
+                            loader: Container(),
+                            scripts: const [
+                              "https://code.highcharts.com/highcharts.js",
+                              'https://code.highcharts.com/modules/networkgraph.js',
                             ],
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            0.0, 8.0, 0.0, 0.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(0.0),
-                              bottomRight: Radius.circular(0.0),
-                              topLeft: Radius.circular(24.0),
-                              topRight: Radius.circular(24.0),
+                      if (isLandscapeMode)
+                        Positioned(
+                          top: 30,
+                          right: 24,
+                          child: GestureDetector(
+                            onTap: _exitLandscapeMode,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).primary,
+                                shape: BoxShape.circle,
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Icon(Icons.close,
+                                  color: Colors.white, size: 18),
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                20.0, 0.0, 20.0, 0.0),
-                            child: SingleChildScrollView(
-                              primary: false,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 12.0, 0.0, 0.0),
-                                    child: Text(
-                                      valueOrDefault<String>(
-                                        _watch.manufactureName,
-                                        'Hublot',
+                        ),
+                    ],
+                  )
+                : SafeArea(
+                    top: true,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                      ),
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(24.0),
+                                  bottomRight: Radius.circular(24.0),
+                                  topLeft: Radius.circular(0.0),
+                                  topRight: Radius.circular(0.0),
+                                ),
+                              ),
+                              child: Align(
+                                alignment: const AlignmentDirectional(0.0, 0.0),
+                                child: Stack(
+                                  alignment:
+                                      const AlignmentDirectional(0.0, 1.0),
+                                  children: [
+                                    Container(
+                                      height: 330.0,
+                                      decoration: const BoxDecoration(),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 330.0,
+                                        child: Stack(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                      0.0, 0.0, 0.0, 30.0),
+                                              child: PageView(
+                                                controller: _model
+                                                        .pageViewController ??=
+                                                    PageController(
+                                                        initialPage: 0),
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                children: watchImages,
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment:
+                                                  const AlignmentDirectional(
+                                                      0.0, 1.0),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 0.0, 0.0, 12.0),
+                                                child: smooth_page_indicator
+                                                    .SmoothPageIndicator(
+                                                  controller: _model
+                                                          .pageViewController ??=
+                                                      PageController(
+                                                          initialPage: 0),
+                                                  count: watchImages.length,
+                                                  axisDirection:
+                                                      Axis.horizontal,
+                                                  onDotClicked: (i) async {
+                                                    await _model
+                                                        .pageViewController!
+                                                        .animateToPage(
+                                                      i,
+                                                      duration: const Duration(
+                                                          milliseconds: 500),
+                                                      curve: Curves.ease,
+                                                    );
+                                                    safeSetState(() {});
+                                                  },
+                                                  effect: smooth_page_indicator
+                                                      .SlideEffect(
+                                                    spacing: 13.0,
+                                                    radius: 3.0,
+                                                    dotWidth: 6.0,
+                                                    dotHeight: 6.0,
+                                                    dotColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .alternate,
+                                                    activeDotColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                    paintStyle:
+                                                        PaintingStyle.fill,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DM Sans',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            letterSpacing: 0.12,
-                                            fontWeight: FontWeight.bold,
-                                            lineHeight: 1.43,
-                                          ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 8.0, 0.0, 0.0),
-                                    child: Text(
-                                      'REF ${valueOrDefault(_watch.referenceNumber, '-')}',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'DM Sans',
-                                            fontSize: 11.0,
-                                            letterSpacing: 0.2,
-                                          ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment:
-                                        const AlignmentDirectional(0.0, 0.0),
-                                    child: Padding(
+                                    Padding(
                                       padding:
                                           const EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 4.0, 0.0, 0.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Align(
-                                            alignment:
-                                                const AlignmentDirectional(
-                                                    0.0, 0.0),
-                                            child: FlutterFlowIconButton(
-                                              buttonSize: 48.0,
-                                              icon: Icon(
-                                                FFIcons.kshare,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                size: 24.0,
-                                              ),
-                                              onPressed: () {
-                                                print('IconButton pressed ...');
-                                              },
-                                            ),
+                                              0.0, 0.0, 0.0, 30.0),
+                                      child: wrapWithModel(
+                                        model: _model.pillBoldButtonModel,
+                                        updateCallback: () =>
+                                            safeSetState(() {}),
+                                        child: PillBoldButtonWidget(
+                                          title: 'Alert Me On Similar Watches',
+                                          icon: Icon(
+                                            FFIcons.kbox1,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            size: 16.0,
                                           ),
-                                          Container(
-                                            width: MediaQuery.sizeOf(context)
-                                                    .width *
-                                                0.653,
-                                            height: 32.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 8.0, 0.0, 0.0),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(0.0),
+                                    bottomRight: Radius.circular(0.0),
+                                    topLeft: Radius.circular(24.0),
+                                    topRight: Radius.circular(24.0),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      20.0, 0.0, 20.0, 0.0),
+                                  child: SingleChildScrollView(
+                                    primary: false,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0.0, 12.0, 0.0, 0.0),
+                                          child: Text(
+                                            valueOrDefault<String>(
+                                              _watch.manufactureName,
+                                              'Hublot',
                                             ),
-                                            child: Text(
-                                              valueOrDefault<String>(
-                                                _watch.modelName,
-                                                '-',
-                                              ),
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'DM Sans',
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.16,
-                                                        lineHeight: 1.33,
-                                                      ),
-                                            ),
-                                          ),
-                                          ToggleIcon(
-                                            onPressed: () async {
-                                              safeSetState(() =>
-                                                  _model.isFavorite =
-                                                      !_model.isFavorite);
-                                            },
-                                            value: _model.isFavorite,
-                                            onIcon: Icon(
-                                              Icons.favorite_outlined,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .badge,
-                                              size: 24.0,
-                                            ),
-                                            offIcon: Icon(
-                                              Icons.favorite_border,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'DM Sans',
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .primary,
-                                              size: 25.0,
-                                            ),
+                                                  letterSpacing: 0.12,
+                                                  fontWeight: FontWeight.bold,
+                                                  lineHeight: 1.43,
+                                                ),
                                           ),
-                                        ].divide(const SizedBox(width: 0.0)),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 24.0, 0.0, 0.0),
-                                    child: wrapWithModel(
-                                      model: _model.twoButtonPageMenuModel,
-                                      updateCallback: () => safeSetState(() {}),
-                                      updateOnChange: true,
-                                      child: const TwoButtonPageMenuWidget(
-                                        firstTitle: 'Details',
-                                        secondTitle: 'Description',
-                                      ),
-                                    ),
-                                  ),
-                                  // Hidding the chart if there is no data
-                                  if (_priceAnalysis == null ||
-                                      (_priceAnalysis!.data.dealersPriceAnalysis
-                                              .any((data) =>
-                                                  data.medians.medianUsd !=
-                                                  0) ||
-                                          _priceAnalysis!
-                                              .data.auctionAnalysisMedians
-                                              .any((data) =>
-                                                  data.medians.medianUsd != 0)))
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 16.0),
-                                      child: Container(
-                                        color: Colors.white,
-                                        child: Column(
-                                          children: [
-                                            Column(
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                          child: Text(
+                                            'REF ${valueOrDefault(_watch.referenceNumber, '-')}',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'DM Sans',
+                                                  fontSize: 11.0,
+                                                  letterSpacing: 0.2,
+                                                ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: const AlignmentDirectional(
+                                              0.0, 0.0),
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Center(
-                                                      child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 12, bottom: 12),
-                                                    child: Text(
-                                                      "Price Chart",
-                                                      style: TextStyle(
-                                                        fontFamily: 'DM Sans',
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            20, // Set your desired font size here
-                                                      ),
+                                                Align(
+                                                  alignment:
+                                                      const AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: FlutterFlowIconButton(
+                                                    buttonSize: 48.0,
+                                                    icon: Icon(
+                                                      FFIcons.kshare,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                      size: 24.0,
                                                     ),
-                                                  )),
-                                                ),
-                                                //Background color for the Price Chart Title Bottom Container
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 12),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    child: Container(
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .lightGray,
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 12,
-                                                                  right: 12,
-                                                                  top: 6,
-                                                                  bottom: 6),
-                                                          child: Text(
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: FlutterFlowTheme
-                                                                      .of(
-                                                                          context)
-                                                                  .titleSmall
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'DM Sans',
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                    fontSize:
-                                                                        16.0,
-                                                                    letterSpacing:
-                                                                        0.08,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                              watchDetail !=
-                                                                      null
-                                                                  ? "${watchDetail.defaultManufacturerName} ${watchDetail.modelName} ${watchDetail.referenceNumber} | ${watchDetail.defaultCaseMaterialName}"
-                                                                  : "-"),
-                                                        )),
+                                                    onPressed: () {
+                                                      print(
+                                                          'IconButton pressed ...');
+                                                    },
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 12),
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 100,
-                                                        height: 100,
-                                                        child: Image.network(
-                                                          watchDetail
-                                                                  ?.watchImages[
-                                                                      0]
-                                                                  .url ??
-                                                              '',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 10),
-                                                          child: Skeletonizer(
-                                                            enabled:
-                                                                _isChartLoading,
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  "Current value",
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmall
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'DM Sans',
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryText,
-                                                                        fontSize:
-                                                                            16.0,
-                                                                        letterSpacing:
-                                                                            0.08,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                      ),
-                                                                ),
-                                                                // Current value
-                                                                Text(
-                                                                  "${NumberFormat('#,##0', 'en_US').format(_priceAnalysis?.data.currentValueAllCurrencies.netPayableUsd ?? 0)} USD",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'DM Sans',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        18, // Set your desired font size here
-                                                                  ),
-                                                                ),
-                                                                Text(
-                                                                  generatePriceChartDescString(
-                                                                      _selectedButtonIndex,
-                                                                      calculateDifferences(
-                                                                              _priceAnalysis)['absoluteDifference']
-                                                                          [
-                                                                          'netPayableUsd'],
-                                                                      calculateDifferences(
-                                                                              _priceAnalysis)['percentDifference']
-                                                                          [
-                                                                          'netPayableUsd']),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmall
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'DM Sans',
-                                                                        color: renderPriceChartDescColor(
-                                                                            calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'].toInt()), // Change color bases on the absolute difference
-                                                                        fontSize:
-                                                                            14.0,
-                                                                        letterSpacing:
-                                                                            0.08,
-                                                                      ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 12),
-                                                  child: Skeletonizer(
-                                                    enabled: _isChartLoading,
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .lightGray,
-                                                              ),
-                                                              child: Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            12,
-                                                                        right:
-                                                                            12,
-                                                                        top: 6,
-                                                                        bottom:
-                                                                            6),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'DM Sans',
-                                                                              color: FlutterFlowTheme.of(context).secondaryText,
-                                                                              fontSize: 14.0,
-                                                                              letterSpacing: 0.08,
-                                                                            ),
-                                                                        "Auction High"),
-                                                                    Text(
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'DM Sans',
-                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.08,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                        "${NumberFormat('#,##0', 'en_US').format(getHighestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"), //Print the highest dealer price
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 12,
-                                                        ),
-                                                        Expanded(
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .lightGray,
-                                                              ),
-                                                              child: Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            12,
-                                                                        right:
-                                                                            12,
-                                                                        top: 6,
-                                                                        bottom:
-                                                                            6),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'DM Sans',
-                                                                              color: FlutterFlowTheme.of(context).secondaryText,
-                                                                              fontSize: 14.0,
-                                                                              letterSpacing: 0.08,
-                                                                            ),
-                                                                        "Auction Low"),
-                                                                    Text(
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'DM Sans',
-                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.08,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                        "${NumberFormat('#,##0', 'en_US').format(getLowestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                // Dealer High and Low
-                                                if (_selectedButtonIndex >= 0 &&
-                                                    _selectedButtonIndex <= 3)
-                                                  Skeletonizer(
-                                                    enabled: _isChartLoading,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: 12),
-                                                      child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8.0),
-                                                              child: Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .lightGray,
-                                                                ),
-                                                                child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              12,
-                                                                          right:
-                                                                              12,
-                                                                          top:
-                                                                              6,
-                                                                          bottom:
-                                                                              6),
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Text(
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .titleSmall
-                                                                              .override(
-                                                                                fontFamily: 'DM Sans',
-                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                fontSize: 14.0,
-                                                                                letterSpacing: 0.08,
-                                                                              ),
-                                                                          "Dealer High"),
-                                                                      Text(
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .titleSmall
-                                                                              .override(
-                                                                                fontFamily: 'DM Sans',
-                                                                                color: FlutterFlowTheme.of(context).primaryText,
-                                                                                fontSize: 16.0,
-                                                                                letterSpacing: 0.08,
-                                                                                fontWeight: FontWeight.bold,
-                                                                              ),
-                                                                          "${NumberFormat('#,##0', 'en_US').format(getHighestDealerPrice(_priceAnalysis?.data.dealersPriceAnalysis ?? []).toInt())} USD"), //Print the highest dealer price
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 12,
-                                                          ),
-                                                          Expanded(
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8.0),
-                                                              child: Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .lightGray,
-                                                                ),
-                                                                child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              12,
-                                                                          right:
-                                                                              12,
-                                                                          top:
-                                                                              6,
-                                                                          bottom:
-                                                                              6),
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Text(
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .titleSmall
-                                                                              .override(
-                                                                                fontFamily: 'DM Sans',
-                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                fontSize: 14.0,
-                                                                                letterSpacing: 0.08,
-                                                                              ),
-                                                                          "Dealer Low"),
-                                                                      Text(
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .titleSmall
-                                                                              .override(
-                                                                                fontFamily: 'DM Sans',
-                                                                                color: FlutterFlowTheme.of(context).primaryText,
-                                                                                fontSize: 16.0,
-                                                                                letterSpacing: 0.08,
-                                                                                fontWeight: FontWeight.bold,
-                                                                              ),
-                                                                          "${NumberFormat('#,##0', 'en_US').format(getLowestDealerPrice(_priceAnalysis?.data.dealersPriceAnalysis ?? []).toInt())} USD"),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 12),
-                                                  child: Container(
-                                                    height: 1,
-                                                    width: double.infinity,
+                                                Container(
+                                                  width:
+                                                      MediaQuery.sizeOf(context)
+                                                              .width *
+                                                          0.653,
+                                                  height: 32.0,
+                                                  decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .lightGray,
+                                                        .secondaryBackground,
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: IntrinsicHeight(
-                                                    child: Row(
-                                                      children: [
-                                                        ChartFilterButton(
-                                                          isFirst: true,
-                                                          text: '3M',
-                                                          color: Colors.red,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  0,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    0);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '6M',
-                                                          color: Colors.blue,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  1,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    1);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '1Y',
-                                                          color: Colors.green,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  2,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    2);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '2Y',
-                                                          color: Colors.yellow,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  3,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    3);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          text: '5Y',
-                                                          color: Colors.purple,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  4,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    4);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                        ChartFilterButton(
-                                                          isBorderRight: true,
-                                                          isLast: true,
-                                                          text: 'Max',
-                                                          color: Colors.orange,
-                                                          isSelected:
-                                                              _selectedButtonIndex ==
-                                                                  5,
-                                                          onPressed: () {
-                                                            setState(() =>
-                                                                _selectedButtonIndex =
-                                                                    5);
-                                                            _getChartPriceAnalysisClicked();
-                                                          },
-                                                        ),
-                                                      ],
+                                                  child: Text(
+                                                    valueOrDefault<String>(
+                                                      _watch.modelName,
+                                                      '-',
                                                     ),
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'DM Sans',
+                                                          fontSize: 12.0,
+                                                          letterSpacing: 0.16,
+                                                          lineHeight: 1.33,
+                                                        ),
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 12),
-                                                  child: Row(
+                                                ToggleIcon(
+                                                  onPressed: () async {
+                                                    safeSetState(() =>
+                                                        _model.isFavorite =
+                                                            !_model.isFavorite);
+                                                  },
+                                                  value: _model.isFavorite,
+                                                  onIcon: Icon(
+                                                    Icons.favorite_outlined,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .badge,
+                                                    size: 24.0,
+                                                  ),
+                                                  offIcon: Icon(
+                                                    Icons.favorite_border,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    size: 25.0,
+                                                  ),
+                                                ),
+                                              ].divide(
+                                                  const SizedBox(width: 0.0)),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0.0, 24.0, 0.0, 0.0),
+                                          child: wrapWithModel(
+                                            model:
+                                                _model.twoButtonPageMenuModel,
+                                            updateCallback: () =>
+                                                safeSetState(() {}),
+                                            updateOnChange: true,
+                                            child:
+                                                const TwoButtonPageMenuWidget(
+                                              firstTitle: 'Details',
+                                              secondTitle: 'Description',
+                                            ),
+                                          ),
+                                        ),
+                                        // Hidding the chart if there is no data
+                                        if (_priceAnalysis == null ||
+                                            (_priceAnalysis!
+                                                    .data.dealersPriceAnalysis
+                                                    .any((data) =>
+                                                        data.medians
+                                                            .medianUsd !=
+                                                        0) ||
+                                                _priceAnalysis!
+                                                    .data.auctionAnalysisMedians
+                                                    .any((data) =>
+                                                        data.medians
+                                                            .medianUsd !=
+                                                        0)))
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 16.0),
+                                            child: Container(
+                                              color: Colors.white,
+                                              child: Column(
+                                                children: [
+                                                  Column(
                                                     children: [
-                                                      Expanded(
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            border: Border.all(
-                                                              color: Color(
-                                                                  0xFFE6E8F0),
-                                                              width: 1,
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        child: Center(
+                                                            child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 12,
+                                                                  bottom: 12),
+                                                          child: Text(
+                                                            "Price Chart",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'DM Sans',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize:
+                                                                  20, // Set your desired font size here
                                                             ),
                                                           ),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 6,
-                                                                    bottom: 6),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
+                                                        )),
+                                                      ),
+                                                      //Background color for the Price Chart Title Bottom Container
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 12),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          child: Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .lightGray,
+                                                              ),
+                                                              child: Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            12,
+                                                                        right:
+                                                                            12,
+                                                                        top: 6,
+                                                                        bottom:
+                                                                            6),
+                                                                child: Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .titleSmall
@@ -2228,329 +1870,872 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                           color:
                                                                               FlutterFlowTheme.of(context).secondaryText,
                                                                           fontSize:
-                                                                              14.0,
+                                                                              16.0,
                                                                           letterSpacing:
                                                                               0.08,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
                                                                         ),
-                                                                    "Show Unsold"),
-                                                                SizedBox(
-                                                                  width: 10,
+                                                                    watchDetail !=
+                                                                            null
+                                                                        ? "${watchDetail.defaultManufacturerName} ${watchDetail.modelName} ${watchDetail.referenceNumber} | ${watchDetail.defaultCaseMaterialName}"
+                                                                        : "-"),
+                                                              )),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 12),
+                                                        child: Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 100,
+                                                              height: 100,
+                                                              child:
+                                                                  Image.network(
+                                                                watchDetail
+                                                                        ?.watchImages[
+                                                                            0]
+                                                                        .url ??
+                                                                    '',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            10),
+                                                                child:
+                                                                    Skeletonizer(
+                                                                  enabled:
+                                                                      _isChartLoading,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Current value",
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .titleSmall
+                                                                            .override(
+                                                                              fontFamily: 'DM Sans',
+                                                                              color: FlutterFlowTheme.of(context).secondaryText,
+                                                                              fontSize: 16.0,
+                                                                              letterSpacing: 0.08,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                      ),
+                                                                      // Current value
+                                                                      Text(
+                                                                        "${NumberFormat('#,##0', 'en_US').format(_priceAnalysis?.data.currentValueAllCurrencies.netPayableUsd ?? 0)} USD",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              'DM Sans',
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              18, // Set your desired font size here
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        generatePriceChartDescString(
+                                                                            _selectedButtonIndex,
+                                                                            calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'],
+                                                                            calculateDifferences(_priceAnalysis)['percentDifference']['netPayableUsd']),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .titleSmall
+                                                                            .override(
+                                                                              fontFamily: 'DM Sans',
+                                                                              color: renderPriceChartDescColor(calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'].toInt()), // Change color bases on the absolute difference
+                                                                              fontSize: 14.0,
+                                                                              letterSpacing: 0.08,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                                AdvancedSwitch(
-                                                                    width: 30.0,
-                                                                    height:
-                                                                        18.0,
-                                                                    controller:
-                                                                        _unsoldController,
-                                                                    activeColor:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .primary,
-                                                                    inactiveColor:
-                                                                        Color.fromRGBO(
-                                                                            4,
-                                                                            7,
-                                                                            49,
-                                                                            0.42)),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 12),
+                                                        child: Skeletonizer(
+                                                          enabled:
+                                                              _isChartLoading,
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8.0),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .lightGray,
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          left:
+                                                                              12,
+                                                                          right:
+                                                                              12,
+                                                                          top:
+                                                                              6,
+                                                                          bottom:
+                                                                              6),
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                              style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                    fontFamily: 'DM Sans',
+                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                    fontSize: 14.0,
+                                                                                    letterSpacing: 0.08,
+                                                                                  ),
+                                                                              "Auction High"),
+                                                                          Text(
+                                                                              style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                    fontFamily: 'DM Sans',
+                                                                                    color: FlutterFlowTheme.of(context).primaryText,
+                                                                                    fontSize: 16.0,
+                                                                                    letterSpacing: 0.08,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                              "${NumberFormat('#,##0', 'en_US').format(getHighestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"), //Print the highest dealer price
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 12,
+                                                              ),
+                                                              Expanded(
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8.0),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .lightGray,
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          left:
+                                                                              12,
+                                                                          right:
+                                                                              12,
+                                                                          top:
+                                                                              6,
+                                                                          bottom:
+                                                                              6),
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                              style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                    fontFamily: 'DM Sans',
+                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                    fontSize: 14.0,
+                                                                                    letterSpacing: 0.08,
+                                                                                  ),
+                                                                              "Auction Low"),
+                                                                          Text(
+                                                                              style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                    fontFamily: 'DM Sans',
+                                                                                    color: FlutterFlowTheme.of(context).primaryText,
+                                                                                    fontSize: 16.0,
+                                                                                    letterSpacing: 0.08,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                              "${NumberFormat('#,##0', 'en_US').format(getLowestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      // Dealer High and Low
+                                                      if (_selectedButtonIndex >=
+                                                              0 &&
+                                                          _selectedButtonIndex <=
+                                                              3)
+                                                        Skeletonizer(
+                                                          enabled:
+                                                              _isChartLoading,
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom: 12),
+                                                            child: Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            8.0),
+                                                                    child:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .lightGray,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsets.only(
+                                                                            left:
+                                                                                12,
+                                                                            right:
+                                                                                12,
+                                                                            top:
+                                                                                6,
+                                                                            bottom:
+                                                                                6),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                                style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                      fontFamily: 'DM Sans',
+                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                      fontSize: 14.0,
+                                                                                      letterSpacing: 0.08,
+                                                                                    ),
+                                                                                "Dealer High"),
+                                                                            Text(
+                                                                                style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                      fontFamily: 'DM Sans',
+                                                                                      color: FlutterFlowTheme.of(context).primaryText,
+                                                                                      fontSize: 16.0,
+                                                                                      letterSpacing: 0.08,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                "${NumberFormat('#,##0', 'en_US').format(getHighestDealerPrice(_priceAnalysis?.data.dealersPriceAnalysis ?? []).toInt())} USD"), //Print the highest dealer price
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 12,
+                                                                ),
+                                                                Expanded(
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            8.0),
+                                                                    child:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .lightGray,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsets.only(
+                                                                            left:
+                                                                                12,
+                                                                            right:
+                                                                                12,
+                                                                            top:
+                                                                                6,
+                                                                            bottom:
+                                                                                6),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                                style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                      fontFamily: 'DM Sans',
+                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                      fontSize: 14.0,
+                                                                                      letterSpacing: 0.08,
+                                                                                    ),
+                                                                                "Dealer Low"),
+                                                                            Text(
+                                                                                style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                      fontFamily: 'DM Sans',
+                                                                                      color: FlutterFlowTheme.of(context).primaryText,
+                                                                                      fontSize: 16.0,
+                                                                                      letterSpacing: 0.08,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                "${NumberFormat('#,##0', 'en_US').format(getLowestDealerPrice(_priceAnalysis?.data.dealersPriceAnalysis ?? []).toInt())} USD"),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
                                                               ],
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      if (shouldShowOutliersButton())
-                                                        SizedBox(
-                                                          width: 12,
-                                                        ),
-                                                      // Show Outliers Button
-                                                      if (shouldShowOutliersButton())
-                                                        Expanded(
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                              color: _isInitialOutliersClicked
-                                                                  ? null
-                                                                  : Color(
-                                                                      0xFF001633),
-                                                              border:
-                                                                  Border.all(
-                                                                color: _isInitialOutliersClicked
-                                                                    ? Color(
-                                                                        0xFFE6E8F0)
-                                                                    : Color(
-                                                                        0xFF001633),
-                                                                width: 1,
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 6,
-                                                                      bottom:
-                                                                          6),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmall
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                'DM Sans',
-                                                                            color: _isInitialOutliersClicked
-                                                                                ? FlutterFlowTheme.of(context).secondaryText
-                                                                                : FlutterFlowTheme.of(context).secondaryBackground,
-                                                                            fontSize:
-                                                                                14.0,
-                                                                            letterSpacing:
-                                                                                0.08,
-                                                                          ),
-                                                                      "Show Outliers"),
-                                                                  SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                  AdvancedSwitch(
-                                                                      width:
-                                                                          30.0,
-                                                                      height:
-                                                                          18.0,
-                                                                      controller:
-                                                                          _outliersController,
-                                                                      activeColor:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primary,
-                                                                      inactiveColor: Color.from(
-                                                                          alpha:
-                                                                              0.42,
-                                                                          red:
-                                                                              0.016,
-                                                                          green:
-                                                                              0.027,
-                                                                          blue:
-                                                                              0.192)),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                if (_isChartLoading)
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 12),
-                                                    child: Skeletonizer(
-                                                      enabled: true,
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 12),
                                                         child: Container(
-                                                          height: 420,
+                                                          height: 1,
                                                           width:
                                                               double.infinity,
                                                           color: FlutterFlowTheme
                                                                   .of(context)
-                                                              .hint,
+                                                              .lightGray,
                                                         ),
                                                       ),
-                                                    ),
-                                                  )
-                                                else
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 12),
-                                                    child: HighCharts(
-                                                      size: Size(
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                          420),
-                                                      data: _chartData,
-                                                      loader: Container(),
-                                                      scripts: const [
-                                                        "https://code.highcharts.com/highcharts.js",
-                                                        'https://code.highcharts.com/modules/networkgraph.js',
-                                                      ],
-                                                    ),
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        child: IntrinsicHeight(
+                                                          child: Row(
+                                                            children: [
+                                                              ChartFilterButton(
+                                                                isFirst: true,
+                                                                text: '3M',
+                                                                color:
+                                                                    Colors.red,
+                                                                isSelected:
+                                                                    _selectedButtonIndex ==
+                                                                        0,
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      _selectedButtonIndex =
+                                                                          0);
+                                                                  _getChartPriceAnalysisClicked();
+                                                                },
+                                                              ),
+                                                              ChartFilterButton(
+                                                                text: '6M',
+                                                                color:
+                                                                    Colors.blue,
+                                                                isSelected:
+                                                                    _selectedButtonIndex ==
+                                                                        1,
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      _selectedButtonIndex =
+                                                                          1);
+                                                                  _getChartPriceAnalysisClicked();
+                                                                },
+                                                              ),
+                                                              ChartFilterButton(
+                                                                text: '1Y',
+                                                                color: Colors
+                                                                    .green,
+                                                                isSelected:
+                                                                    _selectedButtonIndex ==
+                                                                        2,
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      _selectedButtonIndex =
+                                                                          2);
+                                                                  _getChartPriceAnalysisClicked();
+                                                                },
+                                                              ),
+                                                              ChartFilterButton(
+                                                                text: '2Y',
+                                                                color: Colors
+                                                                    .yellow,
+                                                                isSelected:
+                                                                    _selectedButtonIndex ==
+                                                                        3,
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      _selectedButtonIndex =
+                                                                          3);
+                                                                  _getChartPriceAnalysisClicked();
+                                                                },
+                                                              ),
+                                                              ChartFilterButton(
+                                                                text: '5Y',
+                                                                color: Colors
+                                                                    .purple,
+                                                                isSelected:
+                                                                    _selectedButtonIndex ==
+                                                                        4,
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      _selectedButtonIndex =
+                                                                          4);
+                                                                  _getChartPriceAnalysisClicked();
+                                                                },
+                                                              ),
+                                                              ChartFilterButton(
+                                                                isBorderRight:
+                                                                    true,
+                                                                isLast: true,
+                                                                text: 'Max',
+                                                                color: Colors
+                                                                    .orange,
+                                                                isSelected:
+                                                                    _selectedButtonIndex ==
+                                                                        5,
+                                                                onPressed: () {
+                                                                  setState(() =>
+                                                                      _selectedButtonIndex =
+                                                                          5);
+                                                                  _getChartPriceAnalysisClicked();
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 12),
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: Color(
+                                                                        0xFFE6E8F0),
+                                                                    width: 1,
+                                                                  ),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          top:
+                                                                              6,
+                                                                          bottom:
+                                                                              6),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleSmall
+                                                                              .override(
+                                                                                fontFamily: 'DM Sans',
+                                                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                fontSize: 14.0,
+                                                                                letterSpacing: 0.08,
+                                                                              ),
+                                                                          "Show Unsold"),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            10,
+                                                                      ),
+                                                                      AdvancedSwitch(
+                                                                          width:
+                                                                              30.0,
+                                                                          height:
+                                                                              18.0,
+                                                                          controller:
+                                                                              _unsoldController,
+                                                                          activeColor: FlutterFlowTheme.of(context)
+                                                                              .primary,
+                                                                          inactiveColor: Color.fromRGBO(
+                                                                              4,
+                                                                              7,
+                                                                              49,
+                                                                              0.42)),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            if (shouldShowOutliersButton())
+                                                              SizedBox(
+                                                                width: 12,
+                                                              ),
+                                                            // Show Outliers Button
+                                                            if (shouldShowOutliersButton())
+                                                              Expanded(
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12),
+                                                                    color: _isInitialOutliersClicked
+                                                                        ? null
+                                                                        : Color(
+                                                                            0xFF001633),
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: _isInitialOutliersClicked
+                                                                          ? Color(
+                                                                              0xFFE6E8F0)
+                                                                          : Color(
+                                                                              0xFF001633),
+                                                                      width: 1,
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsets.only(
+                                                                        top: 6,
+                                                                        bottom:
+                                                                            6),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                  fontFamily: 'DM Sans',
+                                                                                  color: _isInitialOutliersClicked ? FlutterFlowTheme.of(context).secondaryText : FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                  fontSize: 14.0,
+                                                                                  letterSpacing: 0.08,
+                                                                                ),
+                                                                            "Show Outliers"),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              10,
+                                                                        ),
+                                                                        AdvancedSwitch(
+                                                                            width:
+                                                                                30.0,
+                                                                            height:
+                                                                                18.0,
+                                                                            controller:
+                                                                                _outliersController,
+                                                                            activeColor: FlutterFlowTheme.of(context)
+                                                                                .primary,
+                                                                            inactiveColor: Color.from(
+                                                                                alpha: 0.42,
+                                                                                red: 0.016,
+                                                                                green: 0.027,
+                                                                                blue: 0.192)),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      if (_isChartLoading)
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 12,
+                                                                  bottom: 12),
+                                                          child: Skeletonizer(
+                                                            enabled: true,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                              child: Container(
+                                                                height: 420,
+                                                                width: double
+                                                                    .infinity,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .hint,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      else
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 12),
+                                                          child: HighCharts(
+                                                            size: Size(
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                420),
+                                                            data: _chartData,
+                                                            loader: Container(),
+                                                            scripts: const [
+                                                              "https://code.highcharts.com/highcharts.js",
+                                                              'https://code.highcharts.com/modules/networkgraph.js',
+                                                            ],
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  Stack(
-                                    children: [
-                                      if (_model.twoButtonPageMenuModel
-                                          .isFirstSelected)
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0.0, 12.0, 0.0, 0.0),
-                                          child: Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                wrapWithModel(
-                                                  model: _model
-                                                      .auctionPriceCardModel,
-                                                  updateCallback: () =>
-                                                      safeSetState(() {}),
-                                                  child: AuctionPriceCardWidget(
-                                                    estimationPrice:
-                                                        _watch.parsePrice(),
-                                                    salePrice: _watch
-                                                        .retailPrice
-                                                        .toString(),
-                                                  ),
-                                                ),
-                                                wrapWithModel(
-                                                  model: _model
-                                                      .specificationsCardModel,
-                                                  updateCallback: () =>
-                                                      safeSetState(() {}),
-                                                  child: SpecificationsCardWidget(
-                                                      excludedFieldsWatchDetail:
-                                                          excludedFieldsWatchDetail),
-                                                ),
-                                                wrapWithModel(
-                                                  model: _model
-                                                      .priceGuideCardModel,
-                                                  updateCallback: () =>
-                                                      safeSetState(() {}),
-                                                  child: PriceGuideCardWidget(
-                                                    scrollController:
-                                                        _scrollController,
-                                                    watchAnalysis:
-                                                        watchAnalysis,
-                                                    downArrow: Icon(
-                                                      Icons.keyboard_arrow_down,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 16.0,
-                                                    ),
-                                                    upArrow: Icon(
-                                                      Icons.keyboard_arrow_up,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 16.0,
-                                                    ),
-                                                    brand:
-                                                        _watch.manufactureName,
-                                                    model: _watch.modelName,
-                                                    referenceNumber:
-                                                        _watch.referenceNumber,
-                                                  ),
-                                                ),
-                                              ].divide(
-                                                  const SizedBox(height: 12.0)),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      if (!_model.twoButtonPageMenuModel
-                                          .isFirstSelected)
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0.0, 12.0, 0.0, 0.0),
-                                          child: Container(
+
+                                        // Add the new button below the chart
+                                        FFButtonWidget(
+                                          onPressed: () {
+                                            if (!_isChartLoading) {
+                                              _switchToLandscapeMode();
+                                            }
+                                          },
+                                          text: "View in Landscape Mode",
+                                          options: FFButtonOptions(
                                             width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
+                                            height: 44.0,
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                            iconPadding:
+                                                const EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            textStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .override(
+                                                      fontFamily: 'DM Sans',
+                                                      color: Colors.white,
+                                                      fontSize: 14.0,
+                                                      letterSpacing: 0.12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      lineHeight: 1.47,
+                                                    ),
+                                            borderSide: const BorderSide(
+                                              width: 0.0,
                                             ),
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              elevation: 0.0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(24.0),
-                                              ),
-                                              child: Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .lightGray,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          24.0),
-                                                  border: Border.all(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        ),
+                                        Stack(
+                                          children: [
+                                            if (_model.twoButtonPageMenuModel
+                                                .isFirstSelected)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .border2,
+                                                        .secondaryBackground,
                                                   ),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      12.0),
                                                   child: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
                                                     children: [
-                                                      Align(
-                                                        alignment:
-                                                            const AlignmentDirectional(
-                                                                -1.0, 0.0),
-                                                        child: Text(
-                                                          watchDetail
-                                                                  ?.description ??
-                                                              "No description.",
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'DM Sans',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
-                                                                letterSpacing:
-                                                                    0.08,
-                                                                lineHeight:
-                                                                    1.43,
-                                                              ),
+                                                      wrapWithModel(
+                                                        model: _model
+                                                            .auctionPriceCardModel,
+                                                        updateCallback: () =>
+                                                            safeSetState(() {}),
+                                                        child:
+                                                            AuctionPriceCardWidget(
+                                                          estimationPrice:
+                                                              _watch
+                                                                  .parsePrice(),
+                                                          salePrice: _watch
+                                                              .retailPrice
+                                                              .toString(),
+                                                        ),
+                                                      ),
+                                                      wrapWithModel(
+                                                        model: _model
+                                                            .specificationsCardModel,
+                                                        updateCallback: () =>
+                                                            safeSetState(() {}),
+                                                        child: SpecificationsCardWidget(
+                                                            excludedFieldsWatchDetail:
+                                                                excludedFieldsWatchDetail),
+                                                      ),
+                                                      wrapWithModel(
+                                                        model: _model
+                                                            .priceGuideCardModel,
+                                                        updateCallback: () =>
+                                                            safeSetState(() {}),
+                                                        child:
+                                                            PriceGuideCardWidget(
+                                                          scrollController:
+                                                              _scrollController,
+                                                          watchAnalysis:
+                                                              watchAnalysis,
+                                                          downArrow: Icon(
+                                                            Icons
+                                                                .keyboard_arrow_down,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            size: 16.0,
+                                                          ),
+                                                          upArrow: Icon(
+                                                            Icons
+                                                                .keyboard_arrow_up,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
+                                                            size: 16.0,
+                                                          ),
+                                                          brand: _watch
+                                                              .manufactureName,
+                                                          model:
+                                                              _watch.modelName,
+                                                          referenceNumber: _watch
+                                                              .referenceNumber,
                                                         ),
                                                       ),
                                                     ].divide(const SizedBox(
-                                                        height: 14.0)),
+                                                        height: 12.0)),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
+                                            if (!_model.twoButtonPageMenuModel
+                                                .isFirstSelected)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground,
+                                                  ),
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    elevation: 0.0,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              24.0),
+                                                    ),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .lightGray,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24.0),
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .border2,
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: [
+                                                            Align(
+                                                              alignment:
+                                                                  const AlignmentDirectional(
+                                                                      -1.0,
+                                                                      0.0),
+                                                              child: Text(
+                                                                watchDetail
+                                                                        ?.description ??
+                                                                    "No description.",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'DM Sans',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondary,
+                                                                      letterSpacing:
+                                                                          0.08,
+                                                                      lineHeight:
+                                                                          1.43,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ].divide(
+                                                              const SizedBox(
+                                                                  height:
+                                                                      14.0)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
                                         ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
         );
       },

@@ -19,7 +19,7 @@ void main() async {
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
-    child: const MyApp(), 
+    child: const MyApp(),
   ));
 }
 
@@ -43,9 +43,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
 
-  final appStateNotifier = AppStateNotifier.instance;
+    final appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(appStateNotifier);
     safeSetState(() => appStateNotifier.stopShowingSplashImage());
   }
@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'EveryWatch',
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -79,7 +80,8 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      themeMode: _themeMode,
+      themeMode: ThemeMode
+          .light, // TODO: Remove this in future when we have a proper dark theme configuration
       routerConfig: _router,
     );
   }
