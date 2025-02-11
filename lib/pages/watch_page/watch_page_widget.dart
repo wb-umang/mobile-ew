@@ -2517,43 +2517,59 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                           ),
 
                                         // Add the new button below the chart
-                                        FFButtonWidget(
-                                          onPressed: () {
-                                            if (!_isChartLoading) {
-                                              _switchToLandscapeMode();
-                                            }
-                                          },
-                                          text: "View in Landscape Mode",
-                                          options: FFButtonOptions(
-                                            width: double.infinity,
-                                            height: 44.0,
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(24.0, 0.0, 24.0, 0.0),
-                                            iconPadding:
-                                                const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                      fontFamily: 'DM Sans',
-                                                      color: Colors.white,
-                                                      fontSize: 14.0,
-                                                      letterSpacing: 0.12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      lineHeight: 1.47,
-                                                    ),
-                                            borderSide: const BorderSide(
-                                              width: 0.0,
+                                        if (_priceAnalysis == null ||
+                                            (_priceAnalysis!
+                                                    .data.dealersPriceAnalysis
+                                                    .any((data) =>
+                                                        data.medians
+                                                            .medianUsd !=
+                                                        0) ||
+                                                _priceAnalysis!
+                                                    .data.auctionAnalysisMedians
+                                                    .any((data) =>
+                                                        data.medians
+                                                            .medianUsd !=
+                                                        0)))
+                                          FFButtonWidget(
+                                            onPressed: () {
+                                              if (!_isChartLoading) {
+                                                _switchToLandscapeMode();
+                                              }
+                                            },
+                                            text: "View in Landscape Mode",
+                                            options: FFButtonOptions(
+                                              width: double.infinity,
+                                              height: 44.0,
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                      24.0, 0.0, 24.0, 0.0),
+                                              iconPadding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                      0.0, 0.0, 0.0, 0.0),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily: 'DM Sans',
+                                                        color: Colors.white,
+                                                        fontSize: 14.0,
+                                                        letterSpacing: 0.12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        lineHeight: 1.47,
+                                                      ),
+                                              borderSide: const BorderSide(
+                                                width: 0.0,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
                                           ),
-                                        ),
                                         Stack(
                                           children: [
                                             if (_model.twoButtonPageMenuModel
