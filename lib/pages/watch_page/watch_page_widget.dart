@@ -758,18 +758,14 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
-      final magnitude = math.pow(10, (math.log(value) / math.ln10).floor());
-      final remainder = value % magnitude;
+      // Step 1: Find the nearest power of 10 (base unit for rounding)
+      int numDigits = value > 0 ? math.log(value) ~/ math.log(10) : 0;
+      double baseUnit = math.pow(10, numDigits).toDouble();
 
-      final magnitudeModifier = remainder < magnitude / 2 ? 10 : 5;
-      double val = (value / (magnitude / magnitudeModifier)).round() *
-          (magnitude / magnitudeModifier);
+      // Step 2: Compute the rounded value
+      double roundedValue = (value / (baseUnit / 10)).ceil() * (baseUnit / 10);
 
-      if (val < value) {
-        val = (value / (magnitude / 10)).ceil() * (magnitude / 10);
-      }
-
-      return val;
+      return roundedValue;
     }
 
     // Function to calculate the median
@@ -892,18 +888,14 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
-      final magnitude = math.pow(10, (math.log(value) / math.ln10).floor());
-      final remainder = value % magnitude;
+      // Step 1: Find the nearest power of 10 (base unit for rounding)
+      int numDigits = value > 0 ? math.log(value) ~/ math.log(10) : 0;
+      double baseUnit = math.pow(10, numDigits).toDouble();
 
-      final magnitudeModifier = remainder < magnitude / 2 ? 10 : 5;
-      double val = (value / (magnitude / magnitudeModifier)).round() *
-          (magnitude / magnitudeModifier);
+      // Step 2: Compute the rounded value
+      double roundedValue = (value / (baseUnit / 10)).ceil() * (baseUnit / 10);
 
-      if (val < value) {
-        val = (value / (magnitude / 10)).ceil() * (magnitude / 10);
-      }
-
-      return val;
+      return roundedValue;
     }
 
     // Function to calculate the median
@@ -1180,18 +1172,14 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool shouldShowOutliersButton() {
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
-      final magnitude = math.pow(10, (math.log(value) / math.ln10).floor());
-      final remainder = value % magnitude;
+      // Step 1: Find the nearest power of 10 (base unit for rounding)
+      int numDigits = value > 0 ? math.log(value) ~/ math.log(10) : 0;
+      double baseUnit = math.pow(10, numDigits).toDouble();
 
-      final magnitudeModifier = remainder < magnitude / 2 ? 10 : 5;
-      double val = (value / (magnitude / magnitudeModifier)).round() *
-          (magnitude / magnitudeModifier);
+      // Step 2: Compute the rounded value
+      double roundedValue = (value / (baseUnit / 10)).ceil() * (baseUnit / 10);
 
-      if (val < value) {
-        val = (value / (magnitude / 10)).ceil() * (magnitude / 10);
-      }
-
-      return val;
+      return roundedValue;
     }
 
     // Function to calculate the median
