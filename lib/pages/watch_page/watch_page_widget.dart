@@ -1466,43 +1466,45 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                     centerTitle: true,
                   ),
             body: isLandscapeMode
-                ? Stack(
-                    children: [
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: 14,
-                          ),
-                          child: HighCharts(
-                            size: Size(MediaQuery.of(context).size.width,
-                                MediaQuery.of(context).size.width),
-                            data: _chartData,
-                            loader: Container(),
-                            scripts: const [
-                              "https://code.highcharts.com/highcharts.js",
-                              'https://code.highcharts.com/modules/networkgraph.js',
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (isLandscapeMode)
-                        Positioned(
-                          top: 30,
-                          right: 24,
-                          child: GestureDetector(
-                            onTap: _exitLandscapeMode,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary,
-                                shape: BoxShape.circle,
-                              ),
-                              padding: EdgeInsets.all(10),
-                              child: Icon(Icons.close,
-                                  color: Colors.white, size: 18),
+                ? SafeArea(
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 14,
+                            ),
+                            child: HighCharts(
+                              size: Size(MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.width),
+                              data: _chartData,
+                              loader: Container(),
+                              scripts: const [
+                                "https://code.highcharts.com/highcharts.js",
+                                'https://code.highcharts.com/modules/networkgraph.js',
+                              ],
                             ),
                           ),
                         ),
-                    ],
+                        if (isLandscapeMode)
+                          Positioned(
+                            top: 30,
+                            right: 24,
+                            child: GestureDetector(
+                              onTap: _exitLandscapeMode,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  shape: BoxShape.circle,
+                                ),
+                                padding: EdgeInsets.all(10),
+                                child: Icon(Icons.close,
+                                    color: Colors.white, size: 18),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   )
                 : SafeArea(
                     top: true,
