@@ -188,12 +188,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         ? dates.first
         : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
 
-    final endDate = dates.last.isAfter(
-            auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
-        ? dates.last
-        : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+    // final endDate = dates.last.isAfter(
+    //         auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
+    //     ? dates.last
+    //     : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
 
-    final totalDuration = endDate.difference(startDate).inMilliseconds;
+    // Set endDate to yesterday
+    final yesterday = DateTime.now().subtract(Duration(days: 1));
+    // final adjustedEndDate = endDate.isAfter(yesterday) ? yesterday : endDate;
+    final adjustedEndDate = yesterday;
+
+    final totalDuration = adjustedEndDate.difference(startDate).inMilliseconds;
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
 
@@ -286,11 +291,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           startOnTick: false,
           endOnTick: false,
           min: ${startDate.millisecondsSinceEpoch},
-          max: ${endDate.millisecondsSinceEpoch},
+          max: ${adjustedEndDate.millisecondsSinceEpoch},
           tickPositions: [
             ${startDate.millisecondsSinceEpoch},
             ${startDate.millisecondsSinceEpoch + totalDuration ~/ 2},
-            ${endDate.millisecondsSinceEpoch}
+            ${adjustedEndDate.millisecondsSinceEpoch}
           ]
       },
       yAxis: {
@@ -522,10 +527,12 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         ? dates.first
         : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
 
-    final endDate = dates.last.isAfter(
-            auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
-        ? dates.last
-        : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+    // final endDate = dates.last.isAfter(
+    //         auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
+    //     ? dates.last
+    //     : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+
+    final endDate = DateTime.now().subtract(Duration(days: 1));
 
     final totalDuration = endDate.difference(startDate).inMilliseconds;
 
