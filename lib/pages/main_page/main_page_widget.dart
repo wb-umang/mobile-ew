@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
-import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:every_watch/pages/main_page/image_search_dialog.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
@@ -49,9 +44,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
   final TextEditingController _searchController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final ImagePicker _picker = ImagePicker();
-  File? _capturedImage;
-  String? _base64Image = "";
+
   ImageSearchResponseStruct? _imageSearchResponse;
   WatchListingFilterStruct? _watchListingFilter;
   WatchListingResponseStruct? _watchListingResponse;
@@ -122,241 +115,22 @@ class _MainPageWidgetState extends State<MainPageWidget>
     _searchBarModel.textFieldFocusNode?.unfocus();
   }
 
-  Future<void> _captureImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-
-    if (image != null) {
-      setState(() {
-        _capturedImage = File(image.path);
-      });
-
-      // Convert the image to base64
-      _base64Image = await _convertImageToBase64(_capturedImage!);
-    }
-  }
-
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      setState(() {
-        _capturedImage = File(image.path);
-      });
-
-      // Convert the image to base64
-      _base64Image = await _convertImageToBase64(_capturedImage!);
-      debugPrint('Base64 String: $_base64Image');
-    }
-  }
-
-  Future<String> _convertImageToBase64(File imageFile) async {
-    // Read the image file
-    final inputPath = imageFile.path;
-
-    // Compress and convert the image to WebP
-    final compressedBytes = await FlutterImageCompress.compressWithFile(
-      inputPath,
-      format: CompressFormat.webp,
-      quality: 80,
-      minWidth: 800,
-      minHeight: 600,
-    );
-
-    if (compressedBytes == null) {
-      throw Exception("Failed to compress the image.");
-    }
-
-    // Convert the compressed bytes to base64
-    String base64String = base64Encode(compressedBytes);
-
-    // Return the WebP data URI
-    return 'data:image/webp;base64,$base64String';
-  }
-
   void showImageSearchDialog(BuildContext context) {
     _model.tabBarController?.animateTo(0);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'AI Image Search',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'DM Sans',
-                            color: FlutterFlowTheme.of(context).primary,
-                            fontSize: 18.0,
-                            letterSpacing: 0.18,
-                            fontWeight: FontWeight.bold,
-                            lineHeight: 1.33,
-                          ),
-                    ),
-                    SizedBox(height: 50),
-                    Text(
-                      'Open Camera or Select Image',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'DM Sans',
-                            color: FlutterFlowTheme.of(context).primary,
-                            fontSize: 16.0,
-                            letterSpacing: 0.18,
-                            fontWeight: FontWeight.bold,
-                            lineHeight: 1.33,
-                          ),
-                    ),
-                    SizedBox(height: 14),
-                    Text(
-                      '(JPG, PNG, WebP formats supported)',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'DM Sans',
-                            color: FlutterFlowTheme.of(context).secondary,
-                            fontSize: 14.0,
-                            letterSpacing: 0.18,
-                            lineHeight: 1.33,
-                          ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Maximum file size: 10MB.',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'DM Sans',
-                            color: FlutterFlowTheme.of(context).secondary,
-                            fontSize: 12.0,
-                            letterSpacing: 0.18,
-                            lineHeight: 1.33,
-                          ),
-                    ),
-                    SizedBox(height: 34),
-                    Padding(
-                      padding: EdgeInsets.only(left: 12, right: 12),
-                      child: FFButtonWidget(
-                        onPressed: _pickImage,
-                        text: 'Upload from gallery',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 44.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'DM Sans',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.12,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.47,
-                                  ),
-                          borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primary,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 14),
-                    Padding(
-                      padding: EdgeInsets.only(left: 12, right: 12),
-                      child: FFButtonWidget(
-                        onPressed: _captureImage,
-                        text: 'Take a Picture',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 44.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'DM Sans',
-                                    color: Colors.white,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.12,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.47,
-                                  ),
-                          borderSide: const BorderSide(
-                            width: 0.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 14),
-                    Padding(
-                      padding: EdgeInsets.only(left: 12, right: 12),
-                      child: FFButtonWidget(
-                        onPressed: () => _searchImage(context),
-                        text: 'Search',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 44.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'DM Sans',
-                                    color: Colors.white,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.12,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.47,
-                                  ),
-                          borderSide: const BorderSide(
-                            width: 0.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: SvgPicture.asset(
-                    'assets/icons/dialog_cancel.svg',
-                    width: 12,
-                    height: 12,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
+        return ImageSearchDialog(
+            onSearch: (context, base64Image) =>
+                _searchImage(context, base64Image));
       },
     );
   }
 
-  void _searchImage(BuildContext context) async {
+  void _searchImage(BuildContext context, String base64Image) async {
     final response = await MutualWatchGroup.apiImageSearchPOSTCall.call(
-      base64Image: _base64Image!,
+      base64Image: base64Image,
       authorization: FFAppState().loginData.accessToken,
     );
 
@@ -374,7 +148,22 @@ class _MainPageWidgetState extends State<MainPageWidget>
       isLoading = true; // Set loading to true before the API call
     });
 
+    // Ensure _watchListingFilter is initialized
     _watchListingFilter = FFAppState().watchListingFilter;
+    if (_watchListingFilter == null ||
+        _watchListingFilter?.toMap().isEmpty == true) {
+      _watchListingFilter = WatchListingFilterStruct(
+        filterData: FilterDataStruct(
+          currencyMode: 'USD',
+          auctionType: ['listing'],
+        ),
+        sortType: 'asc',
+        sortColumn: 'relevance',
+        from: 0,
+        size: 30,
+      );
+    }
+
     _watchListingFilter?.filterData.image = [_imageSearchResponse?.data ?? ''];
 
     final response = await MutualWatchGroup.watchListingCall.call(
