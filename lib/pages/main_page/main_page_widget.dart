@@ -49,6 +49,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
   WatchListingFilterStruct? _watchListingFilter;
   WatchListingResponseStruct? _watchListingResponse;
   bool isLoading = false; // Add a loading state variable
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -77,14 +78,30 @@ class _MainPageWidgetState extends State<MainPageWidget>
       safeSetState(() {});
     });
 
-    _model.tabBarController = TabController(
+    _tabController = TabController(
       vsync: this,
       length: 4,
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
 
+    _tabController.addListener(_handleTabSelection);
+
     // Add the API call in initState
     _callWatchListingApi(); // Call the API to fetch data on initialization
+  }
+
+  void _handleTabSelection() {
+    if (_tabController.index == 2) {
+      _tabController.index = _tabController.previousIndex; // Prevent switching
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ImageSearchDialog(
+              onSearch: (context, base64Image) =>
+                  _searchImage(context, base64Image));
+        },
+      );
+    }
   }
 
   @override
@@ -113,19 +130,6 @@ class _MainPageWidgetState extends State<MainPageWidget>
     }
     isLoadingSearch = false;
     _searchBarModel.textFieldFocusNode?.unfocus();
-  }
-
-  void showImageSearchDialog(BuildContext context) {
-    _model.tabBarController?.animateTo(0);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ImageSearchDialog(
-            onSearch: (context, base64Image) =>
-                _searchImage(context, base64Image));
-      },
-    );
   }
 
   void _searchImage(BuildContext context, String base64Image) async {
@@ -223,7 +227,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                   children: [
                     Expanded(
                       child: TabBarView(
-                        controller: _model.tabBarController,
+                        controller: _tabController,
                         children: [
                           KeepAliveWidgetWrapper(
                             builder: (context) => Container(
@@ -1687,6 +1691,9 @@ class _MainPageWidgetState extends State<MainPageWidget>
                               ),
                             ),
                           ),
+                          Center(
+                            child: Text("Find Watch"),
+                          ),
                           KeepAliveWidgetWrapper(
                             builder: (context) => Container(
                               width: double.infinity,
@@ -2405,18 +2412,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                 0.0, 20.0, 0.0, 0.0),
                           ),
                         ],
-                        controller: _model.tabBarController,
-                        onTap: (i) async {
-                          if (i == 2) {
-                            showImageSearchDialog(context);
-                          }
-                          [
-                            () async {},
-                            () async {},
-                            () async {},
-                            () async {}
-                          ][i]();
-                        },
+                        controller: _tabController,
                       ),
                     ),
                   ],
