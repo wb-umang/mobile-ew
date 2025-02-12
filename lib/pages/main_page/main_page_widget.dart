@@ -92,7 +92,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
 
   void _handleTabSelection() {
     if (_tabController.index == 2) {
-      _tabController.index = _tabController.previousIndex; // Prevent switching
+      _tabController.index = 0; // Prevent switching
       showDialog(
         context: context,
         builder: (BuildContext context) {
