@@ -71,6 +71,11 @@ dependencies:
   built_value: ^8.9.0
   flutter_advanced_switch: ^3.1.0
   skeletonizer: ^1.4.3
+  flutter_svg: ^2.0.17
+  image_picker: ^1.1.2
+  mime: ^2.0.0
+  image: ^4.5.2
+  flutter_image_compress: ^2.3.0
 
 dependency_overrides:
   http: 1.2.1
@@ -104,6 +109,7 @@ flutter:
     - assets/lottie_animations/
     - assets/rive_animations/
     - assets/pdfs/
+    - assets/icons/
   fonts:
     - family: Hometab
       fonts:

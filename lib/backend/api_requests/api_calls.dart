@@ -267,6 +267,8 @@ class MutualWatchGroup {
   static ApiWatchGetWatchPriceAnalysisGETCall
       apiWatchGetWatchPriceAnalysisGETCall =
       ApiWatchGetWatchPriceAnalysisGETCall();
+  static ApiImageSearchPOSTCall apiImageSearchPOSTCall =
+      ApiImageSearchPOSTCall();
   static ApiWatchGetWatchDetailByIdGETCall apiWatchGetWatchDetailByIdGETCall =
       ApiWatchGetWatchDetailByIdGETCall();
   static ApiWatchGetWatchAnalysisByIdGETCall
@@ -3552,6 +3554,39 @@ class WatchListingCall {
       params: {
         'variables': variables,
       },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class ApiImageSearchPOSTCall {
+  Future<ApiCallResponse> call({
+    required String base64Image,
+    String authorization = '',
+  }) async {
+    final baseUrl = MutualWatchGroup.getBaseUrl();
+    final ffApiRequestBody = '''
+    {
+      "base64Image": "$base64Image"
+    }
+    ''';
+
+    return ApiManager.instance.makeApiCall(
+      callName: '/api/SimilarWatches/UploadImage POST',
+      apiUrl: '$baseUrl/api/SimilarWatches/UploadImage',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $authorization',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,

@@ -21,6 +21,7 @@ class FilterDataStruct extends BaseStruct {
     List<String>? infoSource,
     List<String>? country,
     List<String>? condition,
+    List<String>? image,
   })  : _currencyMode = currencyMode,
         _auctionType = auctionType,
         _manufacturer = manufacturer,
@@ -34,7 +35,8 @@ class FilterDataStruct extends BaseStruct {
         _claspMaterial = claspMaterial,
         _infoSource = infoSource,
         _country = country,
-        _condition = condition;
+        _condition = condition,
+        _image = image;
 
   // "currencyMode" field.
   String? _currencyMode;
@@ -186,6 +188,17 @@ class FilterDataStruct extends BaseStruct {
 
   bool hasCondition() => _condition != null;
 
+  // "image" field.
+  List<String>? _image;
+  List<String> get image => _image ?? [];
+  set image(List<String>? val) => _image = val;
+
+  void updateImage(Function(List<String>) updateFn) {
+    updateFn(_image ??= []);
+  }
+
+  bool hasImage() => _image != null;
+
   static FilterDataStruct fromMap(Map<String, dynamic> data) =>
       FilterDataStruct(
         currencyMode: data['currencyMode'] as String?,
@@ -202,6 +215,7 @@ class FilterDataStruct extends BaseStruct {
         infoSource: getDataList(data['infoSource']),
         country: getDataList(data['country']),
         condition: getDataList(data['condition']),
+        image: getDataList(data['image']),
       );
 
   static FilterDataStruct? maybeFromMap(dynamic data) => data is Map
@@ -223,6 +237,7 @@ class FilterDataStruct extends BaseStruct {
         'infoSource': _infoSource,
         'country': _country,
         'condition': _condition,
+        'image': _image,
       }.withoutNulls;
 
   @override
@@ -293,6 +308,11 @@ class FilterDataStruct extends BaseStruct {
         ),
         'condition': serializeParam(
           _condition,
+          ParamType.String,
+          isList: true,
+        ),
+        'image': serializeParam(
+          _image,
           ParamType.String,
           isList: true,
         ),
@@ -367,6 +387,11 @@ class FilterDataStruct extends BaseStruct {
         ),
         condition: deserializeParam<String>(
           data['condition'],
+          ParamType.String,
+          true,
+        ),
+        image: deserializeParam<String>(
+          data['image'],
           ParamType.String,
           true,
         ),

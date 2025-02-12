@@ -1,3 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
+import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
+import 'package:every_watch/pages/main_page/search_watch.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/icon_button/icon_button_widget.dart';
@@ -18,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'main_page_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 export 'main_page_model.dart';
 
 class MainPageWidget extends StatefulWidget {
@@ -40,6 +50,12 @@ class _MainPageWidgetState extends State<MainPageWidget>
   final TextEditingController _searchController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final ImagePicker _picker = ImagePicker();
+  File? _capturedImage;
+  String? _base64Image = "";
+  ImageSearchResponseStruct? _imageSearchResponse;
+  WatchListingFilterStruct? _watchListingFilter;
+  WatchListingResponseStruct? _watchListingResponse;
 
   @override
   void initState() {
@@ -70,7 +86,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
 
     _model.tabBarController = TabController(
       vsync: this,
-      length: 3,
+      length: 4,
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
   }
@@ -103,6 +119,270 @@ class _MainPageWidgetState extends State<MainPageWidget>
     _searchBarModel.textFieldFocusNode?.unfocus();
   }
 
+  Future<void> _captureImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      setState(() {
+        _capturedImage = File(image.path);
+      });
+
+      // Convert the image to base64
+      _base64Image = await _convertImageToBase64(_capturedImage!);
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _capturedImage = File(image.path);
+      });
+
+      // Convert the image to base64
+      _base64Image = await _convertImageToBase64(_capturedImage!);
+      debugPrint('Base64 String: $_base64Image');
+    }
+  }
+
+  Future<String> _convertImageToBase64(File imageFile) async {
+    // Read the image file
+    final inputPath = imageFile.path;
+
+    // Compress and convert the image to WebP
+    final compressedBytes = await FlutterImageCompress.compressWithFile(
+      inputPath,
+      format: CompressFormat.webp,
+      quality: 80,
+      minWidth: 800,
+      minHeight: 600,
+    );
+
+    if (compressedBytes == null) {
+      throw Exception("Failed to compress the image.");
+    }
+
+    // Convert the compressed bytes to base64
+    String base64String = base64Encode(compressedBytes);
+
+    // Return the WebP data URI
+    return 'data:image/webp;base64,$base64String';
+  }
+
+  void showImageSearchDialog(BuildContext context) {
+    _model.tabBarController?.animateTo(0);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: FlutterFlowTheme.of(context).primaryBackground,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'AI Image Search',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'DM Sans',
+                            color: FlutterFlowTheme.of(context).primary,
+                            fontSize: 18.0,
+                            letterSpacing: 0.18,
+                            fontWeight: FontWeight.bold,
+                            lineHeight: 1.33,
+                          ),
+                    ),
+                    SizedBox(height: 50),
+                    Text(
+                      'Open Camera or Select Image',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'DM Sans',
+                            color: FlutterFlowTheme.of(context).primary,
+                            fontSize: 16.0,
+                            letterSpacing: 0.18,
+                            fontWeight: FontWeight.bold,
+                            lineHeight: 1.33,
+                          ),
+                    ),
+                    SizedBox(height: 14),
+                    Text(
+                      '(JPG, PNG, WebP formats supported)',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'DM Sans',
+                            color: FlutterFlowTheme.of(context).secondary,
+                            fontSize: 14.0,
+                            letterSpacing: 0.18,
+                            lineHeight: 1.33,
+                          ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Maximum file size: 10MB.',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'DM Sans',
+                            color: FlutterFlowTheme.of(context).secondary,
+                            fontSize: 12.0,
+                            letterSpacing: 0.18,
+                            lineHeight: 1.33,
+                          ),
+                    ),
+                    SizedBox(height: 34),
+                    Padding(
+                      padding: EdgeInsets.only(left: 12, right: 12),
+                      child: FFButtonWidget(
+                        onPressed: _pickImage,
+                        text: 'Upload from gallery',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 44.0,
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'DM Sans',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    fontSize: 14.0,
+                                    letterSpacing: 0.12,
+                                    fontWeight: FontWeight.bold,
+                                    lineHeight: 1.47,
+                                  ),
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).primary,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 14),
+                    Padding(
+                      padding: EdgeInsets.only(left: 12, right: 12),
+                      child: FFButtonWidget(
+                        onPressed: _captureImage,
+                        text: 'Take a Picture',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 44.0,
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'DM Sans',
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                    letterSpacing: 0.12,
+                                    fontWeight: FontWeight.bold,
+                                    lineHeight: 1.47,
+                                  ),
+                          borderSide: const BorderSide(
+                            width: 0.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 14),
+                    Padding(
+                      padding: EdgeInsets.only(left: 12, right: 12),
+                      child: FFButtonWidget(
+                        onPressed: () => _searchImage(context),
+                        text: 'Search',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 44.0,
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              24.0, 0.0, 24.0, 0.0),
+                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'DM Sans',
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                    letterSpacing: 0.12,
+                                    fontWeight: FontWeight.bold,
+                                    lineHeight: 1.47,
+                                  ),
+                          borderSide: const BorderSide(
+                            width: 0.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: SvgPicture.asset(
+                    'assets/icons/dialog_cancel.svg',
+                    width: 12,
+                    height: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _searchImage(BuildContext context) async {
+    final response = await MutualWatchGroup.apiImageSearchPOSTCall.call(
+      base64Image: _base64Image!,
+      authorization: FFAppState().loginData.accessToken,
+    );
+
+    if (response.succeeded && mounted) {
+      _imageSearchResponse =
+          ImageSearchResponseStruct.fromMap(response.jsonBody);
+
+      _callWatchListingApi();
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _callWatchListingApi() async {
+    _watchListingFilter = FFAppState().watchListingFilter;
+    _watchListingFilter?.filterData.image = [_imageSearchResponse?.data ?? ''];
+
+    final response = await MutualWatchGroup.watchListingCall.call(
+      accessToken: FFAppState().loginData.accessToken,
+      variablesJson: _watchListingFilter?.toMap(),
+    );
+
+    if (response.succeeded && mounted) {
+      setState(() {
+        _watchListingResponse =
+            WatchListingResponseStruct.fromMap(response.jsonBody);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -113,7 +393,6 @@ class _MainPageWidgetState extends State<MainPageWidget>
         variablesJson: FFAppState().watchListingFilter.toMap(),
       ),
       builder: (context, snapshot) {
-        WatchListingFilterStruct filter = FFAppState().watchListingFilter;
         var searchResults = _model.searchResults.toMap();
 
         if (!snapshot.hasData) {
@@ -133,6 +412,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
           );
         }
         final mainPageWatchListingResponse = snapshot.data!;
+        _watchListingResponse = WatchListingResponseStruct.maybeFromMap(
+            mainPageWatchListingResponse.jsonBody);
 
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -835,7 +1116,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                           .auctionType
                                                                           .contains(
                                                                               'upcomingLive')) {
-                                                                        return WatchListingResponseStruct.maybeFromMap(mainPageWatchListingResponse.jsonBody)
+                                                                        return _watchListingResponse
                                                                             ?.data
                                                                             .data
                                                                             .data
@@ -848,7 +1129,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                           .auctionType
                                                                           .contains(
                                                                               'result')) {
-                                                                        return WatchListingResponseStruct.maybeFromMap(mainPageWatchListingResponse.jsonBody)
+                                                                        return _watchListingResponse
                                                                             ?.data
                                                                             .data
                                                                             .data
@@ -922,7 +1203,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                             .auctionType
                                                                             .contains(
                                                                                 'marketplace')
-                                                                        ? WatchListingResponseStruct.maybeFromMap(mainPageWatchListingResponse.jsonBody)
+                                                                        ? _watchListingResponse
                                                                             ?.data
                                                                             .data
                                                                             .data
@@ -1009,16 +1290,15 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                   0.0),
                                                           child: Builder(
                                                             builder: (context) {
-                                                              final watchListings = WatchListingResponseStruct.maybeFromMap(
-                                                                          mainPageWatchListingResponse
-                                                                              .jsonBody)
-                                                                      ?.data
-                                                                      .data
-                                                                      .data
-                                                                      .auctionWiseListing
-                                                                      .allWatchListings
-                                                                      .toList() ??
-                                                                  [];
+                                                              final watchListings =
+                                                                  _watchListingResponse
+                                                                          ?.data
+                                                                          .data
+                                                                          .data
+                                                                          .auctionWiseListing
+                                                                          .allWatchListings
+                                                                          .toList() ??
+                                                                      [];
 
                                                               return RefreshIndicator(
                                                                 onRefresh:
@@ -1776,161 +2056,6 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                           scrollDirection:
                                                               Axis.vertical,
                                                           children: [
-                                                            // Align(
-                                                            //   alignment:
-                                                            //       const AlignmentDirectional(
-                                                            //           0.0, 0.0),
-                                                            //   child: Container(
-                                                            //     width: double
-                                                            //         .infinity,
-                                                            //     decoration:
-                                                            //         BoxDecoration(
-                                                            //       color: FlutterFlowTheme.of(
-                                                            //               context)
-                                                            //           .lightGray,
-                                                            //       borderRadius:
-                                                            //           BorderRadius
-                                                            //               .circular(
-                                                            //                   24.0),
-                                                            //     ),
-                                                            //     alignment:
-                                                            //         const AlignmentDirectional(
-                                                            //             0.0,
-                                                            //             0.0),
-                                                            //     child: Align(
-                                                            //       alignment:
-                                                            //           const AlignmentDirectional(
-                                                            //               0.0,
-                                                            //               0.0),
-                                                            //       child:
-                                                            //           Padding(
-                                                            //         padding: const EdgeInsetsDirectional
-                                                            //             .fromSTEB(
-                                                            //             0.0,
-                                                            //             8.0,
-                                                            //             0.0,
-                                                            //             8.0),
-                                                            //         child:
-                                                            //             Column(
-                                                            //           mainAxisSize:
-                                                            //               MainAxisSize
-                                                            //                   .max,
-                                                            //           mainAxisAlignment:
-                                                            //               MainAxisAlignment
-                                                            //                   .center,
-                                                            //           children: [
-                                                            //             Container(
-                                                            //               width:
-                                                            //                   double.infinity,
-                                                            //               height:
-                                                            //                   44.0,
-                                                            //               decoration:
-                                                            //                   const BoxDecoration(
-                                                            //                 color:
-                                                            //                     Color(0x00FFFFFF),
-                                                            //               ),
-                                                            //               child:
-                                                            //                   wrapWithModel(
-                                                            //                 model:
-                                                            //                     _model.profileRowModel1,
-                                                            //                 updateCallback: () =>
-                                                            //                     safeSetState(() {}),
-                                                            //                 child:
-                                                            //                     ProfileRowWidget(
-                                                            //                   title: 'Compare',
-                                                            //                   label: '6',
-                                                            //                   icon: Icon(
-                                                            //                     FFIcons.kicon1,
-                                                            //                     color: FlutterFlowTheme.of(context).primary,
-                                                            //                     size: 24.0,
-                                                            //                   ),
-                                                            //                 ),
-                                                            //               ),
-                                                            //             ),
-                                                            //             wrapWithModel(
-                                                            //               model:
-                                                            //                   _model.separatorIconModel1,
-                                                            //               updateCallback: () =>
-                                                            //                   safeSetState(() {}),
-                                                            //               child:
-                                                            //                   SeparatorIconWidget(
-                                                            //                 color:
-                                                            //                     FlutterFlowTheme.of(context).border3,
-                                                            //               ),
-                                                            //             ),
-                                                            //             Container(
-                                                            //               width:
-                                                            //                   double.infinity,
-                                                            //               height:
-                                                            //                   44.0,
-                                                            //               decoration:
-                                                            //                   const BoxDecoration(
-                                                            //                 color:
-                                                            //                     Color(0x00FFFFFF),
-                                                            //               ),
-                                                            //               child:
-                                                            //                   wrapWithModel(
-                                                            //                 model:
-                                                            //                     _model.profileRowModel2,
-                                                            //                 updateCallback: () =>
-                                                            //                     safeSetState(() {}),
-                                                            //                 child:
-                                                            //                     ProfileRowWidget(
-                                                            //                   title: 'Collection',
-                                                            //                   label: '18',
-                                                            //                   icon: Icon(
-                                                            //                     FFIcons.kbox,
-                                                            //                     color: FlutterFlowTheme.of(context).primary,
-                                                            //                     size: 24.0,
-                                                            //                   ),
-                                                            //                 ),
-                                                            //               ),
-                                                            //             ),
-                                                            //             wrapWithModel(
-                                                            //               model:
-                                                            //                   _model.separatorIconModel2,
-                                                            //               updateCallback: () =>
-                                                            //                   safeSetState(() {}),
-                                                            //               child:
-                                                            //                   SeparatorIconWidget(
-                                                            //                 color:
-                                                            //                     FlutterFlowTheme.of(context).border3,
-                                                            //               ),
-                                                            //             ),
-                                                            //             Container(
-                                                            //               width:
-                                                            //                   double.infinity,
-                                                            //               height:
-                                                            //                   44.0,
-                                                            //               decoration:
-                                                            //                   const BoxDecoration(
-                                                            //                 color:
-                                                            //                     Color(0x00FFFFFF),
-                                                            //               ),
-                                                            //               child:
-                                                            //                   wrapWithModel(
-                                                            //                 model:
-                                                            //                     _model.profileRowModel3,
-                                                            //                 updateCallback: () =>
-                                                            //                     safeSetState(() {}),
-                                                            //                 child:
-                                                            //                     ProfileRowWidget(
-                                                            //                   title: 'Favorite',
-                                                            //                   label: '24',
-                                                            //                   icon: Icon(
-                                                            //                     FFIcons.kicon2,
-                                                            //                     color: FlutterFlowTheme.of(context).primary,
-                                                            //                     size: 24.0,
-                                                            //                   ),
-                                                            //                 ),
-                                                            //               ),
-                                                            //             ),
-                                                            //           ],
-                                                            //         ),
-                                                            //       ),
-                                                            //     ),
-                                                            //   ),
-                                                            // ),
                                                             Align(
                                                               alignment:
                                                                   const AlignmentDirectional(
@@ -2442,7 +2567,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                 ),
                         unselectedLabelStyle: const TextStyle(),
                         indicatorColor: const Color(0x00FFFFFF),
-                        tabs: const [
+                        tabs: [
                           Tab(
                             text: 'Home',
                             icon: Icon(
@@ -2462,6 +2587,20 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                 0.0, 20.0, 0.0, 0.0),
                           ),
                           Tab(
+                            text: 'Find Watch',
+                            icon: SvgPicture.asset(
+                              'assets/icons/search_tab.svg',
+                              width: 20,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                FlutterFlowTheme.of(context).alternate,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            iconMargin: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 20.0, 0.0, 0.0),
+                          ),
+                          Tab(
                             text: 'Profile',
                             icon: Icon(
                               FFIcons.kprofile,
@@ -2473,7 +2612,15 @@ class _MainPageWidgetState extends State<MainPageWidget>
                         ],
                         controller: _model.tabBarController,
                         onTap: (i) async {
-                          [() async {}, () async {}, () async {}][i]();
+                          if (i == 2) {
+                            showImageSearchDialog(context);
+                          }
+                          [
+                            () async {},
+                            () async {},
+                            () async {},
+                            () async {}
+                          ][i]();
                         },
                       ),
                     ),

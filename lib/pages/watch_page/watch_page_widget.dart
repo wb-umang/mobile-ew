@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:every_watch/backend/schema/structs/index.dart';
 import 'package:every_watch/backend/schema/structs/watch_analysis_response_struct.dart';
 import 'package:every_watch/backend/schema/structs/watch_price_analysis_filter_struct.dart';
@@ -1460,7 +1462,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                         Center(
                           child: Padding(
                             padding: EdgeInsets.only(
-                              top: 14,
+                              top: Platform.isIOS ? 14 : 0,
                             ),
                             child: HighCharts(
                               size: Size(MediaQuery.of(context).size.width,
