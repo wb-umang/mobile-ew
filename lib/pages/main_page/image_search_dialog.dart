@@ -21,7 +21,7 @@ class _ImageSearchDialogState extends State<ImageSearchDialog> {
   final ImagePicker _picker = ImagePicker();
   File? _capturedImage;
   String? _base64Image = "";
-  final int maxFileSize = 1 * 1024 * 1024;
+  final int maxFileSize = 10 * 1024 * 1024;
 
   Future<void> _captureImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
