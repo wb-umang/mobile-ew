@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
-import 'package:every_watch/pages/main_page/search_watch.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -56,6 +55,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
   ImageSearchResponseStruct? _imageSearchResponse;
   WatchListingFilterStruct? _watchListingFilter;
   WatchListingResponseStruct? _watchListingResponse;
+  bool isLoading = false; // Add a loading state variable
 
   @override
   void initState() {
@@ -89,6 +89,9 @@ class _MainPageWidgetState extends State<MainPageWidget>
       length: 4,
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
+
+    // Add the API call in initState
+    _callWatchListingApi(); // Call the API to fetch data on initialization
   }
 
   @override
@@ -367,6 +370,10 @@ class _MainPageWidgetState extends State<MainPageWidget>
   }
 
   void _callWatchListingApi() async {
+    setState(() {
+      isLoading = true; // Set loading to true before the API call
+    });
+
     _watchListingFilter = FFAppState().watchListingFilter;
     _watchListingFilter?.filterData.image = [_imageSearchResponse?.data ?? ''];
 
@@ -379,6 +386,11 @@ class _MainPageWidgetState extends State<MainPageWidget>
       setState(() {
         _watchListingResponse =
             WatchListingResponseStruct.fromMap(response.jsonBody);
+        isLoading = false; // Reset loading to false after the response
+      });
+    } else {
+      setState(() {
+        isLoading = false; // Reset loading to false in case of failure
       });
     }
   }
@@ -388,14 +400,11 @@ class _MainPageWidgetState extends State<MainPageWidget>
     context.watch<FFAppState>();
 
     return FutureBuilder<ApiCallResponse>(
-      future: MutualWatchGroup.watchListingCall.call(
-        accessToken: FFAppState().loginData.accessToken,
-        variablesJson: FFAppState().watchListingFilter.toMap(),
-      ),
       builder: (context, snapshot) {
         var searchResults = _model.searchResults.toMap();
 
-        if (!snapshot.hasData) {
+        // Show loader if isLoading is true
+        if (isLoading) {
           return Scaffold(
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
             body: Center(
@@ -411,9 +420,6 @@ class _MainPageWidgetState extends State<MainPageWidget>
             ),
           );
         }
-        final mainPageWatchListingResponse = snapshot.data!;
-        _watchListingResponse = WatchListingResponseStruct.maybeFromMap(
-            mainPageWatchListingResponse.jsonBody);
 
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -2631,6 +2637,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
           ),
         );
       },
+      future: null,
     );
   }
 }
