@@ -1028,7 +1028,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   ''';
   }
 
-  void _getChartPriceAnalysisClicked() async {
+  void _getChartPriceAnalysisClicked(bool unsold, bool outliers) async {
     setState(() {
       _isChartLoading = true;
     });
@@ -1074,18 +1074,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 _generateWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph, _outliers),
                 _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-                _outliers);
+                    _priceAnalysis!.data.priceAnalysisGraph, unsold, outliers),
+                outliers);
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.auctionAnalysisMedians,
                 _generateWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph, _outliers),
                 _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-                _outliers);
+                    _priceAnalysis!.data.priceAnalysisGraph, unsold, outliers),
+                outliers);
           } else {
-            _chartData = _generateDealersChartData([], '', '', _outliers);
+            _chartData = _generateDealersChartData([], '', '', outliers);
           }
 
           _isChartLoading = false;
@@ -1295,9 +1295,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         }
 
         if (_unsoldController.value) {
-          _unsold = false;
-        } else {
           _unsold = true;
+        } else {
+          _unsold = false;
         }
       });
     });
@@ -1361,7 +1361,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _getChartPriceAnalysisClicked();
+        _getChartPriceAnalysisClicked(_unsold, _outliers);
       }
     });
   }
@@ -2212,8 +2212,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                 _selectedButtonIndex == 0,
                                                                             onPressed:
                                                                                 () {
-                                                                              setState(() => _selectedButtonIndex = 0);
-                                                                              _getChartPriceAnalysisClicked();
+                                                                              if (_selectedButtonIndex != 0) {
+                                                                                // Check if not already selected
+                                                                                setState(() => _selectedButtonIndex = 0);
+                                                                                _getChartPriceAnalysisClicked(_unsold, _outliers);
+                                                                              }
                                                                             },
                                                                           ),
                                                                           ChartFilterButton(
@@ -2225,8 +2228,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                 _selectedButtonIndex == 1,
                                                                             onPressed:
                                                                                 () {
-                                                                              setState(() => _selectedButtonIndex = 1);
-                                                                              _getChartPriceAnalysisClicked();
+                                                                              if (_selectedButtonIndex != 1) {
+                                                                                // Check if not already selected
+                                                                                setState(() => _selectedButtonIndex = 1);
+                                                                                _getChartPriceAnalysisClicked(_unsold, _outliers);
+                                                                              }
                                                                             },
                                                                           ),
                                                                           ChartFilterButton(
@@ -2238,8 +2244,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                 _selectedButtonIndex == 2,
                                                                             onPressed:
                                                                                 () {
-                                                                              setState(() => _selectedButtonIndex = 2);
-                                                                              _getChartPriceAnalysisClicked();
+                                                                              if (_selectedButtonIndex != 2) {
+                                                                                // Check if not already selected
+                                                                                setState(() => _selectedButtonIndex = 2);
+                                                                                _getChartPriceAnalysisClicked(_unsold, _outliers);
+                                                                              }
                                                                             },
                                                                           ),
                                                                           ChartFilterButton(
@@ -2251,8 +2260,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                 _selectedButtonIndex == 3,
                                                                             onPressed:
                                                                                 () {
-                                                                              setState(() => _selectedButtonIndex = 3);
-                                                                              _getChartPriceAnalysisClicked();
+                                                                              if (_selectedButtonIndex != 3) {
+                                                                                // Check if not already selected
+                                                                                setState(() => _selectedButtonIndex = 3);
+                                                                                _getChartPriceAnalysisClicked(_unsold, _outliers);
+                                                                              }
                                                                             },
                                                                           ),
                                                                           ChartFilterButton(
@@ -2264,8 +2276,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                 _selectedButtonIndex == 4,
                                                                             onPressed:
                                                                                 () {
-                                                                              setState(() => _selectedButtonIndex = 4);
-                                                                              _getChartPriceAnalysisClicked();
+                                                                              if (_selectedButtonIndex != 4) {
+                                                                                // Check if not already selected
+                                                                                setState(() => _selectedButtonIndex = 4);
+                                                                                _getChartPriceAnalysisClicked(_unsold, _outliers);
+                                                                              }
                                                                             },
                                                                           ),
                                                                           ChartFilterButton(
@@ -2281,8 +2296,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                 _selectedButtonIndex == 5,
                                                                             onPressed:
                                                                                 () {
-                                                                              setState(() => _selectedButtonIndex = 5);
-                                                                              _getChartPriceAnalysisClicked();
+                                                                              if (_selectedButtonIndex != 5) {
+                                                                                // Check if not already selected
+                                                                                setState(() => _selectedButtonIndex = 5);
+                                                                                _getChartPriceAnalysisClicked(_unsold, _outliers);
+                                                                              }
                                                                             },
                                                                           ),
                                                                         ],
@@ -2327,7 +2345,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                     SizedBox(
                                                                                       width: 10,
                                                                                     ),
-                                                                                    AdvancedSwitch(width: 30.0, height: 18.0, controller: _unsoldController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.fromRGBO(4, 7, 49, 0.42)),
+                                                                                    AdvancedSwitch(enabled: !_isChartLoading, width: 30.0, height: 18.0, controller: _unsoldController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.fromRGBO(4, 7, 49, 0.42)),
                                                                                   ],
                                                                                 ),
                                                                               ),
@@ -2365,7 +2383,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                       SizedBox(
                                                                                         width: 10,
                                                                                       ),
-                                                                                      AdvancedSwitch(width: 30.0, height: 18.0, controller: _outliersController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.from(alpha: 0.42, red: 0.016, green: 0.027, blue: 0.192)),
+                                                                                      AdvancedSwitch(enabled: !_isChartLoading, width: 30.0, height: 18.0, controller: _outliersController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.from(alpha: 0.42, red: 0.016, green: 0.027, blue: 0.192)),
                                                                                     ],
                                                                                   ),
                                                                                 ),
