@@ -1069,21 +1069,13 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
         setState(() {
           if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
-            if (_priceAnalysis!
-                .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
-              _chartData = _generateDealersChartData(
-                  _priceAnalysis!.data.dealersPriceAnalysis,
-                  _generateWatchPriceAnalysisChartData(
-                      _priceAnalysis!.data.priceAnalysisGraph, _outliers),
-                  _generateUnsoldWatchPriceAnalysisChartData(
-                      _priceAnalysis!.data.priceAnalysisGraph,
-                      false,
-                      _outliers),
-                  _outliers);
-            } else {
-              _chartData = _generateDealersChartData(
-                  _priceAnalysis!.data.dealersPriceAnalysis, '', '', _outliers);
-            }
+            _chartData = _generateDealersChartData(
+                _priceAnalysis!.data.dealersPriceAnalysis,
+                _generateWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+                _generateUnsoldWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+                _outliers);
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.auctionAnalysisMedians,
@@ -1274,9 +1266,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
     _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
-    print("#########################");
-    print("watchId: ${_watch.watchId}");
-    print("#########################");
     _selectedButtonIndex = 0;
 
     _unsoldController.addListener(() {
@@ -1439,7 +1428,6 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             WatchDetailResponseStruct.maybeFromMap(watchDetailResponse.jsonBody)
                 ?.data
                 .extractWatchDetail();
-        final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
         List<Widget> watchImages = [];
         if (watchDetail?.watchImages != null) {
           for (var image in watchDetail!.watchImages) {
@@ -2540,7 +2528,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          height: 12,
+                                                          height: 6,
                                                         ),
                                                       ],
                                                       wrapWithModel(
@@ -2577,6 +2565,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                           referenceNumber: _watch
                                                               .referenceNumber,
                                                         ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
                                                       ),
                                                     ].divide(const SizedBox(
                                                         height: 12.0)),

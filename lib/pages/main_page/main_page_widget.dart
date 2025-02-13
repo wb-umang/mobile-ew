@@ -87,7 +87,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
     _tabController.addListener(_handleTabSelection);
 
     // Add the API call in initState
-    _callWatchListingApi(); // Call the API to fetch data on initialization
+    _callWatchListingApi(false); // Call the API to fetch data on initialization
   }
 
   void _handleTabSelection() {
@@ -142,12 +142,12 @@ class _MainPageWidgetState extends State<MainPageWidget>
       _imageSearchResponse =
           ImageSearchResponseStruct.fromMap(response.jsonBody);
 
-      _callWatchListingApi();
+      _callWatchListingApi(true);
       Navigator.of(context).pop();
     }
   }
 
-  void _callWatchListingApi() async {
+  void _callWatchListingApi(bool isImageSearch) async {
     setState(() {
       isLoading = true; // Set loading to true before the API call
     });
@@ -159,7 +159,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
       _watchListingFilter = WatchListingFilterStruct(
         filterData: FilterDataStruct(
           currencyMode: 'USD',
-          auctionType: ['listing'],
+          auctionType: isImageSearch ? ['allWatches'] : ['listing'],
         ),
         sortType: 'asc',
         sortColumn: 'relevance',
