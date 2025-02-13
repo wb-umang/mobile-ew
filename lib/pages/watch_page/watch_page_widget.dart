@@ -53,6 +53,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool _outliers = false;
   bool _isInitialOutliersClicked = false;
   bool isLandscapeMode = false;
+  bool isPreviousData = false;
 
   void _switchToLandscapeMode() async {
     // Switch to landscape and update state
@@ -184,20 +185,16 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         .map((data) => DateTime.parse(data.eventPublishEndDate.toString()))
         .toList();
 
-    final startDate = dates.first.isBefore(
-            auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ??
-                dates.first)
+    final startDate = auctionDates == null || auctionDates.isEmpty
         ? dates.first
-        : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
-
-    // final endDate = dates.last.isAfter(
-    //         auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
-    //     ? dates.last
-    //     : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+        : dates.first
+                .isBefore(auctionDates.reduce((a, b) => a.isBefore(b) ? a : b))
+            ? dates.first
+            : auctionDates.reduce((a, b) => a.isBefore(b) ? a : b);
 
     // Set endDate to yesterday
     final yesterday = DateTime.now().subtract(Duration(days: 1));
-    // final adjustedEndDate = endDate.isAfter(yesterday) ? yesterday : endDate;
+
     final adjustedEndDate = yesterday;
 
     final totalDuration = adjustedEndDate.difference(startDate).inMilliseconds;
@@ -398,8 +395,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         }
       },
       series: [
-      $scatterChartData,
-      $unsoldScatterChartData,
+      ${_generateScatterChartDataString(scatterChartData, unsoldScatterChartData)}
       {
           data: [$seriesData],
           name: 'Dealer median',
@@ -414,6 +410,20 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }
       ]
     }''';
+  }
+
+  String _generateScatterChartDataString(
+      String scatterChartData, String unsoldScatterChartData) {
+    if (_priceAnalysis!
+        .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+      return '''
+          $scatterChartData,
+          $unsoldScatterChartData,
+          ''';
+    } else {
+      return '''
+          ''';
+    }
   }
 
   String _getDateRange(int selectedButton) {
@@ -523,16 +533,12 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         .map((data) => DateTime.parse(data.eventPublishEndDate.toString()))
         .toList();
 
-    final startDate = dates.first.isBefore(
-            auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ??
-                dates.first)
+    final startDate = auctionDates == null || auctionDates.isEmpty
         ? dates.first
-        : auctionDates?.reduce((a, b) => a.isBefore(b) ? a : b) ?? dates.first;
-
-    // final endDate = dates.last.isAfter(
-    //         auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last)
-    //     ? dates.last
-    //     : auctionDates?.reduce((a, b) => a.isAfter(b) ? a : b) ?? dates.last;
+        : dates.first
+                .isBefore(auctionDates.reduce((a, b) => a.isBefore(b) ? a : b))
+            ? dates.first
+            : auctionDates.reduce((a, b) => a.isBefore(b) ? a : b);
 
     final endDate = DateTime.now().subtract(Duration(days: 1));
 
@@ -734,8 +740,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         }
       },
       series: [
-        $scatterChartData,
-        $unsoldScatterChartData,
+        ${_generateScatterChartDataString(scatterChartData, unsoldScatterChartData)}
         {
           data: [$seriesData],
           name: "Auction median",
@@ -757,6 +762,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     final auctionPriceAnalysis = priceAnalysisGraph.auctionPriceAnalysis;
     final dealersPriceAnalysis = priceAnalysisGraph.dealersPriceAnalysis;
     final auctionAnalysisMedians = priceAnalysisGraph.auctionAnalysisMedians;
+
+    // Check if the auctionPriceAnalysis is empty
+    if (auctionPriceAnalysis.isEmpty) {
+      return '''''';
+    }
 
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
@@ -887,6 +897,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     final auctionPriceAnalysis = priceAnalysisGraph.auctionPriceAnalysis;
     final dealersPriceAnalysis = priceAnalysisGraph.dealersPriceAnalysis;
     final auctionAnalysisMedians = priceAnalysisGraph.auctionAnalysisMedians;
+
+    // Check if the auctionPriceAnalysis is empty
+    if (auctionPriceAnalysis.isEmpty) {
+      return '''''';
+    }
 
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
@@ -1048,18 +1063,27 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       );
 
       if (response.succeeded && mounted) {
+        isPreviousData = true;
         _priceAnalysis =
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
 
         setState(() {
           if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
-            _chartData = _generateDealersChartData(
-                _priceAnalysis!.data.dealersPriceAnalysis,
-                _generateWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph, _outliers),
-                _generateUnsoldWatchPriceAnalysisChartData(
-                    _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-                _outliers);
+            if (_priceAnalysis!
+                .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+              _chartData = _generateDealersChartData(
+                  _priceAnalysis!.data.dealersPriceAnalysis,
+                  _generateWatchPriceAnalysisChartData(
+                      _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+                  _generateUnsoldWatchPriceAnalysisChartData(
+                      _priceAnalysis!.data.priceAnalysisGraph,
+                      false,
+                      _outliers),
+                  _outliers);
+            } else {
+              _chartData = _generateDealersChartData(
+                  _priceAnalysis!.data.dealersPriceAnalysis, '', '', _outliers);
+            }
           } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.auctionAnalysisMedians,
@@ -1250,6 +1274,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
     _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
+    print("#########################");
+    print("watchId: ${_watch.watchId}");
+    print("#########################");
     _selectedButtonIndex = 0;
 
     _unsoldController.addListener(() {
@@ -1829,21 +1856,17 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                       ),
                                                       // Price Chart
                                                       // Hidding the chart if there is no data
-                                                      if (_priceAnalysis ==
-                                                              null ||
-                                                          (_priceAnalysis!.data
+                                                      if (isPreviousData ||
+                                                          (_priceAnalysis!
+                                                                  .data
+                                                                  .priceAnalysisGraph
                                                                   .dealersPriceAnalysis
-                                                                  .any((data) =>
-                                                                      data.medians
-                                                                          .medianUsd !=
-                                                                      0) ||
+                                                                  .isNotEmpty ||
                                                               _priceAnalysis!
                                                                   .data
-                                                                  .auctionAnalysisMedians
-                                                                  .any((data) =>
-                                                                      data.medians
-                                                                          .medianUsd !=
-                                                                      0)))
+                                                                  .priceAnalysisGraph
+                                                                  .auctionPriceAnalysis
+                                                                  .isNotEmpty))
                                                         Container(
                                                           color: Colors.white,
                                                           child: Column(
@@ -1910,155 +1933,72 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                           )),
                                                                     ),
                                                                   ),
-                                                                  Padding(
-                                                                    padding: EdgeInsets.only(
-                                                                        bottom:
-                                                                            12),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        SizedBox(
-                                                                          width:
-                                                                              100,
-                                                                          height:
-                                                                              100,
-                                                                          child:
-                                                                              Image.network(
-                                                                            watchDetail?.watchImages[0].url ??
-                                                                                '',
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                        ),
-                                                                        Expanded(
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(left: 10),
-                                                                            child:
-                                                                                Skeletonizer(
-                                                                              enabled: _isChartLoading,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Text(
-                                                                                    "Current value",
-                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                          fontFamily: 'DM Sans',
-                                                                                          color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                          fontSize: 16.0,
-                                                                                          letterSpacing: 0.08,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                        ),
-                                                                                  ),
-                                                                                  // Current value
-                                                                                  Text(
-                                                                                    "${NumberFormat('#,##0', 'en_US').format(_priceAnalysis?.data.currentValueAllCurrencies.netPayableUsd ?? 0)} USD",
-                                                                                    style: TextStyle(
-                                                                                      fontFamily: 'DM Sans',
-                                                                                      fontWeight: FontWeight.bold,
-                                                                                      fontSize: 18, // Set your desired font size here
-                                                                                    ),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    generatePriceChartDescString(_selectedButtonIndex, calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'], calculateDifferences(_priceAnalysis)['percentDifference']['netPayableUsd']),
-                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                          fontFamily: 'DM Sans',
-                                                                                          color: renderPriceChartDescColor(calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'].toInt()), // Change color bases on the absolute difference
-                                                                                          fontSize: 14.0,
-                                                                                          letterSpacing: 0.08,
-                                                                                        ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: EdgeInsets.only(
-                                                                        bottom:
-                                                                            12),
-                                                                    child:
-                                                                        Skeletonizer(
-                                                                      enabled:
-                                                                          _isChartLoading,
+                                                                  if (_priceAnalysis!
+                                                                          .data
+                                                                          .priceAnalysisGraph
+                                                                          .dealersPriceAnalysis
+                                                                          .isNotEmpty ||
+                                                                      _priceAnalysis!
+                                                                          .data
+                                                                          .priceAnalysisGraph
+                                                                          .auctionPriceAnalysis
+                                                                          .isNotEmpty)
+                                                                    Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              12),
                                                                       child:
                                                                           Row(
                                                                         children: [
-                                                                          Expanded(
-                                                                            child:
-                                                                                ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(8.0),
-                                                                              child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  color: FlutterFlowTheme.of(context).lightGray,
-                                                                                ),
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                                                                  child: Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      Text(
-                                                                                          style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                                fontFamily: 'DM Sans',
-                                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                fontSize: 14.0,
-                                                                                                letterSpacing: 0.08,
-                                                                                              ),
-                                                                                          "Auction High"),
-                                                                                      Text(
-                                                                                          style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                                fontFamily: 'DM Sans',
-                                                                                                color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                fontSize: 16.0,
-                                                                                                letterSpacing: 0.08,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                              ),
-                                                                                          "${NumberFormat('#,##0', 'en_US').format(getHighestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"), //Print the highest dealer price
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
                                                                           SizedBox(
                                                                             width:
-                                                                                12,
+                                                                                100,
+                                                                            height:
+                                                                                100,
+                                                                            child:
+                                                                                Image.network(
+                                                                              watchDetail?.watchImages[0].url ?? '',
+                                                                              fit: BoxFit.cover,
+                                                                            ),
                                                                           ),
                                                                           Expanded(
                                                                             child:
-                                                                                ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(8.0),
-                                                                              child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  color: FlutterFlowTheme.of(context).lightGray,
-                                                                                ),
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                                                                  child: Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      Text(
-                                                                                          style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                                fontFamily: 'DM Sans',
-                                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                fontSize: 14.0,
-                                                                                                letterSpacing: 0.08,
-                                                                                              ),
-                                                                                          "Auction Low"),
-                                                                                      Text(
-                                                                                          style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                                fontFamily: 'DM Sans',
-                                                                                                color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                fontSize: 16.0,
-                                                                                                letterSpacing: 0.08,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                              ),
-                                                                                          "${NumberFormat('#,##0', 'en_US').format(getLowestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"),
-                                                                                    ],
-                                                                                  ),
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 10),
+                                                                              child: Skeletonizer(
+                                                                                enabled: _isChartLoading,
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      "Current value",
+                                                                                      style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                            fontFamily: 'DM Sans',
+                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                            fontSize: 16.0,
+                                                                                            letterSpacing: 0.08,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                    ),
+                                                                                    // Current value
+                                                                                    Text(
+                                                                                      "${NumberFormat('#,##0', 'en_US').format(_priceAnalysis?.data.currentValueAllCurrencies.netPayableUsd ?? 0)} USD",
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'DM Sans',
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 18, // Set your desired font size here
+                                                                                      ),
+                                                                                    ),
+                                                                                    Text(
+                                                                                      generatePriceChartDescString(_selectedButtonIndex, calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'], calculateDifferences(_priceAnalysis)['percentDifference']['netPayableUsd']),
+                                                                                      style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                            fontFamily: 'DM Sans',
+                                                                                            color: renderPriceChartDescColor(calculateDifferences(_priceAnalysis)['absoluteDifference']['netPayableUsd'].toInt()), // Change color bases on the absolute difference
+                                                                                            fontSize: 14.0,
+                                                                                            letterSpacing: 0.08,
+                                                                                          ),
+                                                                                    ),
+                                                                                  ],
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -2066,7 +2006,99 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                         ],
                                                                       ),
                                                                     ),
-                                                                  ),
+                                                                  if (_priceAnalysis!
+                                                                      .data
+                                                                      .priceAnalysisGraph
+                                                                      .auctionPriceAnalysis
+                                                                      .isNotEmpty)
+                                                                    Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              12),
+                                                                      child:
+                                                                          Skeletonizer(
+                                                                        enabled:
+                                                                            _isChartLoading,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: ClipRRect(
+                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                child: Container(
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: FlutterFlowTheme.of(context).lightGray,
+                                                                                  ),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                                                                                    child: Column(
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Text(
+                                                                                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                  fontFamily: 'DM Sans',
+                                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                  fontSize: 14.0,
+                                                                                                  letterSpacing: 0.08,
+                                                                                                ),
+                                                                                            "Auction High"),
+                                                                                        Text(
+                                                                                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                  fontFamily: 'DM Sans',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                  fontSize: 16.0,
+                                                                                                  letterSpacing: 0.08,
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                ),
+                                                                                            "${NumberFormat('#,##0', 'en_US').format(getHighestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"), //Print the highest dealer price
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 12,
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: ClipRRect(
+                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                child: Container(
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: FlutterFlowTheme.of(context).lightGray,
+                                                                                  ),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                                                                                    child: Column(
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Text(
+                                                                                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                  fontFamily: 'DM Sans',
+                                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                  fontSize: 14.0,
+                                                                                                  letterSpacing: 0.08,
+                                                                                                ),
+                                                                                            "Auction Low"),
+                                                                                        Text(
+                                                                                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                  fontFamily: 'DM Sans',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                  fontSize: 16.0,
+                                                                                                  letterSpacing: 0.08,
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                ),
+                                                                                            "${NumberFormat('#,##0', 'en_US').format(getLowestAuctionPrice(_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis))} USD"),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
                                                                   // Dealer High and Low
                                                                   if (_selectedButtonIndex >=
                                                                           0 &&
@@ -2269,62 +2301,25 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  Padding(
-                                                                    padding: EdgeInsets
-                                                                        .only(
-                                                                            top:
-                                                                                12),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(12),
-                                                                              border: Border.all(
-                                                                                color: Color(0xFFE6E8F0),
-                                                                                width: 1,
-                                                                              ),
-                                                                            ),
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.only(top: 6, bottom: 6),
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                                children: [
-                                                                                  Text(
-                                                                                      style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                            fontFamily: 'DM Sans',
-                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                            fontSize: 14.0,
-                                                                                            letterSpacing: 0.08,
-                                                                                          ),
-                                                                                      "Show Unsold"),
-                                                                                  SizedBox(
-                                                                                    width: 10,
-                                                                                  ),
-                                                                                  AdvancedSwitch(width: 30.0, height: 18.0, controller: _unsoldController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.fromRGBO(4, 7, 49, 0.42)),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        if (shouldShowOutliersButton())
-                                                                          SizedBox(
-                                                                            width:
-                                                                                12,
-                                                                          ),
-                                                                        // Show Outliers Button
-                                                                        if (shouldShowOutliersButton())
+                                                                  if (_priceAnalysis!
+                                                                      .data
+                                                                      .priceAnalysisGraph
+                                                                      .auctionPriceAnalysis
+                                                                      .isNotEmpty)
+                                                                    Padding(
+                                                                      padding: EdgeInsets
+                                                                          .only(
+                                                                              top: 12),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
                                                                           Expanded(
                                                                             child:
                                                                                 Container(
                                                                               decoration: BoxDecoration(
                                                                                 borderRadius: BorderRadius.circular(12),
-                                                                                color: _isInitialOutliersClicked ? null : Color(0xFF001633),
                                                                                 border: Border.all(
-                                                                                  color: _isInitialOutliersClicked ? Color(0xFFE6E8F0) : Color(0xFF001633),
+                                                                                  color: Color(0xFFE6E8F0),
                                                                                   width: 1,
                                                                                 ),
                                                                               ),
@@ -2336,23 +2331,61 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                     Text(
                                                                                         style: FlutterFlowTheme.of(context).titleSmall.override(
                                                                                               fontFamily: 'DM Sans',
-                                                                                              color: _isInitialOutliersClicked ? FlutterFlowTheme.of(context).secondaryText : FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                              color: FlutterFlowTheme.of(context).secondaryText,
                                                                                               fontSize: 14.0,
                                                                                               letterSpacing: 0.08,
                                                                                             ),
-                                                                                        "Show Outliers"),
+                                                                                        "Show Unsold"),
                                                                                     SizedBox(
                                                                                       width: 10,
                                                                                     ),
-                                                                                    AdvancedSwitch(width: 30.0, height: 18.0, controller: _outliersController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.from(alpha: 0.42, red: 0.016, green: 0.027, blue: 0.192)),
+                                                                                    AdvancedSwitch(width: 30.0, height: 18.0, controller: _unsoldController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.fromRGBO(4, 7, 49, 0.42)),
                                                                                   ],
                                                                                 ),
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                      ],
+                                                                          if (shouldShowOutliersButton())
+                                                                            SizedBox(
+                                                                              width: 12,
+                                                                            ),
+                                                                          // Show Outliers Button
+                                                                          if (shouldShowOutliersButton())
+                                                                            Expanded(
+                                                                              child: Container(
+                                                                                decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.circular(12),
+                                                                                  color: _isInitialOutliersClicked ? null : Color(0xFF001633),
+                                                                                  border: Border.all(
+                                                                                    color: _isInitialOutliersClicked ? Color(0xFFE6E8F0) : Color(0xFF001633),
+                                                                                    width: 1,
+                                                                                  ),
+                                                                                ),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsets.only(top: 6, bottom: 6),
+                                                                                  child: Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                          style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                fontFamily: 'DM Sans',
+                                                                                                color: _isInitialOutliersClicked ? FlutterFlowTheme.of(context).secondaryText : FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                                fontSize: 14.0,
+                                                                                                letterSpacing: 0.08,
+                                                                                              ),
+                                                                                          "Show Outliers"),
+                                                                                      SizedBox(
+                                                                                        width: 10,
+                                                                                      ),
+                                                                                      AdvancedSwitch(width: 30.0, height: 18.0, controller: _outliersController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.from(alpha: 0.42, red: 0.016, green: 0.027, blue: 0.192)),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                        ],
+                                                                      ),
                                                                     ),
-                                                                  ),
                                                                   if (_isChartLoading)
                                                                     Padding(
                                                                       padding: EdgeInsets.only(
@@ -2380,7 +2413,16 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                         ),
                                                                       ),
                                                                     )
-                                                                  else
+                                                                  else if (_priceAnalysis!
+                                                                          .data
+                                                                          .priceAnalysisGraph
+                                                                          .dealersPriceAnalysis
+                                                                          .isNotEmpty ||
+                                                                      _priceAnalysis!
+                                                                          .data
+                                                                          .priceAnalysisGraph
+                                                                          .auctionPriceAnalysis
+                                                                          .isNotEmpty) ...[
                                                                     Padding(
                                                                       padding: EdgeInsets
                                                                           .only(
@@ -2400,28 +2442,44 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                         ],
                                                                       ),
                                                                     ),
+                                                                  ] else
+                                                                    SizedBox(
+                                                                      height:
+                                                                          420,
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Text(
+                                                                          'No data available for selected time period!',
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'DM Sans',
+                                                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                fontSize: 18.0,
+                                                                                letterSpacing: 0.08,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    )
                                                                 ],
                                                               ),
                                                             ],
                                                           ),
                                                         ),
 
-                                                      // Add the new button below the chart
-                                                      if (_priceAnalysis ==
-                                                              null ||
-                                                          (_priceAnalysis!.data
-                                                                  .dealersPriceAnalysis
-                                                                  .any((data) =>
-                                                                      data.medians
-                                                                          .medianUsd !=
-                                                                      0) ||
-                                                              _priceAnalysis!
-                                                                  .data
-                                                                  .auctionAnalysisMedians
-                                                                  .any((data) =>
-                                                                      data.medians
-                                                                          .medianUsd !=
-                                                                      0)))
+                                                      if ((_priceAnalysis!
+                                                              .data
+                                                              .priceAnalysisGraph
+                                                              .dealersPriceAnalysis
+                                                              .isNotEmpty ||
+                                                          _priceAnalysis!
+                                                              .data
+                                                              .priceAnalysisGraph
+                                                              .auctionPriceAnalysis
+                                                              .isNotEmpty)) ...[
                                                         FFButtonWidget(
                                                           onPressed: () {
                                                             if (!_isChartLoading) {
@@ -2481,10 +2539,10 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                         12.0),
                                                           ),
                                                         ),
-
-                                                      SizedBox(
-                                                        height: 12,
-                                                      ),
+                                                        SizedBox(
+                                                          height: 12,
+                                                        ),
+                                                      ],
                                                       wrapWithModel(
                                                         model: _model
                                                             .priceGuideCardModel,
