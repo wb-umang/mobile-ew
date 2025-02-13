@@ -123,6 +123,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     String unsoldScatterChartData,
     bool isOutliers,
   ) {
+    // Function to round a value to the nearest specified magnitude
+    double roundToNearest(double value) {
+      // Step 1: Find the nearest power of 10 (base unit for rounding)
+      int numDigits = value > 0 ? math.log(value) ~/ math.log(10) : 0;
+      double baseUnit = math.pow(10, numDigits).toDouble();
+
+      // Step 2: Compute the rounded value
+      double roundedValue = (value / (baseUnit / 10)).ceil() * (baseUnit / 10);
+
+      return roundedValue;
+    }
+
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -205,8 +217,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         isLandscapeMode ? MediaQuery.of(context).size.width.toInt() - 40 : 400;
 
     final yAxisMax = isOutliers
-        ? (getMaxPriceAnalysis(false)).round()
-        : (maxPrice * 1.8).round();
+        ? roundToNearest(getMaxPriceAnalysis(false))
+        : roundToNearest(maxPrice * 1.8);
 
     // Generate series data from unique entries
     final seriesData = sortedEntries.map((entry) {
@@ -471,6 +483,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       String scatterChartData,
       String unsoldScatterChartData,
       bool isOutliers) {
+    // Function to round a value to the nearest specified magnitude
+    double roundToNearest(double value) {
+      // Step 1: Find the nearest power of 10 (base unit for rounding)
+      int numDigits = value > 0 ? math.log(value) ~/ math.log(10) : 0;
+      double baseUnit = math.pow(10, numDigits).toDouble();
+
+      // Step 2: Compute the rounded value
+      double roundedValue = (value / (baseUnit / 10)).ceil() * (baseUnit / 10);
+
+      return roundedValue;
+    }
+
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
@@ -550,8 +574,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     // Calculate y-axis max value
     final maxPrice = uniqueDateValues.values.reduce((a, b) => a > b ? a : b);
     final yAxisMax = isOutliers
-        ? (getMaxPriceAnalysis(true)).round()
-        : (maxPrice * 1.8).round();
+        ? roundToNearest(getMaxPriceAnalysis(true))
+        : roundToNearest(maxPrice * 1.8);
 
     // Generate series data from unique entries
     final seriesData = sortedEntries.map((entry) {
@@ -821,7 +845,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Construct data points for the chart without quotes around keys
     final dataPoints = filteredAuctionData.where((item) {
-      if (!isOutliers) {
+      if (shouldShowOutliersButton() && !isOutliers) {
         // If outliers are not shown, ignore items with medianUsd above double the calculated median
         return item.netPayableUsd <= (medianPrice * 2);
       }
@@ -957,7 +981,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // Construct data points for the chart without quotes around keys
     final dataPoints = filteredAuctionData.where((item) {
-      if (!isOutliers) {
+      if (shouldShowOutliersButton() && !isOutliers) {
         // If outliers are not shown, ignore items with medianUsd above double the calculated median
         return item.netPayableUsd <= (medianPrice * 2);
       }
@@ -1265,7 +1289,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
-    _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
+    _model.filter = createWatchAnalysisFilterStruct(watchId: 2415857);
     _selectedButtonIndex = 0;
 
     _unsoldController.addListener(() {
