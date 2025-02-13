@@ -216,8 +216,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
 
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: WillPopScope(
-            onWillPop: () async => false,
+          child: PopScope(
+            canPop: false, // Prevents back navigation
             child: Scaffold(
               key: scaffoldKey,
               backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
