@@ -1869,16 +1869,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                       // Price Chart
                                                       // Hidding the chart if there is no data
                                                       if (isPreviousData ||
-                                                          (_priceAnalysis!
-                                                                  .data
-                                                                  .priceAnalysisGraph
-                                                                  .dealersPriceAnalysis
-                                                                  .isNotEmpty ||
-                                                              _priceAnalysis!
-                                                                  .data
-                                                                  .priceAnalysisGraph
-                                                                  .auctionPriceAnalysis
-                                                                  .isNotEmpty))
+                                                          (_priceAnalysis !=
+                                                                  null &&
+                                                              (_priceAnalysis!
+                                                                      .data
+                                                                      .priceAnalysisGraph
+                                                                      .dealersPriceAnalysis
+                                                                      .isNotEmpty ||
+                                                                  _priceAnalysis!
+                                                                      .data
+                                                                      .priceAnalysisGraph
+                                                                      .auctionPriceAnalysis
+                                                                      .isNotEmpty)))
                                                         Container(
                                                           color: Colors.white,
                                                           child: Column(
@@ -2500,16 +2502,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                           ),
                                                         ),
 
-                                                      if ((_priceAnalysis!
-                                                              .data
-                                                              .priceAnalysisGraph
-                                                              .dealersPriceAnalysis
-                                                              .isNotEmpty ||
-                                                          _priceAnalysis!
-                                                              .data
-                                                              .priceAnalysisGraph
-                                                              .auctionPriceAnalysis
-                                                              .isNotEmpty)) ...[
+                                                      if ((_priceAnalysis !=
+                                                              null &&
+                                                          (_priceAnalysis!
+                                                                  .data
+                                                                  .priceAnalysisGraph
+                                                                  .dealersPriceAnalysis
+                                                                  .isNotEmpty ||
+                                                              _priceAnalysis!
+                                                                  .data
+                                                                  .priceAnalysisGraph
+                                                                  .auctionPriceAnalysis
+                                                                  .isNotEmpty))) ...[
                                                         FFButtonWidget(
                                                           onPressed: () {
                                                             if (!_isChartLoading) {
