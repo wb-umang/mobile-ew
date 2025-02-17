@@ -1,34 +1,27 @@
-import '../../core/widgets/social_login_buttons/social_login_buttons_widget.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
+import 'package:every_watch/features/auth/ui/widgets/social_logins_widget.dart';
+import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
+import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
+import 'package:every_watch/core/utils/app_strings.dart';
+import 'package:every_watch/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'welcome_page_model.dart';
-export 'welcome_page_model.dart';
 
-class WelcomePageWidget extends StatefulWidget {
-  const WelcomePageWidget({super.key});
+class WelcomePage extends StatefulWidget {
+  const WelcomePage({super.key});
 
   @override
-  State<WelcomePageWidget> createState() => _WelcomePageWidgetState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _WelcomePageWidgetState extends State<WelcomePageWidget> {
-  late WelcomePageModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
+class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => WelcomePageModel());
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
     super.dispose();
   }
 
@@ -37,7 +30,6 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
         backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
@@ -53,7 +45,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(0.0),
                       child: Image.asset(
-                        'assets/images/Logo_Assets_180_x_180.png',
+                        Assets.images.logoAssets180X180.path,
                         width: 80.0,
                         height: 80.0,
                         fit: BoxFit.contain,
@@ -66,7 +58,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           0.0, 16.0, 0.0, 0.0),
                       child: Text(
-                        'Welcome to EveryWatch',
+                        WelcomePageStrings.welcomeMessage,
                         textAlign: TextAlign.start,
                         style: FlutterFlowTheme.of(context).titleLarge.override(
                               fontFamily: 'DM Sans',
@@ -84,7 +76,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           0.0, 8.0, 0.0, 0.0),
                       child: Text(
-                        'Luxury is something everyone deserves\nfrom time to time.',
+                        WelcomePageStrings.welcomeTagline,
                         textAlign: TextAlign.start,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'DM Sans',
@@ -104,15 +96,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                         onPressed: () async {
                           context.pushNamed(
                             'LoginPage',
-                            extra: <String, dynamic>{
-                              kTransitionInfoKey: const TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.rightToLeft,
-                              ),
-                            },
                           );
                         },
-                        text: 'Log In',
+                        text: WelcomePageStrings.logInText,
                         options: FFButtonOptions(
                           width: double.infinity,
                           height: 44.0,
@@ -145,7 +131,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                       onPressed: () async {
                         context.pushNamed('RegisterPage');
                       },
-                      text: 'Sign Up',
+                      text: WelcomePageStrings.signUpText,
                       options: FFButtonOptions(
                         width: double.infinity,
                         height: 44.0,
@@ -174,14 +160,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                   Align(
                     alignment: const AlignmentDirectional(0.0, 1.0),
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                          0.0, 16.0, 0.0, 0.0),
-                      child: wrapWithModel(
-                        model: _model.socialLoginButtonsModel,
-                        updateCallback: () => safeSetState(() {}),
-                        child: const SocialLoginButtonsWidget(),
-                      ),
-                    ),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 16.0, 0.0, 0.0),
+                        child: const SocialLoginsWidget()),
                   ),
                   Align(
                     alignment: const AlignmentDirectional(0.0, 1.0),
@@ -193,8 +174,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text:
-                                  'By creating new account, you agree to our Terms of Services &',
+                              text: WelcomePageStrings.privacyPolicyNotice,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
@@ -208,9 +188,8 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                   ),
                             ),
                             TextSpan(
-                              text: ' Privacy Policy',
-                              style: GoogleFonts.getFont(
-                                'DM Sans',
+                              text: WelcomePageStrings.privacyPolicyTitle,
+                              style: GoogleFonts.dmSans(
                                 color: FlutterFlowTheme.of(context).tertiary,
                                 fontSize: 12.0,
                                 height: 1.33,

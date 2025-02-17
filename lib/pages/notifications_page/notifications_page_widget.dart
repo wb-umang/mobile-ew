@@ -1,5 +1,5 @@
-import '/components/profile_row/profile_row_widget.dart';
-import '/components/separator_icon/separator_icon_widget.dart';
+import '../../core/widgets/profile_row/profile_row_widget.dart';
+import '../../core/widgets/separator_icon/separator_icon_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -75,7 +75,8 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                             child: Stack(
                               children: [
                                 Align(
-                                  alignment: const AlignmentDirectional(0.0, 0.0),
+                                  alignment:
+                                      const AlignmentDirectional(0.0, 0.0),
                                   child: Text(
                                     'Notifications',
                                     textAlign: TextAlign.center,
@@ -128,18 +129,18 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        20.0, 12.0, 20.0, 0.0),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            20.0, 12.0, 20.0, 0.0),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Align(
-                                          alignment:
-                                              const AlignmentDirectional(0.0, 0.0),
+                                          alignment: const AlignmentDirectional(
+                                              0.0, 0.0),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 24.0, 0.0, 0.0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 24.0, 0.0, 0.0),
                                             child: ListView(
                                               padding: EdgeInsets.zero,
                                               primary: false,
@@ -171,11 +172,8 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                                       child: Padding(
                                                         padding:
                                                             const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    8.0,
-                                                                    0.0,
-                                                                    8.0),
+                                                                .fromSTEB(0.0,
+                                                                8.0, 0.0, 8.0),
                                                         child: Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -298,7 +296,8 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                                     ),
                                                   ),
                                                 ),
-                                              ].divide(const SizedBox(height: 8.0)),
+                                              ].divide(
+                                                  const SizedBox(height: 8.0)),
                                             ),
                                           ),
                                         ),

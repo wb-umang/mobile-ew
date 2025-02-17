@@ -1,4 +1,4 @@
-import '/components/toggle_button/toggle_button_widget.dart';
+import '../toggle_button/toggle_button_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'filter_row_widget.dart' show FilterRowWidget;
 import 'package:flutter/material.dart';

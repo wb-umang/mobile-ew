@@ -2,7 +2,7 @@ import 'package:every_watch/app_state.dart';
 import 'package:provider/provider.dart';
 
 import '/backend/schema/structs/index.dart';
-import '/components/toggle_button/toggle_button_widget.dart';
+import '../toggle_button/toggle_button_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';

@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
-import '/components/filter_checkbox/filter_checkbox_widget.dart';
-import '/components/search_bar/search_bar_widget.dart';
+import '../../core/widgets/filter_checkbox/filter_checkbox_widget.dart';
+import '../../core/widgets/search_bar/search_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

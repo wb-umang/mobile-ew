@@ -1,4 +1,4 @@
-import '/components/referral_dialog/referral_dialog_widget.dart';
+import '../../core/widgets/referral_dialog/referral_dialog_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'referral_page_widget.dart' show ReferralPageWidget;
 import 'package:flutter/material.dart';

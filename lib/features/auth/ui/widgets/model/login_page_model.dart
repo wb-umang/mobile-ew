@@ -1,11 +1,12 @@
+import 'package:every_watch/core/widgets/arrow_button/arrow_button_model.dart';
+import 'package:every_watch/core/widgets/social_login_buttons/social_login_buttons_model.dart';
+import 'package:every_watch/features/auth/ui/pages/login_page.dart';
+
 import '/backend/api_requests/api_calls.dart';
-import '../../core/widgets/arrow_button/arrow_button_widget.dart';
-import '../../core/widgets/social_login_buttons/social_login_buttons_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'login_page_widget.dart' show LoginPageWidget;
 import 'package:flutter/material.dart';
 
-class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
+class LoginPageModel extends FlutterFlowModel<LoginPage> {
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();

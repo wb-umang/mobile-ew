@@ -1,8 +1,8 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
-import '/components/arrow_button/arrow_button_widget.dart';
-import '/components/invite_field/invite_field_widget.dart';
-import '/components/social_login_buttons/social_login_buttons_widget.dart';
+import '../../core/widgets/arrow_button/arrow_button_widget.dart';
+import '../../core/widgets/invite_field/invite_field_widget.dart';
+import '../../core/widgets/social_login_buttons/social_login_buttons_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

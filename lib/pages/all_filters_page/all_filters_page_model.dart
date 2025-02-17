@@ -1,5 +1,5 @@
 import '/backend/schema/structs/index.dart';
-import '/components/search_bar/search_bar_widget.dart';
+import '../../core/widgets/search_bar/search_bar_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'all_filters_page_widget.dart' show AllFiltersPageWidget;
 import 'package:flutter/material.dart';

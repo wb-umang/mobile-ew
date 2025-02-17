@@ -1,4 +1,4 @@
-import '/components/watch_tag/watch_tag_widget.dart';
+import '../watch_tag/watch_tag_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';

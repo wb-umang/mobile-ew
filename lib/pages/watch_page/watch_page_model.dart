@@ -1,9 +1,9 @@
 import 'package:every_watch/backend/schema/structs/index.dart';
-import '/components/auction_price_card/auction_price_card_widget.dart';
-import '/components/pill_bold_button/pill_bold_button_widget.dart';
-import '/components/price_guide_card/price_guide_card_widget.dart';
-import '/components/specifications_card/specifications_card_widget.dart';
-import '/components/two_button_page_menu/two_button_page_menu_widget.dart';
+import '../../core/widgets/auction_price_card/auction_price_card_widget.dart';
+import '../../core/widgets/pill_bold_button/pill_bold_button_widget.dart';
+import '../../core/widgets/price_guide_card/price_guide_card_widget.dart';
+import '../../core/widgets/specifications_card/specifications_card_widget.dart';
+import '../../core/widgets/two_button_page_menu/two_button_page_menu_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'watch_page_widget.dart' show WatchPageWidget;
 import 'package:flutter/material.dart';
