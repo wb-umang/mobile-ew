@@ -30,3 +30,22 @@ class LoginPageStrings {
   static const dontHaveAccount = "Don't have account?";
   static const signUp = "Sign Up";
 }
+
+// Signup Page
+class SignupPageStrings {
+  static const newAccount = "New Account";
+  static const subHeadline = "Please log in to your account";
+  static const email = "Email";
+  static const emailExampleLabel = "e.g. johndawny@company.com";
+  static const password = "Password";
+  static const firstName = "First Name";
+  static const firstNameExample = "e.g. John";
+  static const lastName = "Last Name";
+  static const lastNameExample = "e.g. Dawny";
+  static const invitationCode = "Invitation Code";
+  static const registerFailed = "Register Failed!";
+  static const signUp = "Sign Up";
+  static const ok = "Ok";
+  static const bottomTagline = "Join us before?";
+  static const logIn = "Log in";
+}

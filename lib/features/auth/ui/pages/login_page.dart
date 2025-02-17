@@ -226,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 0.0, 32.0, 0.0, 0.0),
                             child: wrapWithModel(
-                              model: _model.socialLoginButtonsModel,
+                              model: _model.socialLoginsModel,
                               updateCallback: () => safeSetState(() {}),
                               child: const SocialLoginsWidget(),
                             ),

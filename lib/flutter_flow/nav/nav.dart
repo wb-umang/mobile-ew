@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:every_watch/features/auth/ui/pages/login_page.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page.dart';
 import 'package:every_watch/features/auth/ui/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'RegisterPage',
           path: '/registerPage',
-          builder: (context, params) => const RegisterPageWidget(),
+          builder: (context, params) => const SignupPage(),
         ),
         FFRoute(
           name: 'ForgotPasswordPage',
