@@ -65,26 +65,60 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     setState(() {
       isLandscapeMode = true;
 
-      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+      if (_priceAnalysis!
+              .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty ||
+          _priceAnalysis!
+              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
         _chartData = _generateDealersChartData(
-            _priceAnalysis!.data.dealersPriceAnalysis,
+            _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
             _generateWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, _outliers),
             _generateUnsoldWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-            _outliers);
-      } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+            _outliers,
+            _priceAnalysis!.data.priceAnalysisGraph);
+      } else if (_priceAnalysis!
+              .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty ||
+          _priceAnalysis!
+              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
         _chartData = _generateAuctionChartData(
-            _priceAnalysis!.data.auctionAnalysisMedians,
+            _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
             _generateWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, _outliers),
             _generateUnsoldWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-            _outliers);
+            _outliers,
+            _priceAnalysis!.data.priceAnalysisGraph);
+      } else if (_priceAnalysis!
+          .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+        if (_selectedButtonIndex <= 3) {
+          _chartData = _generateDealersChartData(
+              _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+              _outliers,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        } else {
+          _chartData = _generateAuctionChartData(
+              _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+              _outliers,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        }
       } else {
-        _chartData = _generateDealersChartData([], '', '', _outliers);
+        _chartData = _generateDealersChartData(
+            [], '', '', _outliers, _priceAnalysis!.data.priceAnalysisGraph);
       }
     });
+  }
+
+  String formatDate(DateTime date) {
+    return "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
 
   void _exitLandscapeMode() async {
@@ -96,34 +130,63 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     setState(() {
       isLandscapeMode = false;
 
-      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty ||
+          _priceAnalysis!
+              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
         _chartData = _generateDealersChartData(
-            _priceAnalysis!.data.dealersPriceAnalysis,
+            _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
             _generateWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, _outliers),
             _generateUnsoldWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-            _outliers);
-      } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+            _outliers,
+            _priceAnalysis!.data.priceAnalysisGraph);
+      } else if (_priceAnalysis!
+              .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty ||
+          _priceAnalysis!
+              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
         _chartData = _generateAuctionChartData(
-            _priceAnalysis!.data.auctionAnalysisMedians,
+            _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
             _generateWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, _outliers),
             _generateUnsoldWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
-            _outliers);
+            _outliers,
+            _priceAnalysis!.data.priceAnalysisGraph);
+      } else if (_priceAnalysis!
+          .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+        if (_selectedButtonIndex <= 3) {
+          _chartData = _generateDealersChartData(
+              _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+              _outliers,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        } else {
+          _chartData = _generateAuctionChartData(
+              _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph, false, _outliers),
+              _outliers,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        }
       } else {
-        _chartData = _generateDealersChartData([], '', '', _outliers);
+        _chartData = _generateDealersChartData(
+            [], '', '', _outliers, _priceAnalysis!.data.priceAnalysisGraph);
       }
     });
   }
 
   String _generateDealersChartData(
-    List<DealerPriceAnalysisStruct> priceAnalysis,
-    String scatterChartData,
-    String unsoldScatterChartData,
-    bool isOutliers,
-  ) {
+      List<DealerPriceAnalysisStruct> priceAnalysis,
+      String scatterChartData,
+      String unsoldScatterChartData,
+      bool isOutliers,
+      PriceAnalysisGraphStruct priceAnalysisGraph) {
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
       // Step 1: Find the nearest power of 10 (base unit for rounding)
@@ -154,7 +217,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // If no non-zero values found, return empty chart with message
     if (uniqueDateValues.isEmpty) {
-      return '''{
+      if (priceAnalysisGraph.auctionPriceAnalysis.isEmpty) {
+        return '''{
         chart: {
           backgroundColor: '#faf8f6',
           spacingLeft: -30,
@@ -185,6 +249,21 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           data: []
         }]
       }''';
+      } else {
+        // Filter non-zero values and get unique entries for each date
+        for (var data in priceAnalysisGraph.auctionPriceAnalysis) {
+          if (data.netPayableUsd != 0) {
+            final parsedDate =
+                DateTime.parse(formatDate(data.eventPublishEndDate));
+            final dateKey = DateTime.utc(parsedDate.year, parsedDate.month,
+                    parsedDate.day, 0, 0, 0, 0, 0)
+                .toIso8601String()
+                .split('T')[0];
+
+            uniqueDateValues[dateKey] = data.netPayableUsd;
+          }
+        }
+      }
     }
 
     // Convert the map entries to sorted list
@@ -410,7 +489,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       series: [
       ${_generateScatterChartDataString(scatterChartData, unsoldScatterChartData)}
       {
-          data: [$seriesData],
+          data: ${priceAnalysisGraph.dealersPriceAnalysis.isEmpty ? [] : [
+            seriesData
+          ]},
           name: 'Dealer median',
           type: 'spline',
           dashStyle: 'Solid',
@@ -483,7 +564,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       List<AuctionAnalysisMedianStruct> auctionAnalysis,
       String scatterChartData,
       String unsoldScatterChartData,
-      bool isOutliers) {
+      bool isOutliers,
+      PriceAnalysisGraphStruct priceAnalysisGraph) {
     // Function to round a value to the nearest specified magnitude
     double roundToNearest(double value) {
       // Step 1: Find the nearest power of 10 (base unit for rounding)
@@ -514,7 +596,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
 
     // If no non-zero values found, return empty chart with message
     if (uniqueDateValues.isEmpty) {
-      return '''{
+      if (priceAnalysisGraph.auctionPriceAnalysis.isEmpty) {
+        return '''{
         chart: {
           backgroundColor: '#faf8f6',
           spacingLeft: -30,
@@ -545,6 +628,21 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
           data: []
         }]
       }''';
+      } else {
+        // Filter non-zero values and get unique entries for each date
+        for (var data in priceAnalysisGraph.auctionPriceAnalysis) {
+          if (data.netPayableUsd != 0) {
+            final parsedDate =
+                DateTime.parse(formatDate(data.eventPublishEndDate));
+            final dateKey = DateTime.utc(parsedDate.year, parsedDate.month,
+                    parsedDate.day, 0, 0, 0, 0, 0)
+                .toIso8601String()
+                .split('T')[0];
+
+            uniqueDateValues[dateKey] = data.netPayableUsd;
+          }
+        }
+      }
     }
 
     // Convert the map entries to sorted list
@@ -767,7 +865,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       series: [
         ${_generateScatterChartDataString(scatterChartData, unsoldScatterChartData)}
         {
-          data: [$seriesData],
+           data: ${priceAnalysisGraph.auctionAnalysisMedians.isEmpty ? [] : [
+            seriesData
+          ]},
           name: "Auction median",
           type: "spline",
           dashStyle: "ShortDash",
@@ -1093,24 +1193,55 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
 
         setState(() {
-          if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+          if (_priceAnalysis!
+              .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty) {
             _chartData = _generateDealersChartData(
-                _priceAnalysis!.data.dealersPriceAnalysis,
+                _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
                 _generateWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph, _outliers),
                 _generateUnsoldWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph, unsold, outliers),
-                outliers);
-          } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+                outliers,
+                _priceAnalysis!.data.priceAnalysisGraph);
+          } else if (_priceAnalysis!
+              .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty) {
             _chartData = _generateAuctionChartData(
-                _priceAnalysis!.data.auctionAnalysisMedians,
+                _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
                 _generateWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph, _outliers),
                 _generateUnsoldWatchPriceAnalysisChartData(
                     _priceAnalysis!.data.priceAnalysisGraph, unsold, outliers),
-                outliers);
+                outliers,
+                _priceAnalysis!.data.priceAnalysisGraph);
+          } else if (_priceAnalysis!
+              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+            if (_selectedButtonIndex <= 3) {
+              _chartData = _generateDealersChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
+                  _generateWatchPriceAnalysisChartData(
+                      _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+                  _generateUnsoldWatchPriceAnalysisChartData(
+                      _priceAnalysis!.data.priceAnalysisGraph,
+                      unsold,
+                      outliers),
+                  outliers,
+                  _priceAnalysis!.data.priceAnalysisGraph);
+            } else {
+              _chartData = _generateAuctionChartData(
+                  _priceAnalysis!
+                      .data.priceAnalysisGraph.auctionAnalysisMedians,
+                  _generateWatchPriceAnalysisChartData(
+                      _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+                  _generateUnsoldWatchPriceAnalysisChartData(
+                      _priceAnalysis!.data.priceAnalysisGraph,
+                      unsold,
+                      outliers),
+                  outliers,
+                  _priceAnalysis!.data.priceAnalysisGraph);
+            }
           } else {
-            _chartData = _generateDealersChartData([], '', '', outliers);
+            _chartData = _generateDealersChartData(
+                [], '', '', outliers, _priceAnalysis!.data.priceAnalysisGraph);
           }
 
           _isChartLoading = false;
@@ -1289,6 +1420,11 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   }
 
   bool isValidDealersData(WatchPriceAnalysisResponseStruct? priceAnalysisData) {
+    if (priceAnalysisData
+            ?.data.priceAnalysisGraph.dealersPriceAnalysis.isEmpty ??
+        false) {
+      return false;
+    }
     return priceAnalysisData?.data.priceAnalysisGraph.dealersPriceAnalysis
             .every((dealer) => dealer.medians.medianUsd == 0) ??
         true;
@@ -1308,33 +1444,66 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
-    _model.filter = createWatchAnalysisFilterStruct(watchId: 10075670);
+    _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
+    print("-----");
+    print(_watch.watchId);
+    print("-----");
     _selectedButtonIndex = 0;
 
     _unsoldController.addListener(() {
       setState(() {
-        if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+        if (_priceAnalysis!
+            .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty) {
           _chartData = _generateDealersChartData(
-              _priceAnalysis!.data.dealersPriceAnalysis,
+              _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
               _generateWatchPriceAnalysisChartData(
                   _priceAnalysis!.data.priceAnalysisGraph, _outliers),
               _generateUnsoldWatchPriceAnalysisChartData(
                   _priceAnalysis!.data.priceAnalysisGraph,
                   _unsoldController.value,
                   _outliers),
-              _outliers);
-        } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+              _outliers,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        } else if (_priceAnalysis!
+            .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty) {
           _chartData = _generateAuctionChartData(
-              _priceAnalysis!.data.auctionAnalysisMedians,
+              _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
               _generateWatchPriceAnalysisChartData(
                   _priceAnalysis!.data.priceAnalysisGraph, _outliers),
               _generateUnsoldWatchPriceAnalysisChartData(
                   _priceAnalysis!.data.priceAnalysisGraph,
                   _unsoldController.value,
                   _outliers),
-              _outliers);
+              _outliers,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        } else if (_priceAnalysis!
+            .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+          if (_selectedButtonIndex <= 3) {
+            _chartData = _generateDealersChartData(
+                _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
+                _generateWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+                _generateUnsoldWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph,
+                    _unsoldController.value,
+                    _outliers),
+                _outliers,
+                _priceAnalysis!.data.priceAnalysisGraph);
+          } else {
+            _chartData = _generateAuctionChartData(
+                _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
+                _generateWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph, _outliers),
+                _generateUnsoldWatchPriceAnalysisChartData(
+                    _priceAnalysis!.data.priceAnalysisGraph,
+                    _unsoldController.value,
+                    _outliers),
+                _outliers,
+                _priceAnalysis!.data.priceAnalysisGraph);
+          }
         } else {
-          _chartData = _generateDealersChartData([], '', '', _outliers);
+          _chartData = _generateDealersChartData(
+              [], '', '', _outliers, _priceAnalysis!.data.priceAnalysisGraph);
         }
 
         if (_unsoldController.value) {
@@ -1346,9 +1515,10 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     });
 
     _outliersController.addListener(() {
-      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
+      if (_priceAnalysis!
+          .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty) {
         _chartData = _generateDealersChartData(
-            _priceAnalysis!.data.dealersPriceAnalysis,
+            _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
             _generateWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph,
                 _outliersController.value),
@@ -1356,10 +1526,12 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 _priceAnalysis!.data.priceAnalysisGraph,
                 _unsold,
                 _outliersController.value),
-            _outliersController.value);
-      } else if (_priceAnalysis!.data.auctionAnalysisMedians.isNotEmpty) {
+            _outliersController.value,
+            _priceAnalysis!.data.priceAnalysisGraph);
+      } else if (_priceAnalysis!
+          .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty) {
         _chartData = _generateAuctionChartData(
-            _priceAnalysis!.data.auctionAnalysisMedians,
+            _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
             _generateWatchPriceAnalysisChartData(
                 _priceAnalysis!.data.priceAnalysisGraph,
                 _outliersController.value),
@@ -1367,9 +1539,38 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 _priceAnalysis!.data.priceAnalysisGraph,
                 _unsold,
                 _outliersController.value),
-            _outliersController.value);
+            _outliersController.value,
+            _priceAnalysis!.data.priceAnalysisGraph);
+      } else if (_priceAnalysis!
+          .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+        if (_selectedButtonIndex <= 3) {
+          _chartData = _generateDealersChartData(
+              _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph,
+                  _outliersController.value),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph,
+                  _unsold,
+                  _outliersController.value),
+              _outliersController.value,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        } else {
+          _chartData = _generateAuctionChartData(
+              _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
+              _generateWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph,
+                  _outliersController.value),
+              _generateUnsoldWatchPriceAnalysisChartData(
+                  _priceAnalysis!.data.priceAnalysisGraph,
+                  _unsold,
+                  _outliersController.value),
+              _outliersController.value,
+              _priceAnalysis!.data.priceAnalysisGraph);
+        }
       } else {
-        _chartData = _generateDealersChartData([], '', '', _outliers);
+        _chartData = _generateDealersChartData(
+            [], '', '', _outliers, _priceAnalysis!.data.priceAnalysisGraph);
       }
 
       setState(() {
@@ -2436,46 +2637,49 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                         child:
                                                                             Row(
                                                                           children: [
-                                                                            Expanded(
-                                                                              child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  borderRadius: BorderRadius.circular(12),
-                                                                                  border: Border.all(
-                                                                                    color: Color(0xFFE6E8F0),
-                                                                                    width: 1,
+                                                                            if (_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis.any((element) =>
+                                                                                element.lotStatusId !=
+                                                                                2))
+                                                                              Expanded(
+                                                                                child: Container(
+                                                                                  decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(12),
+                                                                                    border: Border.all(
+                                                                                      color: Color(0xFFE6E8F0),
+                                                                                      width: 1,
+                                                                                    ),
                                                                                   ),
-                                                                                ),
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsets.only(top: 6, bottom: 6),
-                                                                                  child: Row(
-                                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                                    children: [
-                                                                                      Text(
-                                                                                          style: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                                fontFamily: 'DM Sans',
-                                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                fontSize: 14.0,
-                                                                                                letterSpacing: 0.08,
-                                                                                              ),
-                                                                                          "Show Unsold"),
-                                                                                      SizedBox(
-                                                                                        width: 10,
-                                                                                      ),
-                                                                                      if (isPremium) AdvancedSwitch(enabled: !_isChartLoading, width: 30.0, height: 18.0, controller: _unsoldController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.fromRGBO(4, 7, 49, 0.42)),
-                                                                                      if (!isPremium)
-                                                                                        Visibility(
-                                                                                          visible: !isPremium,
-                                                                                          child: Icon(
-                                                                                            FFIcons.klock,
-                                                                                            color: Color(0xFFAC835D),
-                                                                                            size: 16.0,
-                                                                                          ),
-                                                                                        )
-                                                                                    ],
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(top: 6, bottom: 6),
+                                                                                    child: Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                                      children: [
+                                                                                        Text(
+                                                                                            style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                  fontFamily: 'DM Sans',
+                                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                  fontSize: 14.0,
+                                                                                                  letterSpacing: 0.08,
+                                                                                                ),
+                                                                                            "Show Unsold"),
+                                                                                        SizedBox(
+                                                                                          width: 10,
+                                                                                        ),
+                                                                                        if (isPremium) AdvancedSwitch(enabled: !_isChartLoading, width: 30.0, height: 18.0, controller: _unsoldController, activeColor: FlutterFlowTheme.of(context).primary, inactiveColor: Color.fromRGBO(4, 7, 49, 0.42)),
+                                                                                        if (!isPremium)
+                                                                                          Visibility(
+                                                                                            visible: !isPremium,
+                                                                                            child: Icon(
+                                                                                              FFIcons.klock,
+                                                                                              color: Color(0xFFAC835D),
+                                                                                              size: 16.0,
+                                                                                            ),
+                                                                                          )
+                                                                                      ],
+                                                                                    ),
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                            ),
                                                                             if (!isPremium ||
                                                                                 shouldShowOutliersButton())
                                                                               SizedBox(
