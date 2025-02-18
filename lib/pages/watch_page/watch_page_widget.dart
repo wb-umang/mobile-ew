@@ -1280,13 +1280,14 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       );
 
       if (response.succeeded && mounted) {
-        isPreviousData = true;
         _priceAnalysis =
             WatchPriceAnalysisResponseStruct.fromMap(response.jsonBody);
 
         setState(() {
           if (_priceAnalysis!
               .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty) {
+            isPreviousData = true;
+
             _chartData = _generateDealersChartData(
                 _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
                 _generateWatchPriceAnalysisChartData(
@@ -1297,6 +1298,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 _priceAnalysis!.data.priceAnalysisGraph);
           } else if (_priceAnalysis!
               .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty) {
+            isPreviousData = true;
+
             _chartData = _generateAuctionChartData(
                 _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
                 _generateWatchPriceAnalysisChartData(
@@ -1307,6 +1310,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                 _priceAnalysis!.data.priceAnalysisGraph);
           } else if (_priceAnalysis!
               .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+            isPreviousData = true;
+
             if (_selectedButtonIndex <= 3) {
               _chartData = _generateDealersChartData(
                   _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
@@ -1596,11 +1601,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
-    _model.filter = createWatchAnalysisFilterStruct(watchId: 1282169);
-
-    print("-----");
-    print(_watch.watchId);
-    print("-----");
+    final watchID = _watch.watchId;
+    _model.filter = createWatchAnalysisFilterStruct(watchId: watchID);
 
     _unsoldController.addListener(() {
       setState(() {
@@ -2863,8 +2865,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                            if (!isPremium ||
-                                                                                shouldShowOutliersButton())
+                                                                            if ((!isPremium || shouldShowOutliersButton()) &&
+                                                                                (_priceAnalysis!.data.priceAnalysisGraph.auctionPriceAnalysis.any((element) => element.lotStatusId != 2)))
                                                                               SizedBox(
                                                                                 width: 12,
                                                                               ),
