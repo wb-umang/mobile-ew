@@ -595,12 +595,12 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
   final double netPayableChf;
   final double? netPayableAed;
   final double? netPayableJpy;
-  final int referenceNumberId;
+  final int? referenceNumberId;
   final int modelId;
   final int manufacturerId;
   final String manufactureName;
   final String modelName;
-  final String referenceNumber;
+  final String? referenceNumber;
   final PrimaryImage? primaryImage;
   final int lotStatusId;
   final String infoSourceName;
@@ -619,12 +619,12 @@ class AuctionPriceAnalysisStruct extends BaseStruct {
     required this.netPayableChf,
     this.netPayableAed,
     this.netPayableJpy,
-    required this.referenceNumberId,
+    this.referenceNumberId,
     required this.modelId,
     required this.manufacturerId,
     required this.manufactureName,
     required this.modelName,
-    required this.referenceNumber,
+    this.referenceNumber,
     this.primaryImage,
     required this.lotStatusId,
     required this.infoSourceName,

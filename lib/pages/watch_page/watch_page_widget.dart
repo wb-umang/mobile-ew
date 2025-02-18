@@ -54,7 +54,9 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool _isInitialOutliersClicked = false;
   bool isLandscapeMode = false;
   bool isPreviousData = false;
+  List<bool>? chartFilterBlockList;
   final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
+  bool isFirstTimeIndexSelection = true;
 
   double calculateMedianPrice(PriceAnalysisGraphStruct priceAnalysisGraph) {
     final auctionPriceAnalysis = priceAnalysisGraph.auctionPriceAnalysis;
@@ -1255,12 +1257,18 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
         ..model = [watchDetail?.defaultModelId.toString() ?? '']
         ..manufacturer = [watchDetail?.manufacturerId.toString() ?? '']
         ..auctionType = ["result"]
-        ..referenceNumber = [
-          watchDetail?.defaultReferenceNumberId.toString() ?? ''
-        ]
-        ..childReferenceNumber = [
-          watchDetail?.referenceNumberId.toString() ?? ''
-        ]
+        ..referenceNumber =
+            watchDetail?.defaultReferenceNumberId.toString() == '0' ||
+                    watchDetail?.manufacturerId == 100 ||
+                    watchDetail?.manufacturerId == 267
+                ? null
+                : [watchDetail?.defaultReferenceNumberId.toString() ?? '']
+        ..childReferenceNumber =
+            watchDetail?.referenceNumberId.toString() == '0' ||
+                    watchDetail?.manufacturerId == 100 ||
+                    watchDetail?.manufacturerId == 267
+                ? null
+                : [watchDetail?.referenceNumberId.toString() ?? '']
         ..caseMaterial = [watchDetail?.defaultCaseMaterialId.toString() ?? '']
         ..currencyMode = "USD"
         ..eventDateRange = _getDateRange(_selectedButtonIndex));
@@ -1523,16 +1531,76 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     }
   }
 
+  List<bool> checkDateFilters(GraphDataPoints watchGraphDataPoints) {
+    final now = DateTime.now();
+    DateTime? auctionFirstPointDate;
+    DateTime? dealersFirstPointDate;
+
+    if (watchGraphDataPoints.dealersFirstPointDate != '') {
+      dealersFirstPointDate =
+          DateTime.parse(watchGraphDataPoints.dealersFirstPointDate);
+    }
+    if (watchGraphDataPoints.auctionFirstPointDate != '') {
+      auctionFirstPointDate =
+          DateTime.parse(watchGraphDataPoints.auctionFirstPointDate);
+    }
+
+    // Define the time spans for dealersFirstPointDate
+    final dealerTimeSpans = {
+      '3 months': Duration(days: 90),
+      '6 months': Duration(days: 180),
+      '1 year': Duration(days: 365),
+      '2 years': Duration(days: 730),
+    };
+
+    // Define the time spans for auctionFirstPointDate
+    final auctionTimeSpans = {
+      '5 years': Duration(days: 1825),
+      'max': Duration(days: 365 * 100) // Assuming max is 100 years
+    };
+
+    // Create a list to hold the results
+    List<bool> results = [];
+
+    if (dealersFirstPointDate != null) {
+      // Check dealersFirstPointDate against each time span
+      for (var duration in dealerTimeSpans.values) {
+        final startDate = now.subtract(duration);
+        results.add(dealersFirstPointDate.isAfter(startDate));
+      }
+    } else {
+      results = [
+        false,
+        false,
+        false,
+        false,
+      ];
+    }
+
+    if (auctionFirstPointDate != null) {
+      // Check auctionFirstPointDate against each time span
+      for (var duration in auctionTimeSpans.values) {
+        final startDate = now.subtract(duration);
+        results.add(auctionFirstPointDate.isAfter(startDate));
+      }
+    } else {
+      results.add(false);
+      results.add(false);
+    }
+
+    return results;
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => WatchPageModel());
     _watch = FFAppState().watchListingStruct;
-    _model.filter = createWatchAnalysisFilterStruct(watchId: _watch.watchId);
+    _model.filter = createWatchAnalysisFilterStruct(watchId: 1282169);
+
     print("-----");
     print(_watch.watchId);
     print("-----");
-    _selectedButtonIndex = 0;
 
     _unsoldController.addListener(() {
       setState(() {
@@ -1744,6 +1812,31 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             .data
             .watchAnalysis;
         final watchDetailResponse = snapshot.data![1];
+
+        final watchGraphDataPoints =
+            WatchDetailResponseStruct.maybeFromMap(watchDetailResponse.jsonBody)
+                ?.data
+                .data
+                .data
+                .watchDetails
+                .graphDataPoints;
+
+        if (isFirstTimeIndexSelection) {
+          if (watchGraphDataPoints != null) {
+            // Populate chartFilterBlockList based on available data
+            chartFilterBlockList = checkDateFilters(watchGraphDataPoints);
+
+            // Set _selectedButtonIndex based on chartFilterBlockList
+            _selectedButtonIndex = chartFilterBlockList?.indexOf(true) ?? 0;
+
+            // If no true value is found, it will default to -1, so we can set it to 0 if needed
+            if (_selectedButtonIndex == -1) {
+              _selectedButtonIndex =
+                  0; // Default to 0 if no true value is found
+            }
+          }
+          isFirstTimeIndexSelection = false;
+        }
 
         final watchDetail =
             WatchDetailResponseStruct.maybeFromMap(watchDetailResponse.jsonBody)
@@ -2632,6 +2725,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                               isFirst: true,
                                                                               text: '3M',
                                                                               color: Colors.red,
+                                                                              isBlocked: chartFilterBlockList?[0] ?? false,
                                                                               isSelected: _selectedButtonIndex == 0,
                                                                               onPressed: () {
                                                                                 if (_selectedButtonIndex != 0) {
@@ -2644,6 +2738,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                             ChartFilterButton(
                                                                               text: '6M',
                                                                               color: Colors.blue,
+                                                                              isBlocked: chartFilterBlockList?[1] ?? false,
                                                                               isSelected: _selectedButtonIndex == 1,
                                                                               onPressed: () {
                                                                                 if (_selectedButtonIndex != 1) {
@@ -2656,6 +2751,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                             ChartFilterButton(
                                                                               text: '1Y',
                                                                               color: Colors.green,
+                                                                              isBlocked: chartFilterBlockList?[2] ?? false,
                                                                               isSelected: _selectedButtonIndex == 2,
                                                                               onPressed: () {
                                                                                 if (_selectedButtonIndex != 2) {
@@ -2668,6 +2764,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                             ChartFilterButton(
                                                                               text: '2Y',
                                                                               color: Colors.yellow,
+                                                                              isBlocked: chartFilterBlockList?[3] ?? false,
                                                                               isSelected: _selectedButtonIndex == 3,
                                                                               onPressed: () {
                                                                                 if (_selectedButtonIndex != 3) {
@@ -2680,6 +2777,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                             ChartFilterButton(
                                                                               text: '5Y',
                                                                               color: Colors.purple,
+                                                                              isBlocked: chartFilterBlockList?[4] ?? false,
                                                                               isSelected: _selectedButtonIndex == 4,
                                                                               onPressed: () {
                                                                                 if (_selectedButtonIndex != 4) {
@@ -2694,6 +2792,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
                                                                               isLast: true,
                                                                               text: 'Max',
                                                                               color: Colors.orange,
+                                                                              isBlocked: chartFilterBlockList?[5] ?? false,
                                                                               isSelected: _selectedButtonIndex == 5,
                                                                               onPressed: () {
                                                                                 if (_selectedButtonIndex != 5) {

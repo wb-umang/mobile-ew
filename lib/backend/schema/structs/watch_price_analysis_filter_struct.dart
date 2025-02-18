@@ -9,8 +9,8 @@ abstract class WatchPriceAnalysisFilterStruct
   List<String>? get auctionType;
   List<String>? get manufacturer;
   List<String>? get model;
-  List<String>? get referenceNumber;
-  List<String>? get childReferenceNumber;
+  List<String?>? get referenceNumber;
+  List<String?>? get childReferenceNumber;
   List<String>? get caseMaterial;
   String? get currencyMode;
   String? get eventDateRange;
