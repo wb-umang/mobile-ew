@@ -89,15 +89,21 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }
     }
 
-    final dealerMedian =
-        dealersPriceAnalysis.map((item) => item.medians.medianUsd).toList();
+    final dealerMedian = dealersPriceAnalysis
+        .where((item) => item.medians.medianUsd != 0)
+        .map((item) => item.medians.medianUsd)
+        .toList();
 
-    final auctionMedian =
-        auctionAnalysisMedians.map((item) => item.medians.medianUsd).toList();
+    final auctionMedian = auctionAnalysisMedians
+        .where((item) => item.medians.medianUsd != 0)
+        .map((item) => item.medians.medianUsd)
+        .toList();
 
     // Calculate the median price
-    final auctionPriceMedian =
-        auctionPriceAnalysis.map((item) => item.netPayableUsd).toList();
+    final auctionPriceMedian = auctionPriceAnalysis
+        .where((item) => item.netPayableUsd != 0)
+        .map((item) => item.netPayableUsd)
+        .toList();
 
     // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
     final combinedMedians = [
@@ -120,9 +126,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       isLandscapeMode = true;
 
       if (_priceAnalysis!
-              .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty ||
-          _priceAnalysis!
-              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+          .data.priceAnalysisGraph.dealersPriceAnalysis.isNotEmpty) {
         _chartData = _generateDealersChartData(
             _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
             _generateWatchPriceAnalysisChartData(
@@ -132,9 +136,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             _outliers,
             _priceAnalysis!.data.priceAnalysisGraph);
       } else if (_priceAnalysis!
-              .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty ||
-          _priceAnalysis!
-              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+          .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty) {
         _chartData = _generateAuctionChartData(
             _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
             _generateWatchPriceAnalysisChartData(
@@ -184,9 +186,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     setState(() {
       isLandscapeMode = false;
 
-      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty ||
-          _priceAnalysis!
-              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+      if (_priceAnalysis!.data.dealersPriceAnalysis.isNotEmpty) {
         _chartData = _generateDealersChartData(
             _priceAnalysis!.data.priceAnalysisGraph.dealersPriceAnalysis,
             _generateWatchPriceAnalysisChartData(
@@ -196,9 +196,7 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
             _outliers,
             _priceAnalysis!.data.priceAnalysisGraph);
       } else if (_priceAnalysis!
-              .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty ||
-          _priceAnalysis!
-              .data.priceAnalysisGraph.auctionPriceAnalysis.isNotEmpty) {
+          .data.priceAnalysisGraph.auctionAnalysisMedians.isNotEmpty) {
         _chartData = _generateAuctionChartData(
             _priceAnalysis!.data.priceAnalysisGraph.auctionAnalysisMedians,
             _generateWatchPriceAnalysisChartData(
@@ -995,15 +993,21 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }
     }
 
-    final dealerMedian =
-        dealersPriceAnalysis.map((item) => item.medians.medianUsd).toList();
+    final dealerMedian = dealersPriceAnalysis
+        .where((item) => item.medians.medianUsd != 0)
+        .map((item) => item.medians.medianUsd)
+        .toList();
 
-    final auctionMedian =
-        auctionAnalysisMedians.map((item) => item.medians.medianUsd).toList();
+    final auctionMedian = auctionAnalysisMedians
+        .where((item) => item.medians.medianUsd != 0)
+        .map((item) => item.medians.medianUsd)
+        .toList();
 
     // Calculate the median price
-    final auctionPriceMedian =
-        auctionPriceAnalysis.map((item) => item.netPayableUsd).toList();
+    final auctionPriceMedian = auctionPriceAnalysis
+        .where((item) => item.netPayableUsd != 0)
+        .map((item) => item.netPayableUsd)
+        .toList();
 
     // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
     final combinedMedians = [
@@ -1130,15 +1134,21 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
       }
     }
 
-    final dealerMedian =
-        dealersPriceAnalysis.map((item) => item.medians.medianUsd).toList();
+    final dealerMedian = dealersPriceAnalysis
+        .where((item) => item.medians.medianUsd != 0)
+        .map((item) => item.medians.medianUsd)
+        .toList();
 
-    final auctionMedian =
-        auctionAnalysisMedians.map((item) => item.medians.medianUsd).toList();
+    final auctionMedian = auctionAnalysisMedians
+        .where((item) => item.medians.medianUsd != 0)
+        .map((item) => item.medians.medianUsd)
+        .toList();
 
     // Calculate the median price
-    final auctionPriceMedian =
-        auctionPriceAnalysis.map((item) => item.netPayableUsd).toList();
+    final auctionPriceMedian = auctionPriceAnalysis
+        .where((item) => item.netPayableUsd != 0)
+        .map((item) => item.netPayableUsd)
+        .toList();
 
     // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
     final combinedMedians = [
