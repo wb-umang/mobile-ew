@@ -56,6 +56,60 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
   bool isPreviousData = false;
   final isPremium = FFAppState().loginData.subscriptionTypeId == 1;
 
+  double calculateMedianPrice(PriceAnalysisGraphStruct priceAnalysisGraph) {
+    final auctionPriceAnalysis = priceAnalysisGraph.auctionPriceAnalysis;
+    final dealersPriceAnalysis = priceAnalysisGraph.dealersPriceAnalysis;
+    final auctionAnalysisMedians = priceAnalysisGraph.auctionAnalysisMedians;
+
+// Function to round a value to the nearest specified magnitude
+    double roundToNearest(double value) {
+      // Step 1: Find the nearest power of 10 (base unit for rounding)
+      int numDigits = value > 0 ? math.log(value) ~/ math.log(10) : 0;
+      double baseUnit = math.pow(10, numDigits).toDouble();
+
+      // Step 2: Compute the rounded value
+      double roundedValue = (value / (baseUnit / 10)).ceil() * (baseUnit / 10);
+
+      return roundedValue;
+    }
+
+    // Function to calculate the median
+    double calculateMedian(List<double> numbers) {
+      if (numbers.isEmpty) return 0.0; // Return 0 if the list is empty
+      final sortedNumbers = List<double>.from(numbers)..sort();
+      final length = sortedNumbers.length;
+      final mid = length ~/ 2;
+
+      if (length % 2 == 0) {
+        // For even-length arrays, return the average of the two middle numbers
+        return (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
+      } else {
+        // For odd-length arrays, return the middle number
+        return sortedNumbers[mid];
+      }
+    }
+
+    final dealerMedian =
+        dealersPriceAnalysis.map((item) => item.medians.medianUsd).toList();
+
+    final auctionMedian =
+        auctionAnalysisMedians.map((item) => item.medians.medianUsd).toList();
+
+    // Calculate the median price
+    final auctionPriceMedian =
+        auctionPriceAnalysis.map((item) => item.netPayableUsd).toList();
+
+    // Calculate the overall median of dealerMedian, auctionMedian, and auctionPriceMedian
+    final combinedMedians = [
+      ...dealerMedian,
+      ...auctionMedian,
+      ...auctionPriceMedian
+    ];
+    final medianPrice = roundToNearest(calculateMedian(combinedMedians));
+
+    return medianPrice;
+  }
+
   void _switchToLandscapeMode() async {
     // Switch to landscape and update state
     await SystemChrome.setPreferredOrientations([
@@ -202,6 +256,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
+    final medianPrice = calculateMedianPrice(priceAnalysisGraph);
+
     // Filter non-zero values and get unique entries for each date
     for (var data in priceAnalysis) {
       if (data.medians.medianUsd != 0) {
@@ -267,8 +323,16 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     }
 
     // Convert the map entries to sorted list
-    final sortedEntries = uniqueDateValues.entries.toList()
+    final sortedEntriesWithOutliers = uniqueDateValues.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
+
+    final sortedEntries = sortedEntriesWithOutliers.where((element) {
+      if (shouldShowOutliersButton() && !isOutliers) {
+        // If outliers are not shown, ignore items with medianUsd above double the calculated median
+        return element.value <= (medianPrice * 2);
+      }
+      return true;
+    }).toList();
 
     // Calculate x-axis values
     final dates = sortedEntries.map((e) => DateTime.parse(e.key)).toList();
@@ -581,6 +645,8 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     // Create a map to store unique date entries with their latest values
     final Map<String, double> uniqueDateValues = {};
 
+    final medianPrice = calculateMedianPrice(priceAnalysisGraph);
+
     // Filter non-zero values and get unique entries for each date
     for (var data in auctionAnalysis) {
       if (data.medians.medianUsd != 0) {
@@ -646,8 +712,16 @@ class _WatchPageWidgetState extends State<WatchPageWidget> {
     }
 
     // Convert the map entries to sorted list
-    final sortedEntries = uniqueDateValues.entries.toList()
+    final sortedEntriesWithOutliers = uniqueDateValues.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
+
+    final sortedEntries = sortedEntriesWithOutliers.where((element) {
+      if (shouldShowOutliersButton() && !isOutliers) {
+        // If outliers are not shown, ignore items with medianUsd above double the calculated median
+        return element.value <= (medianPrice * 2);
+      }
+      return true;
+    }).toList();
 
     // Calculate x-axis values
     final dates = sortedEntries.map((e) => DateTime.parse(e.key)).toList();
