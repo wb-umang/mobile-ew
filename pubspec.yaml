@@ -76,6 +76,8 @@ dependencies:
   mime: ^2.0.0
   image: ^4.5.2
   flutter_image_compress: ^2.3.0
+  flutter_bloc: ^9.0.0
+  get_it: ^8.0.3
 
 dependency_overrides:
   http: 1.2.1
@@ -88,7 +90,11 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.4.8
   built_value_generator: ^8.9.0
+  flutter_gen_runner: ^5.9.0
 
+flutter_gen:
+  assets:
+    enabled: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

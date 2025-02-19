@@ -1,4 +1,4 @@
-import '/components/notification_setting_row/notification_setting_row_widget.dart';
+import '../../core/widgets/notification_setting_row/notification_setting_row_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -74,7 +74,8 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                             child: Stack(
                               children: [
                                 Align(
-                                  alignment: const AlignmentDirectional(0.0, 0.0),
+                                  alignment:
+                                      const AlignmentDirectional(0.0, 0.0),
                                   child: Text(
                                     'Email',
                                     textAlign: TextAlign.center,
@@ -127,18 +128,18 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        20.0, 12.0, 20.0, 0.0),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            20.0, 12.0, 20.0, 0.0),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Align(
-                                          alignment:
-                                              const AlignmentDirectional(0.0, 0.0),
+                                          alignment: const AlignmentDirectional(
+                                              0.0, 0.0),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 24.0, 0.0, 0.0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 24.0, 0.0, 0.0),
                                             child: ListView(
                                               padding: EdgeInsets.zero,
                                               primary: false,
@@ -170,11 +171,8 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                       child: Padding(
                                                         padding:
                                                             const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    8.0,
-                                                                    0.0,
-                                                                    8.0),
+                                                                .fromSTEB(0.0,
+                                                                8.0, 0.0, 8.0),
                                                         child: Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -253,17 +251,17 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                         lineHeight: 1.43,
                                                       ),
                                                 ),
-                                              ].divide(const SizedBox(height: 8.0)),
+                                              ].divide(
+                                                  const SizedBox(height: 8.0)),
                                             ),
                                           ),
                                         ),
                                         Align(
-                                          alignment:
-                                              const AlignmentDirectional(0.0, 0.0),
+                                          alignment: const AlignmentDirectional(
+                                              0.0, 0.0),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 24.0, 0.0, 0.0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 24.0, 0.0, 0.0),
                                             child: ListView(
                                               padding: EdgeInsets.zero,
                                               primary: false,
@@ -295,11 +293,8 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                       child: Padding(
                                                         padding:
                                                             const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    8.0,
-                                                                    0.0,
-                                                                    8.0),
+                                                                .fromSTEB(0.0,
+                                                                8.0, 0.0, 8.0),
                                                         child: Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -378,17 +373,17 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                         lineHeight: 1.43,
                                                       ),
                                                 ),
-                                              ].divide(const SizedBox(height: 8.0)),
+                                              ].divide(
+                                                  const SizedBox(height: 8.0)),
                                             ),
                                           ),
                                         ),
                                         Align(
-                                          alignment:
-                                              const AlignmentDirectional(0.0, 0.0),
+                                          alignment: const AlignmentDirectional(
+                                              0.0, 0.0),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 24.0, 0.0, 0.0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 24.0, 0.0, 0.0),
                                             child: ListView(
                                               padding: EdgeInsets.zero,
                                               primary: false,
@@ -420,11 +415,8 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                       child: Padding(
                                                         padding:
                                                             const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    8.0,
-                                                                    0.0,
-                                                                    8.0),
+                                                                .fromSTEB(0.0,
+                                                                8.0, 0.0, 8.0),
                                                         child: Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -503,17 +495,17 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                         lineHeight: 1.43,
                                                       ),
                                                 ),
-                                              ].divide(const SizedBox(height: 8.0)),
+                                              ].divide(
+                                                  const SizedBox(height: 8.0)),
                                             ),
                                           ),
                                         ),
                                         Align(
-                                          alignment:
-                                              const AlignmentDirectional(0.0, 0.0),
+                                          alignment: const AlignmentDirectional(
+                                              0.0, 0.0),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 24.0, 0.0, 0.0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 24.0, 0.0, 0.0),
                                             child: ListView(
                                               padding: EdgeInsets.zero,
                                               primary: false,
@@ -545,11 +537,8 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                       child: Padding(
                                                         padding:
                                                             const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    8.0,
-                                                                    0.0,
-                                                                    8.0),
+                                                                .fromSTEB(0.0,
+                                                                8.0, 0.0, 8.0),
                                                         child: Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -628,7 +617,8 @@ class _EmailSettingsPageWidgetState extends State<EmailSettingsPageWidget> {
                                                         lineHeight: 1.43,
                                                       ),
                                                 ),
-                                              ].divide(const SizedBox(height: 8.0)),
+                                              ].divide(
+                                                  const SizedBox(height: 8.0)),
                                             ),
                                           ),
                                         ),

@@ -1,5 +1,5 @@
-import '/components/separator/separator_widget.dart';
-import '/components/settings_row/settings_row_widget.dart';
+import '../../core/widgets/separator/separator_widget.dart';
+import '../../core/widgets/settings_row/settings_row_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -149,10 +149,12 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                         ),
                                   ),
                                   Align(
-                                    alignment: const AlignmentDirectional(0.0, 0.0),
+                                    alignment:
+                                        const AlignmentDirectional(0.0, 0.0),
                                     child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 24.0, 0.0, 0.0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 24.0, 0.0, 0.0),
                                       child: ListView(
                                         padding: EdgeInsets.zero,
                                         primary: false,
@@ -176,7 +178,8 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                           ),
                                           Align(
                                             alignment:
-                                                const AlignmentDirectional(0.0, 0.0),
+                                                const AlignmentDirectional(
+                                                    0.0, 0.0),
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
@@ -186,14 +189,17 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                                 borderRadius:
                                                     BorderRadius.circular(24.0),
                                               ),
-                                              alignment: const AlignmentDirectional(
-                                                  0.0, 0.0),
+                                              alignment:
+                                                  const AlignmentDirectional(
+                                                      0.0, 0.0),
                                               child: Align(
-                                                alignment: const AlignmentDirectional(
-                                                    0.0, 0.0),
+                                                alignment:
+                                                    const AlignmentDirectional(
+                                                        0.0, 0.0),
                                                 child: Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(
                                                           0.0, 8.0, 0.0, 8.0),
                                                   child: Column(
                                                     mainAxisSize:
@@ -296,7 +302,8 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                           ),
                                           Align(
                                             alignment:
-                                                const AlignmentDirectional(0.0, 0.0),
+                                                const AlignmentDirectional(
+                                                    0.0, 0.0),
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
@@ -306,14 +313,17 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                                 borderRadius:
                                                     BorderRadius.circular(24.0),
                                               ),
-                                              alignment: const AlignmentDirectional(
-                                                  0.0, 0.0),
+                                              alignment:
+                                                  const AlignmentDirectional(
+                                                      0.0, 0.0),
                                               child: Align(
-                                                alignment: const AlignmentDirectional(
-                                                    0.0, 0.0),
+                                                alignment:
+                                                    const AlignmentDirectional(
+                                                        0.0, 0.0),
                                                 child: Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(
                                                           0.0, 8.0, 0.0, 8.0),
                                                   child: Column(
                                                     mainAxisSize:

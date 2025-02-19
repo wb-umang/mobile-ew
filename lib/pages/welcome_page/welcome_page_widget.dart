@@ -1,4 +1,4 @@
-import '/components/social_login_buttons/social_login_buttons_widget.dart';
+import '../../core/widgets/social_login_buttons/social_login_buttons_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';

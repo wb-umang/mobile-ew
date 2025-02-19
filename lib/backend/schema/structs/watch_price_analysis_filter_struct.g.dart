@@ -14,9 +14,9 @@ class _$WatchPriceAnalysisFilterStruct extends WatchPriceAnalysisFilterStruct {
   @override
   final List<String>? model;
   @override
-  final List<String>? referenceNumber;
+  final List<String?>? referenceNumber;
   @override
-  final List<String>? childReferenceNumber;
+  final List<String?>? childReferenceNumber;
   @override
   final List<String>? caseMaterial;
   @override
@@ -112,14 +112,14 @@ class WatchPriceAnalysisFilterStructBuilder
   List<String>? get model => _$this._model;
   set model(List<String>? model) => _$this._model = model;
 
-  List<String>? _referenceNumber;
-  List<String>? get referenceNumber => _$this._referenceNumber;
-  set referenceNumber(List<String>? referenceNumber) =>
+  List<String?>? _referenceNumber;
+  List<String?>? get referenceNumber => _$this._referenceNumber;
+  set referenceNumber(List<String?>? referenceNumber) =>
       _$this._referenceNumber = referenceNumber;
 
-  List<String>? _childReferenceNumber;
-  List<String>? get childReferenceNumber => _$this._childReferenceNumber;
-  set childReferenceNumber(List<String>? childReferenceNumber) =>
+  List<String?>? _childReferenceNumber;
+  List<String?>? get childReferenceNumber => _$this._childReferenceNumber;
+  set childReferenceNumber(List<String?>? childReferenceNumber) =>
       _$this._childReferenceNumber = childReferenceNumber;
 
   List<String>? _caseMaterial;

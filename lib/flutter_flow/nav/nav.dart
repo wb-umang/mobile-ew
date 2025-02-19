@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:every_watch/features/auth/ui/pages/login_page.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page.dart';
+import 'package:every_watch/features/auth/ui/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,62 +26,58 @@ class AppStateNotifier extends ChangeNotifier {
   bool get showSplashImage => _showSplashImage;
 
   void stopShowingSplashImage() {
-  Future.delayed(const Duration(milliseconds: 1000),
-    () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       _showSplashImage = false;
       notifyListeners();
     });
   }
 }
 
-
 GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       redirect: (context, state) {
-
         // Add a redirect handler that will force router to evaluate routes
         if (appStateNotifier.showSplashImage) {
           return '/';
         } else {
           return state.fullPath == '/' ? '/welcomePage' : state.fullPath;
         }
-
       },
-      errorBuilder: (context, state) =>Container(
-      color: Colors.transparent,
-      child: Image.asset(
-        'assets/images/Splas_Screen.jpg',
-        fit: BoxFit.fill,
+      errorBuilder: (context, state) => Container(
+        color: Colors.transparent,
+        child: Image.asset(
+          'assets/images/Splas_Screen.jpg',
+          fit: BoxFit.fill,
+        ),
       ),
-    ),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) => Container(
-              color: Colors.transparent,
-              child: Image.asset(
-                'assets/images/Splas_Screen.jpg',
-                fit: BoxFit.fill,
-              ),
+            color: Colors.transparent,
+            child: Image.asset(
+              'assets/images/Splas_Screen.jpg',
+              fit: BoxFit.fill,
             ),
+          ),
         ),
         FFRoute(
           name: 'WelcomePage',
           path: '/welcomePage',
-          builder: (context, params) => const WelcomePageWidget(),
+          builder: (context, params) => const WelcomePage(),
         ),
         FFRoute(
           name: 'LoginPage',
           path: '/loginPage',
-          builder: (context, params) => const LoginPageWidget(),
+          builder: (context, params) => const LoginPage(),
         ),
         FFRoute(
           name: 'RegisterPage',
           path: '/registerPage',
-          builder: (context, params) => const RegisterPageWidget(),
+          builder: (context, params) => const SignupPage(),
         ),
         FFRoute(
           name: 'ForgotPasswordPage',

@@ -1,4 +1,4 @@
-import '/components/watch_tag/watch_tag_widget.dart';
+import '../watch_tag/watch_tag_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'watch_card_widget.dart' show WatchCardWidget;
 import 'package:flutter/material.dart';

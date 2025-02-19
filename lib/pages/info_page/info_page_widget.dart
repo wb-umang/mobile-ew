@@ -1,5 +1,5 @@
-import '/components/profile_row/profile_row_widget.dart';
-import '/components/separator_icon/separator_icon_widget.dart';
+import '../../core/widgets/profile_row/profile_row_widget.dart';
+import '../../core/widgets/separator_icon/separator_icon_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -136,10 +136,12 @@ class _InfoPageWidgetState extends State<InfoPageWidget> {
                                     ),
                                   ),
                                   Align(
-                                    alignment: const AlignmentDirectional(0.0, 0.0),
+                                    alignment:
+                                        const AlignmentDirectional(0.0, 0.0),
                                     child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 24.0, 0.0, 0.0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 24.0, 0.0, 0.0),
                                       child: ListView(
                                         padding: EdgeInsets.zero,
                                         primary: false,
@@ -161,7 +163,8 @@ class _InfoPageWidgetState extends State<InfoPageWidget> {
                                           ),
                                           Align(
                                             alignment:
-                                                const AlignmentDirectional(0.0, 0.0),
+                                                const AlignmentDirectional(
+                                                    0.0, 0.0),
                                             child: Text(
                                               'Version 1.0 (1)',
                                               textAlign: TextAlign.start,
@@ -181,10 +184,13 @@ class _InfoPageWidgetState extends State<InfoPageWidget> {
                                           ),
                                           Align(
                                             alignment:
-                                                const AlignmentDirectional(0.0, 0.0),
+                                                const AlignmentDirectional(
+                                                    0.0, 0.0),
                                             child: Padding(
-                                              padding: const EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                      0.0, 4.0, 0.0, 0.0),
                                               child: Container(
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
@@ -195,8 +201,9 @@ class _InfoPageWidgetState extends State<InfoPageWidget> {
                                                       BorderRadius.circular(
                                                           24.0),
                                                 ),
-                                                alignment: const AlignmentDirectional(
-                                                    0.0, 0.0),
+                                                alignment:
+                                                    const AlignmentDirectional(
+                                                        0.0, 0.0),
                                                 child: Align(
                                                   alignment:
                                                       const AlignmentDirectional(
@@ -204,8 +211,8 @@ class _InfoPageWidgetState extends State<InfoPageWidget> {
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 8.0,
-                                                                0.0, 8.0),
+                                                            .fromSTEB(
+                                                            0.0, 8.0, 0.0, 8.0),
                                                     child: Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,

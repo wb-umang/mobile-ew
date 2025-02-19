@@ -8,6 +8,7 @@ class ChartFilterButton extends StatefulWidget {
   final bool isFirst;
   final bool isLast;
   final bool isBorderRight;
+  final bool isBlocked;
 
   const ChartFilterButton({
     super.key,
@@ -18,6 +19,7 @@ class ChartFilterButton extends StatefulWidget {
     this.isFirst = false,
     this.isLast = false,
     this.isBorderRight = false,
+    this.isBlocked = false,
   });
 
   @override
@@ -29,7 +31,7 @@ class _ChartFilterButtonState extends State<ChartFilterButton> {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        onTap: widget.onPressed,
+        onTap: !widget.isBlocked ? null : widget.onPressed,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -41,35 +43,45 @@ class _ChartFilterButtonState extends State<ChartFilterButton> {
                     widget.isFirst ? Radius.circular(12) : Radius.circular(0),
                 bottomRight:
                     widget.isLast ? Radius.circular(12) : Radius.circular(0)),
-            color: widget.isSelected
-                ? const Color(0xFF001633)
-                : Colors.transparent,
+            color: !widget.isBlocked
+                ? Color(0xFFF7F7FA)
+                : widget.isSelected
+                    ? const Color(0xFF001633)
+                    : Colors.transparent,
             border: Border(
               top: BorderSide(
                 width: 1,
-                color: widget.isSelected
-                    ? const Color(0xFF001633)
-                    : const Color(0xFFE6E8F0),
+                color: !widget.isBlocked
+                    ? Color(0xFFE6E8F0)
+                    : widget.isSelected
+                        ? const Color(0xFF001633)
+                        : const Color(0xFFE6E8F0),
               ),
               bottom: BorderSide(
                 width: 1,
-                color: widget.isSelected
-                    ? const Color(0xFF001633)
-                    : const Color(0xFFE6E8F0),
+                color: !widget.isBlocked
+                    ? Color(0xFFE6E8F0)
+                    : widget.isSelected
+                        ? const Color(0xFF001633)
+                        : const Color(0xFFE6E8F0),
               ),
               right: widget.isBorderRight
                   ? BorderSide(
                       width: 1,
-                      color: widget.isSelected
-                          ? const Color(0xFF001633)
-                          : const Color(0xFFE6E8F0),
+                      color: !widget.isBlocked
+                          ? Color(0xFFE6E8F0)
+                          : widget.isSelected
+                              ? const Color(0xFF001633)
+                              : const Color(0xFFE6E8F0),
                     )
                   : BorderSide.none,
               left: BorderSide(
                 width: 1,
-                color: widget.isSelected
-                    ? const Color(0xFF001633)
-                    : const Color(0xFFE6E8F0),
+                color: !widget.isBlocked
+                    ? Color(0xFFE6E8F0)
+                    : widget.isSelected
+                        ? const Color(0xFF001633)
+                        : const Color(0xFFE6E8F0),
               ),
             ),
           ),
@@ -80,9 +92,11 @@ class _ChartFilterButtonState extends State<ChartFilterButton> {
                 widget.text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: widget.isSelected
-                      ? const Color(0xFFFFFFFF)
-                      : const Color(0xFF001633),
+                  color: !widget.isBlocked
+                      ? Color.fromRGBO(4, 7, 49, 0.42)
+                      : widget.isSelected
+                          ? const Color(0xFFFFFFFF)
+                          : const Color(0xFF001633),
                   overflow: TextOverflow.visible,
                 ),
               ),
