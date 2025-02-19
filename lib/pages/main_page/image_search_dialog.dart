@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
+import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,13 +24,47 @@ class _ImageSearchDialogState extends State<ImageSearchDialog> {
   File? _capturedImage;
   String? _base64Image = "";
   final int maxFileSize = 10 * 1024 * 1024;
+  dynamic customImage;
+
+  void _showNoCameraDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("No Camera Available"),
+        content:
+            Text("Your device does not have a camera or it is not accessible."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _captureImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    // final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    try {
+      List<CameraDescription> cameras = await availableCameras();
 
-    if (image != null) {
+      if (cameras.isEmpty) {
+        _showNoCameraDialog();
+        return;
+      }
+
+      // If cameras are available, navigate to CustomCameraScreen
+      customImage = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CustomCameraScreen()),
+      );
+    } catch (e) {
+      _showNoCameraDialog();
+    }
+
+    if (customImage != null) {
       setState(() {
-        _capturedImage = File(image.path);
+        _capturedImage = File(customImage);
       });
 
       // Check the file size

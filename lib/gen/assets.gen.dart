@@ -134,6 +134,9 @@ class $AssetsFontsGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/custom_camera_close.svg
+  String get customCameraClose => 'assets/icons/custom_camera_close.svg';
+
   /// File path: assets/icons/dialog_camera.svg
   String get dialogCamera => 'assets/icons/dialog_camera.svg';
 
@@ -150,8 +153,14 @@ class $AssetsIconsGen {
   String get searchTab => 'assets/icons/search_tab.svg';
 
   /// List of all assets
-  List<String> get values =>
-      [dialogCamera, dialogCancel, dialogFolder, dialogTime, searchTab];
+  List<String> get values => [
+        customCameraClose,
+        dialogCamera,
+        dialogCancel,
+        dialogFolder,
+        dialogTime,
+        searchTab
+      ];
 }
 
 class $AssetsImagesGen {
