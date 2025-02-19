@@ -47,6 +47,8 @@
 	<string>LaunchScreen</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need to access your camera to take pictures.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to save pictures</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

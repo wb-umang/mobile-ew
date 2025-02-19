@@ -1,5 +1,5 @@
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
-import 'package:every_watch/pages/main_page/image_search_dialog.dart';
+import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
@@ -93,13 +93,13 @@ class _MainPageWidgetState extends State<MainPageWidget>
   void _handleTabSelection() {
     if (_tabController.index == 2) {
       _tabController.index = 0; // Prevent switching
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ImageSearchDialog(
-              onSearch: (context, base64Image) =>
-                  _searchImage(context, base64Image));
-        },
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CustomCameraScreen(
+                onSearch: (context, base64Image) =>
+                    _searchImage(context, base64Image))),
       );
     }
   }
@@ -143,6 +143,7 @@ class _MainPageWidgetState extends State<MainPageWidget>
           ImageSearchResponseStruct.fromMap(response.jsonBody);
 
       _callWatchListingApi(true);
+      Navigator.of(context).pop();
       Navigator.of(context).pop();
     }
   }
