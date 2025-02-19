@@ -140,29 +140,38 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
 
-    // **Increase Crop Area to Include 30% More Content**
+    // **Consider the Shifted Preview Square**
+    double shiftUpFactor = screenSize.height * 0.10; // Moves crop area up
+    if (Platform.isIOS) {
+      shiftUpFactor *= 1.4; // iOS needs more adjustment
+    }
+
+    // **Updated Cropping Calculations**
     double overlayWidth = screenWidth * 0.8;
     double overlayHeight = overlayWidth * (320 / 320);
 
     double scaleX = imageWidth / screenWidth;
     double scaleY = imageHeight / screenHeight;
 
-    // Expand crop area by 30%
-    double expansionFactor = 1.5;
-    int cropSizeX = min(((overlayWidth * scaleX) * expansionFactor).toInt(),
-        capturedImage.width);
-    int cropSizeY = min(((overlayHeight * scaleY) * expansionFactor).toInt(),
-        capturedImage.height);
+    // Convert screen shift to image scale
+    int shiftY = (shiftUpFactor * scaleY).toInt();
+
+    // Adjust Crop Area
+    int cropSizeX =
+        min(((overlayWidth * scaleX) * 1.4).toInt(), capturedImage.width);
+    int cropSizeY =
+        min(((overlayHeight * scaleY) * 1.4).toInt(), capturedImage.height);
 
     // Ensure Crop Area is Centered
     int cropX = ((imageWidth / 2) - (cropSizeX / 2)).toInt();
-    int cropY = ((imageHeight / 2) - (cropSizeY / 2)).toInt();
+    int cropY = ((imageHeight / 2) - (cropSizeY / 2) - shiftY)
+        .toInt(); // Adjusted for shift
 
     // **Prevent Cropping Out of Bounds**
     cropX = cropX.clamp(0, max(0, capturedImage.width - cropSizeX));
     cropY = cropY.clamp(0, max(0, capturedImage.height - cropSizeY));
 
-    // Crop the image to match the preview area
+    // Crop the image
     img.Image croppedImage = img.copyCrop(
       capturedImage,
       x: cropX,
