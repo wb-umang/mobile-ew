@@ -1,5 +1,7 @@
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
+import 'package:every_watch/core/utils/show_custom_snackbar.dart';
+import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:every_watch/features/auth/ui/widgets/email_field_login_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/login_button_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/model/login_page_model.dart';
@@ -9,6 +11,7 @@ import 'package:every_watch/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -64,180 +67,200 @@ class _LoginPageState extends State<LoginPage> {
         ),
         body: SafeArea(
           top: true,
-          child: Align(
-            alignment: const AlignmentDirectional(0.0, 0.0),
-            child: Container(
-              width: double.infinity,
-              constraints: const BoxConstraints(
-                maxWidth: 670.0,
-              ),
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-              ),
-              child: Form(
-                autovalidateMode: AutovalidateMode.disabled,
-                child: Align(
-                  alignment: const AlignmentDirectional(0.0, -1.0),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        20.0, 32.0, 20.0, 0.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: const AlignmentDirectional(-1.0, 0.0),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 16),
-                              child: Text(
-                                LoginPageStrings.welcomeBack,
-                                textAlign: TextAlign.start,
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      letterSpacing: 0.08,
-                                      fontWeight: FontWeight.bold,
-                                      lineHeight: 1.27,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: const AlignmentDirectional(-1.0, 0.0),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                LoginPageStrings.pleaseLogInToYourAccount,
-                                textAlign: TextAlign.start,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      letterSpacing: 0.08,
-                                      lineHeight: 1.43,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Text(
-                              LoginPageStrings.email,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'DM Sans',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.12,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.43,
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthSuccess) {
+                context.pushNamed('MainPage');
+              }
+
+              if (state is AuthError) {
+                showCustomSnackBar(context, state.message);
+              }
+            },
+            builder: (context, state) {
+              return Align(
+                alignment: const AlignmentDirectional(0.0, 0.0),
+                child: Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxWidth: 670.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                  ),
+                  child: Form(
+                    autovalidateMode: AutovalidateMode.disabled,
+                    child: Align(
+                      alignment: const AlignmentDirectional(0.0, -1.0),
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            20.0, 32.0, 20.0, 0.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment:
+                                    const AlignmentDirectional(-1.0, 0.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: Text(
+                                    LoginPageStrings.welcomeBack,
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleLarge
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          letterSpacing: 0.08,
+                                          fontWeight: FontWeight.bold,
+                                          lineHeight: 1.27,
+                                        ),
                                   ),
-                            ),
-                          ),
-                          EmailFieldLoginWidget(model: _model),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Text(
-                              LoginPageStrings.password,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'DM Sans',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.12,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.43,
-                                  ),
-                            ),
-                          ),
-                          PasswordFieldLoginWidget(model: _model),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () {
-                                context.pushNamed('ForgotPasswordPage');
-                              },
-                              child: Text(
-                                LoginPageStrings.forgotPassword,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      color:
-                                          FlutterFlowTheme.of(context).tertiary,
-                                      fontSize: 12.0,
-                                      letterSpacing: 0.18,
-                                      fontWeight: FontWeight.bold,
-                                      lineHeight: 1.33,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          LoginButtonWidget(model: _model),
-                          Align(
-                            alignment: const AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 32),
-                              child: Text(
-                                LoginPageStrings.dontHaveAccount,
-                                textAlign: TextAlign.start,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'DM Sans',
-                                      fontSize: 12.0,
-                                      letterSpacing: 0.16,
-                                      lineHeight: 1.33,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                context.pushNamed('RegisterPage');
-                              },
-                              child: wrapWithModel(
-                                model: _model.arrowButtonModel,
-                                updateCallback: () => safeSetState(() {}),
-                                child: const ArrowButtonWidget(
-                                  title: LoginPageStrings.signUp,
                                 ),
                               ),
-                            ),
+                              Align(
+                                alignment:
+                                    const AlignmentDirectional(-1.0, 0.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    LoginPageStrings.pleaseLogInToYourAccount,
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          letterSpacing: 0.08,
+                                          lineHeight: 1.43,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Text(
+                                  LoginPageStrings.email,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DM Sans',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        letterSpacing: 0.12,
+                                        fontWeight: FontWeight.bold,
+                                        lineHeight: 1.43,
+                                      ),
+                                ),
+                              ),
+                              EmailFieldLoginWidget(model: _model),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Text(
+                                  LoginPageStrings.password,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DM Sans',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        letterSpacing: 0.12,
+                                        fontWeight: FontWeight.bold,
+                                        lineHeight: 1.43,
+                                      ),
+                                ),
+                              ),
+                              PasswordFieldLoginWidget(model: _model),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () {
+                                    context.pushNamed('ForgotPasswordPage');
+                                  },
+                                  child: Text(
+                                    LoginPageStrings.forgotPassword,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .tertiary,
+                                          fontSize: 12.0,
+                                          letterSpacing: 0.18,
+                                          fontWeight: FontWeight.bold,
+                                          lineHeight: 1.33,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              LoginButtonWidget(
+                                model: _model,
+                                isLoading: state is AuthLoading,
+                              ),
+                              Align(
+                                alignment: const AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 32),
+                                  child: Text(
+                                    LoginPageStrings.dontHaveAccount,
+                                    textAlign: TextAlign.start,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          fontSize: 12.0,
+                                          letterSpacing: 0.16,
+                                          lineHeight: 1.33,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 16.0, 0.0, 0.0),
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed('RegisterPage');
+                                  },
+                                  child: wrapWithModel(
+                                    model: _model.arrowButtonModel,
+                                    updateCallback: () => safeSetState(() {}),
+                                    child: const ArrowButtonWidget(
+                                      title: LoginPageStrings.signUp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 32.0, 0.0, 0.0),
+                                child: wrapWithModel(
+                                  model: _model.socialLoginsModel,
+                                  updateCallback: () => safeSetState(() {}),
+                                  child: const SocialLoginsWidget(),
+                                ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0.0, 32.0, 0.0, 0.0),
-                            child: wrapWithModel(
-                              model: _model.socialLoginsModel,
-                              updateCallback: () => safeSetState(() {}),
-                              child: const SocialLoginsWidget(),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
       ),

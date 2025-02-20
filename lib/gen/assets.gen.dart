@@ -137,6 +137,15 @@ class $AssetsIconsGen {
   /// File path: assets/icons/custom_camera_close.svg
   String get customCameraClose => 'assets/icons/custom_camera_close.svg';
 
+  /// File path: assets/icons/custom_camera_flash.svg
+  String get customCameraFlash => 'assets/icons/custom_camera_flash.svg';
+
+  /// File path: assets/icons/custom_camera_flip.svg
+  String get customCameraFlip => 'assets/icons/custom_camera_flip.svg';
+
+  /// File path: assets/icons/custom_camera_gallery.svg
+  String get customCameraGallery => 'assets/icons/custom_camera_gallery.svg';
+
   /// File path: assets/icons/dialog_camera.svg
   String get dialogCamera => 'assets/icons/dialog_camera.svg';
 
@@ -155,6 +164,9 @@ class $AssetsIconsGen {
   /// List of all assets
   List<String> get values => [
         customCameraClose,
+        customCameraFlash,
+        customCameraFlip,
+        customCameraGallery,
         dialogCamera,
         dialogCancel,
         dialogFolder,

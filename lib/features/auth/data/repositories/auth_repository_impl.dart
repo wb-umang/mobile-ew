@@ -1,7 +1,7 @@
 import 'package:every_watch/core/error/exceptions.dart';
 import 'package:every_watch/core/error/failures.dart';
 import 'package:every_watch/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:every_watch/core/common/entities/user.dart';
+import 'package:every_watch/core/common/entities/user_entity.dart';
 import 'package:every_watch/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -11,32 +11,34 @@ class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl(this.authRemoteDataSource);
 
   @override
-  Future<Either<Failure, String>> logInWithEmailAndPassword({
+  Future<Either<Failure, UserEntity>> logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
     try {
-      try {
-        final result = await authRemoteDataSource.logInWithEmailAndPassword(
-            email: email, password: password);
-        return right(result);
-      } on ServerException catch (e) {
-        return left(Failure(e.message));
-      }
-    } catch (e) {
-      throw ServerException(e.toString());
+      final result = await authRemoteDataSource.logInWithEmailAndPassword(
+          email: email, password: password);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
     }
   }
 
   @override
-  Future<Either<Failure, User>> signUpWithEmailAndPassword({
+  Future<Either<Failure, UserEntity>> signUpWithEmailAndPassword({
     required String email,
-    required String name,
+    required String firstName,
+    required String lastName,
     required String password,
+    required String invitationCode,
   }) async {
     try {
       final result = await authRemoteDataSource.signUpWithEmailAndPassword(
-          email: email, name: name, password: password);
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          invitationCode: invitationCode);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

@@ -73,6 +73,10 @@ class _SignupPageState extends State<SignupPage> {
             top: true,
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
+                if (state is AuthSuccess) {
+                  context.pushNamed('MainPage');
+                }
+
                 if (state is AuthError) {
                   showCustomSnackBar(context, state.message);
                 }
@@ -161,7 +165,8 @@ class _SignupPageState extends State<SignupPage> {
                             ],
                           ),
                         ),
-                        SignupButtonWidget(model: _model),
+                        SignupButtonWidget(
+                            model: _model, isLoading: state is AuthLoading),
                         Align(
                           alignment: const AlignmentDirectional(0.0, 0.0),
                           child: Padding(
