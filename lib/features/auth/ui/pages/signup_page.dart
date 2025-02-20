@@ -1,6 +1,8 @@
 import 'package:every_watch/core/utils/app_strings.dart';
-import 'package:every_watch/core/widgets/arrow_button/arrow_button_widget.dart';
-import 'package:every_watch/core/widgets/invite_field/invite_field_widget.dart';
+import 'package:every_watch/core/utils/show_custom_snackbar.dart';
+import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
+import 'package:every_watch/core/common/widgets/invite_field/invite_field_widget.dart';
+import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:every_watch/features/auth/ui/widgets/email_pass_form_signup_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/model/signup_page_model.dart';
 import 'package:every_watch/features/auth/ui/widgets/name_form_signup_widget.dart';
@@ -10,6 +12,7 @@ import 'package:every_watch/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -68,133 +71,147 @@ class _SignupPageState extends State<SignupPage> {
         ),
         body: SafeArea(
             top: true,
-            child: Padding(
-              padding:
-                  const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Align(
-                      alignment: const AlignmentDirectional(-1.0, 0.0),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Text(
-                          SignupPageStrings.newAccount,
-                          textAlign: TextAlign.start,
-                          style:
-                              FlutterFlowTheme.of(context).titleLarge.override(
+            child: BlocConsumer<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is AuthError) {
+                  showCustomSnackBar(context, state.message);
+                }
+              },
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                      20.0, 0.0, 20.0, 0.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Align(
+                          alignment: const AlignmentDirectional(-1.0, 0.0),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 16),
+                            child: Text(
+                              SignupPageStrings.newAccount,
+                              textAlign: TextAlign.start,
+                              style: FlutterFlowTheme.of(context)
+                                  .titleLarge
+                                  .override(
                                     fontFamily: 'DM Sans',
                                     color: FlutterFlowTheme.of(context).primary,
                                     letterSpacing: 0.08,
                                     fontWeight: FontWeight.bold,
                                     lineHeight: 1.27,
                                   ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(-1.0, 0.0),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text(
-                          SignupPageStrings.subHeadline,
-                          textAlign: TextAlign.start,
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'DM Sans',
-                                color: FlutterFlowTheme.of(context).secondary,
-                                letterSpacing: 0.08,
-                                lineHeight: 1.43,
-                              ),
-                        ),
-                      ),
-                    ),
-                    EmailPassFormSignupWidget(model: _model),
-                    NameFormSignupWidget(model: _model),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: const AlignmentDirectional(-1.0, 0.0),
+                        Align(
+                          alignment: const AlignmentDirectional(-1.0, 0.0),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8),
                             child: Text(
-                              SignupPageStrings.invitationCode,
+                              SignupPageStrings.subHeadline,
+                              textAlign: TextAlign.start,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
                                     fontFamily: 'DM Sans',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.12,
-                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        FlutterFlowTheme.of(context).secondary,
+                                    letterSpacing: 0.08,
                                     lineHeight: 1.43,
                                   ),
                             ),
                           ),
-                          Align(
-                            alignment: const AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 4.0, 0.0, 0.0),
-                              child: wrapWithModel(
-                                model: _model.inviteFieldModel,
-                                updateCallback: () => safeSetState(() {}),
-                                child: const InviteFieldWidget(),
+                        ),
+                        EmailPassFormSignupWidget(model: _model),
+                        NameFormSignupWidget(model: _model),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment:
+                                    const AlignmentDirectional(-1.0, 0.0),
+                                child: Text(
+                                  SignupPageStrings.invitationCode,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DM Sans',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        letterSpacing: 0.12,
+                                        fontWeight: FontWeight.bold,
+                                        lineHeight: 1.43,
+                                      ),
+                                ),
                               ),
-                            ),
+                              Align(
+                                alignment: const AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 4.0, 0.0, 0.0),
+                                  child: wrapWithModel(
+                                    model: _model.inviteFieldModel,
+                                    updateCallback: () => safeSetState(() {}),
+                                    child: const InviteFieldWidget(),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SignupButtonWidget(model: _model),
-                    Align(
-                      alignment: const AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 32),
-                        child: Text(
-                          SignupPageStrings.bottomTagline,
-                          textAlign: TextAlign.start,
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
+                        ),
+                        SignupButtonWidget(model: _model),
+                        Align(
+                          alignment: const AlignmentDirectional(0.0, 0.0),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 32),
+                            child: Text(
+                              SignupPageStrings.bottomTagline,
+                              textAlign: TextAlign.start,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     fontFamily: 'DM Sans',
                                     fontSize: 12.0,
                                     letterSpacing: 0.16,
                                     lineHeight: 1.33,
                                   ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          context.pushNamed('LoginPage');
-                        },
-                        child: wrapWithModel(
-                          model: _model.arrowButtonModel,
-                          updateCallback: () => safeSetState(() {}),
-                          child: const ArrowButtonWidget(
-                            title: SignupPageStrings.logIn,
+                            ),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              context.pushNamed('LoginPage');
+                            },
+                            child: wrapWithModel(
+                              model: _model.arrowButtonModel,
+                              updateCallback: () => safeSetState(() {}),
+                              child: const ArrowButtonWidget(
+                                title: SignupPageStrings.logIn,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 32, bottom: 24),
+                          child: wrapWithModel(
+                            model: _model.socialLoginsModel,
+                            updateCallback: () => safeSetState(() {}),
+                            child: const SocialLoginsWidget(),
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 32, bottom: 24),
-                      child: wrapWithModel(
-                        model: _model.socialLoginsModel,
-                        updateCallback: () => safeSetState(() {}),
-                        child: const SocialLoginsWidget(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             )),
       ),
     );

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
-import '../../core/widgets/arrow_button/arrow_button_widget.dart';
-import '../../core/widgets/social_login_buttons/social_login_buttons_widget.dart';
+import '../../core/common/widgets/arrow_button/arrow_button_widget.dart';
+import '../../core/common/widgets/social_login_buttons/social_login_buttons_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

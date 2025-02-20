@@ -1,5 +1,5 @@
-import 'package:every_watch/core/widgets/arrow_button/arrow_button_model.dart';
-import 'package:every_watch/core/widgets/invite_field/invite_field_model.dart';
+import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_model.dart';
+import 'package:every_watch/core/common/widgets/invite_field/invite_field_model.dart';
 import 'package:every_watch/features/auth/ui/widgets/model/social_logins_model.dart';
 
 import '/backend/api_requests/api_calls.dart';

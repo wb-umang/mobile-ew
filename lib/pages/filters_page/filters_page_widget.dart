@@ -2,7 +2,7 @@ import 'package:flutter/scheduler.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
-import '../../core/widgets/filter_row/filter_row_widget.dart';
+import '../../core/common/widgets/filter_row/filter_row_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

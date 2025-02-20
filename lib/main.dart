@@ -1,4 +1,4 @@
-import 'package:every_watch/core/di/injection.dart';
+import 'package:every_watch/core/di/init_dependencies.dart';
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +12,7 @@ import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 
 void main() async {
-  setupDependencies();
+  initDependencies();
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => sl<AuthBloc>(),
+        create: (_) => serviceLocator<AuthBloc>(),
         child: MaterialApp.router(
           title: AppStrings.appName,
           debugShowCheckedModeBanner: false,

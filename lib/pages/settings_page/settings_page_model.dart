@@ -1,5 +1,5 @@
-import '../../core/widgets/separator/separator_widget.dart';
-import '../../core/widgets/settings_row/settings_row_widget.dart';
+import '../../core/common/widgets/separator/separator_widget.dart';
+import '../../core/common/widgets/settings_row/settings_row_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'settings_page_widget.dart' show SettingsPageWidget;
 import 'package:flutter/material.dart';

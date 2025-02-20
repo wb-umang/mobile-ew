@@ -1,31 +1,30 @@
+import 'package:every_watch/core/common/entities/user.dart';
+import 'package:every_watch/features/auth/domain/usecases/user_signup_usecase.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
-// import '../../domain/usecases/login_usecase.dart';
-// import '../../domain/entities/user.dart';
+
+part 'auth_event.dart';
+part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  // final LoginUseCase loginUseCase;
+  final UserSignupUsecase _userSignupUsecase;
 
-  AuthBloc() : super(AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
-    on<LogoutRequested>(_onLogoutRequested);
-  }
+  AuthBloc({required UserSignupUsecase userSignupUsecase})
+      : _userSignupUsecase = userSignupUsecase,
+        super(AuthInitial()) {
+    on<AuthSignUp>((event, emit) async {
+      emit(AuthLoading());
+      final res = await _userSignupUsecase(UserSignUpParams(
+        email: event.email,
+        name: event.name,
+        password: event.password,
+      ));
 
-  Future<void> _onLoginRequested(
-      LoginRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
-
-    try {
-      // final user = await loginUseCase.execute(event.email, event.password);
-      // emit(AuthAuthenticated(user));
-    } catch (e) {
-      emit(AuthError("Login failed. Please try again."));
-    }
-  }
-
-  Future<void> _onLogoutRequested(
-      LogoutRequested event, Emitter<AuthState> emit) async {
-    emit(AuthInitial());
+      res.fold((failure) {
+        emit(AuthError(failure.message));
+      }, (success) {
+        emit(AuthSuccess(success));
+      });
+    });
   }
 }

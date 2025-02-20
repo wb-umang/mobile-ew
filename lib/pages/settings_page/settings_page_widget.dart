@@ -1,5 +1,5 @@
-import '../../core/widgets/separator/separator_widget.dart';
-import '../../core/widgets/settings_row/settings_row_widget.dart';
+import '../../core/common/widgets/separator/separator_widget.dart';
+import '../../core/common/widgets/settings_row/settings_row_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

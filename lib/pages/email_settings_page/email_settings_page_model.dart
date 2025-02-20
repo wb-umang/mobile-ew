@@ -1,4 +1,4 @@
-import '../../core/widgets/notification_setting_row/notification_setting_row_widget.dart';
+import '../../core/common/widgets/notification_setting_row/notification_setting_row_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'email_settings_page_widget.dart' show EmailSettingsPageWidget;
 import 'package:flutter/material.dart';

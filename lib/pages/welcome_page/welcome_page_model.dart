@@ -1,4 +1,4 @@
-import '../../core/widgets/social_login_buttons/social_login_buttons_widget.dart';
+import '../../core/common/widgets/social_login_buttons/social_login_buttons_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'welcome_page_widget.dart' show WelcomePageWidget;
 import 'package:flutter/material.dart';

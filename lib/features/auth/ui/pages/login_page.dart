@@ -1,5 +1,5 @@
 import 'package:every_watch/core/utils/app_strings.dart';
-import 'package:every_watch/core/widgets/arrow_button/arrow_button_widget.dart';
+import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/email_field_login_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/login_button_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/model/login_page_model.dart';
