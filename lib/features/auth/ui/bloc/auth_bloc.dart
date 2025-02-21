@@ -1,6 +1,6 @@
 import 'package:every_watch/app_state.dart';
-import 'package:every_watch/backend/schema/structs/login_data_struct.dart';
 import 'package:every_watch/core/common/entities/user_entity.dart';
+import 'package:every_watch/core/utils/temp/map_to_login_data_struct.dart';
 import 'package:every_watch/features/auth/domain/usecases/user_login_usecase.dart';
 import 'package:every_watch/features/auth/domain/usecases/user_signup_usecase.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       res.fold((failure) {
         emit(AuthError(failure.message));
       }, (result) {
-        FFAppState().loginData = result as LoginDataStruct;
+        // TODO: Remove this temporary solution after full new arch. migration
+        FFAppState().loginData = mapUserEntityToLoginData(result);
         emit(AuthSuccess(result));
       });
     });
@@ -47,6 +48,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       res.fold((failure) {
         emit(AuthError(failure.message));
       }, (result) {
+        // TODO: Remove this temporary solution after full new arch. migration
+        FFAppState().loginData = mapUserEntityToLoginData(result);
         emit(AuthSuccess(result));
       });
     });

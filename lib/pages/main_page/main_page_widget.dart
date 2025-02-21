@@ -1,4 +1,5 @@
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
+import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
 
 import '/backend/api_requests/api_calls.dart';
@@ -2308,6 +2309,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                         LoginDataStruct();
                                                                     FFAppState()
                                                                         .clear();
+                                                                    await SecureStorage
+                                                                        .removeData();
 
                                                                     context.pushNamed(
                                                                         'WelcomePage');

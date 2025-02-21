@@ -15,7 +15,7 @@ class UserEntity {
   final int subscriptionTypeId;
   final String subscriptionName;
   final String currencyName;
-  final String tableauEmail;
+  final String? tableauEmail;
   final List<String>? roles;
 
   const UserEntity({
@@ -35,7 +35,7 @@ class UserEntity {
     required this.subscriptionTypeId,
     required this.subscriptionName,
     required this.currencyName,
-    required this.tableauEmail,
+    this.tableauEmail,
     this.roles,
   });
 }

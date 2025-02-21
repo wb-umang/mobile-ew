@@ -9,8 +9,6 @@ class ApiInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    print("[API Request] ${options.method} ${options.path}");
-
     // Retrieve token from storage
     String? token = await SecureStorage.getToken();
 
@@ -23,7 +21,6 @@ class ApiInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print("[API Response] ${response.statusCode} ${response.data}");
     return handler.next(response);
   }
 
@@ -34,7 +31,7 @@ class ApiInterceptor extends Interceptor {
     // Handle Token Expiry (Example)
     if (err.response?.statusCode == 401) {
       print("Token expired. Redirect to login.");
-      SecureStorage.removeToken();
+      SecureStorage.removeData();
       // Optionally: Implement token refresh logic
     }
 

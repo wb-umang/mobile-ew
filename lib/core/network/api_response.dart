@@ -1,33 +1,23 @@
-class ApiResponse<T> {
+class ApiResponse {
   final bool success;
-  final T? data;
-  final String? message;
-  final ApiError? error;
+  final dynamic data; // Changed from UserData to dynamic
+  final String message;
+  final ApiError error;
 
   ApiResponse({
     required this.success,
-    this.data,
-    this.message,
-    this.error,
+    required this.data,
+    required this.message,
+    required this.error,
   });
 
-  factory ApiResponse.fromJson(
-      Map<String, dynamic> json, T Function(Object?) fromJsonT) {
-    return ApiResponse<T>(
-      success: json["success"] ?? false,
-      data: json["data"] != null ? fromJsonT(json["data"]) : null,
-      message: json["message"],
-      error: json["error"] != null ? ApiError.fromJson(json["error"]) : null,
+  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+    return ApiResponse(
+      success: json['success'],
+      data: json['data'],
+      message: json['message'],
+      error: ApiError.fromJson(json['error']),
     );
-  }
-
-  Map<String, dynamic> toJson(Object Function(T) toJsonT) {
-    return {
-      "success": success,
-      "data": data != null ? toJsonT(data as T) : null,
-      "message": message,
-      "error": error?.toJson(),
-    };
   }
 }
 
@@ -42,15 +32,8 @@ class ApiError {
 
   factory ApiError.fromJson(Map<String, dynamic> json) {
     return ApiError(
-      errorCode: json["errorCode"] ?? 0,
-      errorMessage: json["errorMessage"],
+      errorCode: json['errorCode'],
+      errorMessage: json['errorMessage'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "errorCode": errorCode,
-      "errorMessage": errorMessage,
-    };
   }
 }

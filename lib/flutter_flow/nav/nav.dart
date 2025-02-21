@@ -40,7 +40,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       refreshListenable: appStateNotifier,
       redirect: (context, state) async {
         bool isLoggedIn = await SecureStorage.isLoggedIn();
-        print("isLoggedIn: $isLoggedIn");
 
         // Show Splash Screen first
         if (appStateNotifier.showSplashImage) {

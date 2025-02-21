@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:every_watch/core/error/exceptions.dart';
 import 'package:every_watch/core/network/api_client.dart';
 import 'package:every_watch/core/network/api_endpoints.dart';
+import 'package:every_watch/core/network/api_response.dart';
 import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:every_watch/features/auth/data/models/user_model.dart';
@@ -21,14 +23,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "password": password,
       });
 
-      print("response: ${response.data.data}");
+      final result = ApiResponse.fromJson(response.data);
 
-      final user = UserModel.fromJson(response.data.data);
+      if (result.success) {
+        final user = UserModel.fromJson(result.data);
 
-      // Save access token securely
-      await SecureStorage.saveToken(user.accessToken);
+        // Save access token securely
+        await SecureStorage.saveToken(user.accessToken);
+        await SecureStorage.saveTokenExpiry(user.accessTokenExpires.toString());
+        await SecureStorage.saveRefreshToken(user.refreshToken);
 
-      return user;
+        return user;
+      } else {
+        throw ServerException(result.message);
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw ServerException(e.response!.data['message'] ?? "Request failed");
+      } else {
+        throw ServerException(e.message ?? "Unexpected error");
+      }
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -51,12 +65,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "invitationCode": invitationCode,
       });
 
-      final user = UserModel.fromJson(response.data);
+      final result = ApiResponse.fromJson(response.data);
 
-      // Save access token securely
-      await SecureStorage.saveToken(user.accessToken);
+      if (result.success) {
+        final user = UserModel.fromJson(result.data);
 
-      return user;
+        // Save access token securely
+        await SecureStorage.saveToken(user.accessToken);
+        await SecureStorage.saveTokenExpiry(user.accessTokenExpires.toString());
+        await SecureStorage.saveRefreshToken(user.refreshToken);
+
+        return user;
+      } else {
+        throw ServerException(result.message);
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw ServerException(e.response!.data['message'] ?? "Request failed");
+      } else {
+        throw ServerException(e.message ?? "Unexpected error");
+      }
     } catch (e) {
       throw ServerException(e.toString());
     }
