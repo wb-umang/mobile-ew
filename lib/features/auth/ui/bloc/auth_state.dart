@@ -16,6 +16,7 @@ final class AuthSuccess extends AuthState {
 
 final class AuthError extends AuthState {
   final String message;
+  final bool isValidationError;
 
-  const AuthError(this.message);
+  const AuthError(this.message, {this.isValidationError = false});
 }

@@ -52,7 +52,12 @@ class SignUpViewModel extends Cubit<AuthState> {
   void signUp(BuildContext context) {
     final errorMessage = validateInputs();
     if (errorMessage != null) {
-      emit(AuthError(errorMessage)); // Emit error state if validation fails
+      emit(
+        AuthError(
+          errorMessage,
+          isValidationError: true,
+        ),
+      ); // Emit error state if validation fails
       return;
     } else {
       emit(AuthLoading());

@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
           if (state is AuthSuccess) {
             context.pushNamed('MainPage');
           }
-          if (state is AuthError) {
+          if (state is AuthError && !state.isValidationError) {
             showCustomSnackBar(context, state.message);
           }
         },
@@ -166,7 +166,8 @@ class _LoginPageState extends State<LoginPage> {
                                         .read<LoginViewModel>()
                                         .login(context),
                                   ),
-                                  if (loginState is AuthError)
+                                  if (loginState is AuthError &&
+                                      loginState.isValidationError)
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Text(
