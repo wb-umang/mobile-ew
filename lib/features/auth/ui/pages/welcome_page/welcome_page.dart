@@ -1,4 +1,4 @@
-import 'package:every_watch/features/auth/ui/widgets/social_logins_widget.dart';
+import 'package:every_watch/features/auth/ui/widgets/social_logins/social_logins_widget.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
 import 'package:every_watch/core/utils/app_strings.dart';

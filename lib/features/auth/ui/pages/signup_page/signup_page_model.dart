@@ -1,10 +1,10 @@
 import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_model.dart';
 import 'package:every_watch/core/common/widgets/invite_field/invite_field_model.dart';
-import 'package:every_watch/features/auth/ui/widgets/model/social_logins_model.dart';
+import 'package:every_watch/features/auth/ui/widgets/social_logins/social_logins_model.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import './../../pages/signup_page.dart' show SignupPage;
+import 'signup_page.dart' show SignupPage;
 import 'package:flutter/material.dart';
 
 class SignupPageModel extends FlutterFlowModel<SignupPage> {

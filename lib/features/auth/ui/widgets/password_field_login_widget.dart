@@ -1,4 +1,4 @@
-import 'package:every_watch/features/auth/ui/widgets/model/login_page_model.dart';
+import 'package:every_watch/features/auth/ui/pages/login_page/login_page_model.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/foundation.dart';

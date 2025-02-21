@@ -4,10 +4,10 @@ import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget
 import 'package:every_watch/core/common/widgets/invite_field/invite_field_widget.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:every_watch/features/auth/ui/widgets/email_pass_form_signup_widget.dart';
-import 'package:every_watch/features/auth/ui/widgets/model/signup_page_model.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page/signup_page_model.dart';
 import 'package:every_watch/features/auth/ui/widgets/name_form_signup_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/signup_button_widget.dart';
-import 'package:every_watch/features/auth/ui/widgets/social_logins_widget.dart';
+import 'package:every_watch/features/auth/ui/widgets/social_logins/social_logins_widget.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';

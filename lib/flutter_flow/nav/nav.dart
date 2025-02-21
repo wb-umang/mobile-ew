@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:every_watch/core/storage/secure_storage.dart';
-import 'package:every_watch/features/auth/ui/pages/login_page.dart';
-import 'package:every_watch/features/auth/ui/pages/signup_page.dart';
-import 'package:every_watch/features/auth/ui/pages/welcome_page.dart';
+import 'package:every_watch/features/auth/ui/pages/login_page/login_page.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page/signup_page.dart';
+import 'package:every_watch/features/auth/ui/pages/welcome_page/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

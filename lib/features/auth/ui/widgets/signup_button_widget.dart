@@ -1,7 +1,7 @@
 import 'package:every_watch/core/common/widgets/primary_button.dart';
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
-import 'package:every_watch/features/auth/ui/widgets/model/signup_page_model.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page/signup_page_model.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
