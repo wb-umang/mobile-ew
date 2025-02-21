@@ -6,7 +6,7 @@ import 'package:every_watch/features/auth/ui/pages/login_page/login_view_model.d
 import 'package:every_watch/features/auth/ui/widgets/email_field_login_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/login_button_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/password_field_login_widget.dart';
-import 'package:every_watch/features/auth/ui/widgets/social_logins/social_logins_widget.dart';
+import 'package:every_watch/features/auth/ui/widgets/social_logins_widget.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';

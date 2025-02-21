@@ -7,7 +7,7 @@ import 'package:every_watch/features/auth/ui/widgets/email_pass_form_signup_widg
 import 'package:every_watch/features/auth/ui/widgets/invite_field_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/name_form_signup_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/signup_button_widget.dart';
-import 'package:every_watch/features/auth/ui/widgets/social_logins/social_logins_widget.dart';
+import 'package:every_watch/features/auth/ui/widgets/social_logins_widget.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
@@ -227,6 +227,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             const SizedBox(height: 32),
                             const SocialLoginsWidget(),
+                            const SizedBox(height: 32),
                           ],
                         ),
                       ),

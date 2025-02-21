@@ -12,6 +12,8 @@ class PasswordFieldLoginWidget extends StatefulWidget {
 }
 
 class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
+  bool _isObscure = true;
+
   @override
   void initState() {
     var passwordText = '';
@@ -20,7 +22,6 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
     }
 
     widget.passwordController.text = passwordText;
-
     super.initState();
   }
 
@@ -32,6 +33,7 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
         controller: widget.passwordController,
         autofocus: false,
         textInputAction: TextInputAction.next,
+        obscureText: _isObscure,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
@@ -77,6 +79,20 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
               width: 1.0,
             ),
             borderRadius: BorderRadius.circular(12.0),
+          ),
+          suffixIcon: InkWell(
+            onTap: () {
+              setState(() {
+                _isObscure = !_isObscure;
+              });
+            },
+            child: Icon(
+              size: 16,
+              _isObscure
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              color: FlutterFlowTheme.of(context).primary,
+            ),
           ),
         ),
         style: FlutterFlowTheme.of(context).bodyMedium.override(

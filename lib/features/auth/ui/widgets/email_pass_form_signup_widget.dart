@@ -17,6 +17,8 @@ class EmailPassFormSignupWidget extends StatefulWidget {
 }
 
 class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
+  bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -120,6 +122,7 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
               controller: widget.passwordController,
               autofocus: true,
               textInputAction: TextInputAction.next,
+              obscureText: _isObscure,
               decoration: InputDecoration(
                 labelText: SignupPageStrings.password,
                 labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
@@ -159,6 +162,20 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
                     width: 1.0,
                   ),
                   borderRadius: BorderRadius.circular(12.0),
+                ),
+                suffixIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                  child: Icon(
+                    size: 16,
+                    _isObscure
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    color: FlutterFlowTheme.of(context).primary,
+                  ),
                 ),
               ),
               style: FlutterFlowTheme.of(context).bodyMedium.override(
