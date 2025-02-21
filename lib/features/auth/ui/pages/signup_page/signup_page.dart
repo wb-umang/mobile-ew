@@ -1,10 +1,10 @@
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/core/utils/show_custom_snackbar.dart';
 import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
-import 'package:every_watch/core/common/widgets/invite_field/invite_field_widget.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page/signup_view_model.dart';
 import 'package:every_watch/features/auth/ui/widgets/email_pass_form_signup_widget.dart';
-import 'package:every_watch/features/auth/ui/pages/signup_page/signup_page_model.dart';
+import 'package:every_watch/features/auth/ui/widgets/invite_field_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/name_form_signup_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/signup_button_widget.dart';
 import 'package:every_watch/features/auth/ui/widgets/social_logins/social_logins_widget.dart';
@@ -22,202 +22,221 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  late SignupPageModel _model;
-
   @override
   void initState() {
-    _model = createModel(context, () => SignupPageModel());
-
-    _model.firstNameTextFieldTextController ??= TextEditingController();
-    _model.firstNameTextFieldFocusNode ??= FocusNode();
-
-    _model.lastNameTextFieldTextController ??= TextEditingController();
-    _model.lastNameTextFieldFocusNode ??= FocusNode();
-
-    _model.emailTextFieldTextController ??= TextEditingController();
-    _model.emailTextFieldFocusNode ??= FocusNode();
-
-    _model.passwordTextFieldTextController ??= TextEditingController();
-    _model.passwordTextFieldFocusNode ??= FocusNode();
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-        appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30.0,
-            borderWidth: 1.0,
-            buttonSize: 52.0,
-            icon: Icon(
-              FFIcons.kleft,
-              color: FlutterFlowTheme.of(context).primary,
-              size: 32.0,
-            ),
-            onPressed: () async {
-              context.pop();
-            },
-          ),
-          actions: const [],
-          centerTitle: true,
-        ),
-        body: SafeArea(
-            top: true,
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, state) {
-                if (state is AuthSuccess) {
-                  context.pushNamed('MainPage');
-                }
-
-                if (state is AuthError) {
-                  showCustomSnackBar(context, state.message);
-                }
-              },
-              builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(
-                      20.0, 0.0, 20.0, 0.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Align(
-                          alignment: const AlignmentDirectional(-1.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 16),
-                            child: Text(
-                              SignupPageStrings.newAccount,
-                              textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context)
-                                  .titleLarge
-                                  .override(
-                                    fontFamily: 'DM Sans',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    letterSpacing: 0.08,
-                                    fontWeight: FontWeight.bold,
-                                    lineHeight: 1.27,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: const AlignmentDirectional(-1.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 8),
-                            child: Text(
-                              SignupPageStrings.subHeadline,
-                              textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'DM Sans',
-                                    color:
-                                        FlutterFlowTheme.of(context).secondary,
-                                    letterSpacing: 0.08,
-                                    lineHeight: 1.43,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        EmailPassFormSignupWidget(model: _model),
-                        NameFormSignupWidget(model: _model),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: Column(
-                            children: [
-                              Align(
-                                alignment:
-                                    const AlignmentDirectional(-1.0, 0.0),
+    return BlocProvider(
+      create: (_) => SignUpViewModel(),
+      child: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          context.read<SignUpViewModel>().handleAuthState(state);
+          if (state is AuthSuccess) {
+            context.pushNamed('MainPage');
+          }
+          if (state is AuthError) {
+            showCustomSnackBar(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          return BlocBuilder<SignUpViewModel, AuthState>(
+            builder: (context, signUpState) {
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Scaffold(
+                  backgroundColor:
+                      FlutterFlowTheme.of(context).secondaryBackground,
+                  appBar: AppBar(
+                    backgroundColor:
+                        FlutterFlowTheme.of(context).secondaryBackground,
+                    automaticallyImplyLeading: false,
+                    leading: FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30.0,
+                      borderWidth: 1.0,
+                      buttonSize: 52.0,
+                      icon: Icon(
+                        FFIcons.kleft,
+                        color: FlutterFlowTheme.of(context).primary,
+                        size: 32.0,
+                      ),
+                      onPressed: () => context.pop(),
+                    ),
+                    actions: const [],
+                    centerTitle: true,
+                  ),
+                  body: SafeArea(
+                    top: true,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          20.0, 0.0, 20.0, 0.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: const AlignmentDirectional(-1.0, 0.0),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 16),
                                 child: Text(
-                                  SignupPageStrings.invitationCode,
+                                  SignupPageStrings.newAccount,
+                                  textAlign: TextAlign.start,
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleLarge
+                                      .override(
+                                        fontFamily: 'DM Sans',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        letterSpacing: 0.08,
+                                        fontWeight: FontWeight.bold,
+                                        lineHeight: 1.27,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: const AlignmentDirectional(-1.0, 0.0),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 8),
+                                child: Text(
+                                  SignupPageStrings.subHeadline,
+                                  textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
                                         fontFamily: 'DM Sans',
                                         color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        letterSpacing: 0.12,
-                                        fontWeight: FontWeight.bold,
+                                            .secondary,
+                                        letterSpacing: 0.08,
                                         lineHeight: 1.43,
                                       ),
                                 ),
                               ),
-                              Align(
-                                alignment: const AlignmentDirectional(0.0, 0.0),
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 4.0, 0.0, 0.0),
-                                  child: wrapWithModel(
-                                    model: _model.inviteFieldModel,
-                                    updateCallback: () => safeSetState(() {}),
-                                    child: const InviteFieldWidget(),
+                            ),
+                            EmailPassFormSignupWidget(
+                              emailController: context
+                                  .read<SignUpViewModel>()
+                                  .emailController,
+                              passwordController: context
+                                  .read<SignUpViewModel>()
+                                  .passwordController,
+                            ),
+                            NameFormSignupWidget(
+                              firstNameController: context
+                                  .read<SignUpViewModel>()
+                                  .firstNameController,
+                              lastNameController: context
+                                  .read<SignUpViewModel>()
+                                  .lastNameController,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment:
+                                        const AlignmentDirectional(-1.0, 0.0),
+                                    child: Text(
+                                      SignupPageStrings.invitationCode,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'DM Sans',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            letterSpacing: 0.12,
+                                            fontWeight: FontWeight.bold,
+                                            lineHeight: 1.43,
+                                          ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment:
+                                        const AlignmentDirectional(0.0, 0.0),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 4.0, 0.0, 0.0),
+                                      child: InviteFieldWidget(
+                                        inviteCodeController: context
+                                            .read<SignUpViewModel>()
+                                            .inviteCodeController,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SignupButtonWidget(
+                              isLoading: signUpState is AuthLoading,
+                              onPressed: () => context
+                                  .read<SignUpViewModel>()
+                                  .signUp(context),
+                            ),
+                            if (signUpState is AuthError)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    signUpState.message,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'DM Sans',
+                                          color: FlutterFlowTheme.of(context)
+                                              .error,
+                                          fontSize: 12.0,
+                                        ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SignupButtonWidget(
-                            model: _model, isLoading: state is AuthLoading),
-                        Align(
-                          alignment: const AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 32),
-                            child: Text(
-                              SignupPageStrings.bottomTagline,
-                              textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'DM Sans',
-                                    fontSize: 12.0,
-                                    letterSpacing: 0.16,
-                                    lineHeight: 1.33,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
-                              context.pushNamed('LoginPage');
-                            },
-                            child: wrapWithModel(
-                              model: _model.arrowButtonModel,
-                              updateCallback: () => safeSetState(() {}),
-                              child: const ArrowButtonWidget(
-                                title: SignupPageStrings.logIn,
+                            Align(
+                              alignment: const AlignmentDirectional(0.0, 0.0),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 32),
+                                child: Text(
+                                  SignupPageStrings.bottomTagline,
+                                  textAlign: TextAlign.start,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'DM Sans',
+                                        fontSize: 12.0,
+                                        letterSpacing: 0.16,
+                                        lineHeight: 1.33,
+                                      ),
+                                ),
                               ),
                             ),
-                          ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () => context.pushNamed('LoginPage'),
+                                child: const ArrowButtonWidget(
+                                  title: SignupPageStrings.logIn,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 32),
+                            const SocialLoginsWidget(),
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 32, bottom: 24),
-                          child: wrapWithModel(
-                            model: _model.socialLoginsModel,
-                            updateCallback: () => safeSetState(() {}),
-                            child: const SocialLoginsWidget(),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                );
-              },
-            )),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

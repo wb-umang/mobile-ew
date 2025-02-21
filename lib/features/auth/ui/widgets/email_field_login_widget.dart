@@ -1,13 +1,14 @@
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:every_watch/features/auth/ui/pages/login_page/login_page_model.dart';
-import 'package:every_watch/flutter_flow/flutter_flow_model.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class EmailFieldLoginWidget extends StatefulWidget {
-  final LoginPageModel model;
-  const EmailFieldLoginWidget({super.key, required this.model});
+  final TextEditingController emailController;
+  const EmailFieldLoginWidget({
+    super.key,
+    required this.emailController,
+  });
 
   @override
   State<EmailFieldLoginWidget> createState() => _EmailFieldLoginWidgetState();
@@ -20,10 +21,7 @@ class _EmailFieldLoginWidgetState extends State<EmailFieldLoginWidget> {
     if (kDebugMode) {
       emailText = 'yash@everywatch.com';
     }
-    widget.model.emailTextFieldTextController ??=
-        TextEditingController(text: emailText);
-    widget.model.emailTextFieldFocusNode ??= FocusNode();
-
+    widget.emailController.text = emailText;
     super.initState();
   }
 
@@ -32,18 +30,9 @@ class _EmailFieldLoginWidgetState extends State<EmailFieldLoginWidget> {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
       child: TextFormField(
-        controller: widget.model.emailTextFieldTextController,
-        focusNode: widget.model.emailTextFieldFocusNode,
+        controller: widget.emailController,
         onChanged: (_) => EasyDebounce.debounce(
-            '_model.emailTextFieldTextController',
-            const Duration(milliseconds: 2000),
-            () => {}),
-        onFieldSubmitted: (_) async {
-          if (widget.model.formKey.currentState == null ||
-              !widget.model.formKey.currentState!.validate()) {
-            return;
-          }
-        },
+            'emailController', const Duration(milliseconds: 2000), () => {}),
         autofocus: true,
         autofillHints: const [AutofillHints.email],
         textInputAction: TextInputAction.next,
@@ -94,10 +83,10 @@ class _EmailFieldLoginWidgetState extends State<EmailFieldLoginWidget> {
             ),
             borderRadius: BorderRadius.circular(12.0),
           ),
-          suffixIcon: widget.model.emailTextFieldTextController!.text.isNotEmpty
+          suffixIcon: widget.emailController.text.isNotEmpty
               ? InkWell(
                   onTap: () async {
-                    widget.model.emailTextFieldTextController?.clear();
+                    widget.emailController.clear();
                   },
                   child: Icon(
                     Icons.clear,
@@ -114,8 +103,6 @@ class _EmailFieldLoginWidgetState extends State<EmailFieldLoginWidget> {
               lineHeight: 1.43,
             ),
         keyboardType: TextInputType.emailAddress,
-        validator: widget.model.emailTextFieldTextControllerValidator
-            .asValidator(context),
       ),
     );
   }

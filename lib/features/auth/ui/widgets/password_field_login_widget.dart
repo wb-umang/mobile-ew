@@ -1,13 +1,10 @@
-import 'package:every_watch/features/auth/ui/pages/login_page/login_page_model.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
-import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PasswordFieldLoginWidget extends StatefulWidget {
-  final LoginPageModel model;
-
-  const PasswordFieldLoginWidget({super.key, required this.model});
+  final TextEditingController passwordController;
+  const PasswordFieldLoginWidget({super.key, required this.passwordController});
 
   @override
   State<PasswordFieldLoginWidget> createState() =>
@@ -22,9 +19,7 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
       passwordText = '1234567';
     }
 
-    widget.model.passwordTextFieldTextController ??=
-        TextEditingController(text: passwordText);
-    widget.model.passwordTextFieldFocusNode ??= FocusNode();
+    widget.passwordController.text = passwordText;
 
     super.initState();
   }
@@ -34,17 +29,9 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
       child: TextFormField(
-        controller: widget.model.passwordTextFieldTextController,
-        focusNode: widget.model.passwordTextFieldFocusNode,
-        onFieldSubmitted: (_) async {
-          if (widget.model.formKey.currentState == null ||
-              !widget.model.formKey.currentState!.validate()) {
-            return;
-          }
-        },
+        controller: widget.passwordController,
         autofocus: false,
         textInputAction: TextInputAction.next,
-        obscureText: !widget.model.passwordTextFieldVisibility,
         decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
@@ -91,20 +78,6 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
             ),
             borderRadius: BorderRadius.circular(12.0),
           ),
-          suffixIcon: InkWell(
-            onTap: () => safeSetState(
-              () => widget.model.passwordTextFieldVisibility =
-                  widget.model.passwordTextFieldVisibility,
-            ),
-            focusNode: FocusNode(skipTraversal: true),
-            child: Icon(
-              widget.model.passwordTextFieldVisibility
-                  ? Icons.visibility_outlined
-                  : Icons.visibility_off_outlined,
-              color: FlutterFlowTheme.of(context).secondary,
-              size: 16.0,
-            ),
-          ),
         ),
         style: FlutterFlowTheme.of(context).bodyMedium.override(
               fontFamily: 'DM Sans',
@@ -112,8 +85,6 @@ class _PasswordFieldLoginWidgetState extends State<PasswordFieldLoginWidget> {
               letterSpacing: 0.08,
               lineHeight: 1.43,
             ),
-        validator: widget.model.passwordTextFieldTextControllerValidator
-            .asValidator(context),
       ),
     );
   }

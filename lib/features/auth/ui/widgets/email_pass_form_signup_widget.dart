@@ -1,12 +1,15 @@
 import 'package:every_watch/core/utils/app_strings.dart';
-import 'package:every_watch/features/auth/ui/pages/signup_page/signup_page_model.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
-import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class EmailPassFormSignupWidget extends StatefulWidget {
-  final SignupPageModel model;
-  const EmailPassFormSignupWidget({super.key, required this.model});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  const EmailPassFormSignupWidget({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
 
   @override
   State<EmailPassFormSignupWidget> createState() =>
@@ -17,7 +20,6 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: widget.model.formKey1,
       autovalidateMode: AutovalidateMode.disabled,
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -42,14 +44,7 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
             child: TextFormField(
-              controller: widget.model.emailTextFieldTextController,
-              focusNode: widget.model.emailTextFieldFocusNode,
-              onFieldSubmitted: (_) async {
-                if (widget.model.formKey1.currentState == null ||
-                    !widget.model.formKey1.currentState!.validate()) {
-                  return;
-                }
-              },
+              controller: widget.emailController,
               autofocus: true,
               textInputAction: TextInputAction.next,
               obscureText: false,
@@ -100,8 +95,6 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
                     letterSpacing: 0.08,
                     lineHeight: 1.43,
                   ),
-              validator: widget.model.emailTextFieldTextControllerValidator
-                  .asValidator(context),
             ),
           ),
           Align(
@@ -124,17 +117,9 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
             child: TextFormField(
-              controller: widget.model.passwordTextFieldTextController,
-              focusNode: widget.model.passwordTextFieldFocusNode,
-              onFieldSubmitted: (_) async {
-                if (widget.model.formKey1.currentState == null ||
-                    !widget.model.formKey1.currentState!.validate()) {
-                  return;
-                }
-              },
+              controller: widget.passwordController,
               autofocus: true,
               textInputAction: TextInputAction.next,
-              obscureText: !widget.model.passwordTextFieldVisibility,
               decoration: InputDecoration(
                 labelText: SignupPageStrings.password,
                 labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
@@ -175,20 +160,6 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
                   ),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                suffixIcon: InkWell(
-                  onTap: () => safeSetState(
-                    () => widget.model.passwordTextFieldVisibility =
-                        !widget.model.passwordTextFieldVisibility,
-                  ),
-                  focusNode: FocusNode(skipTraversal: true),
-                  child: Icon(
-                    widget.model.passwordTextFieldVisibility
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: FlutterFlowTheme.of(context).secondary,
-                    size: 16.0,
-                  ),
-                ),
               ),
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'DM Sans',
@@ -196,8 +167,6 @@ class _EmailPassFormSignupWidgetState extends State<EmailPassFormSignupWidget> {
                     letterSpacing: 0.08,
                     lineHeight: 1.43,
                   ),
-              validator: widget.model.passwordTextFieldTextControllerValidator
-                  .asValidator(context),
             ),
           ),
         ],
