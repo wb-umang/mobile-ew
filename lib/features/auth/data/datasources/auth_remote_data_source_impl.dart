@@ -29,9 +29,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final user = UserModel.fromJson(result.data);
 
         // Save access token securely
-        await SecureStorage.saveToken(user.accessToken);
-        await SecureStorage.saveTokenExpiry(user.accessTokenExpires.toString());
-        await SecureStorage.saveRefreshToken(user.refreshToken);
+        await SecureStorage.saveData("access_token", user.accessToken);
+        await SecureStorage.saveData(
+            "token_expiry", user.accessTokenExpires.toString());
+        await SecureStorage.saveData("refresh_token", user.refreshToken);
 
         return user;
       } else {
@@ -71,9 +72,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final user = UserModel.fromJson(result.data);
 
         // Save access token securely
-        await SecureStorage.saveToken(user.accessToken);
-        await SecureStorage.saveTokenExpiry(user.accessTokenExpires.toString());
-        await SecureStorage.saveRefreshToken(user.refreshToken);
+        await SecureStorage.saveData("access_token", user.accessToken);
+        await SecureStorage.saveData(
+            "token_expiry", user.accessTokenExpires.toString());
+        await SecureStorage.saveData("refresh_token", user.refreshToken);
 
         return user;
       } else {

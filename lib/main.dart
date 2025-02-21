@@ -1,4 +1,5 @@
 import 'package:every_watch/core/di/init_dependencies.dart';
+import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,8 @@ import 'flutter_flow/internationalization.dart';
 void main() async {
   initDependencies();
   WidgetsFlutterBinding.ensureInitialized();
+  await SecureStorage.init();
+
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 

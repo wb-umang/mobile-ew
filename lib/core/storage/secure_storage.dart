@@ -1,53 +1,67 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class SecureStorage {
-  static final _storage = FlutterSecureStorage();
+  static const String _boxName = 'secureStorageBox';
+  static Box? _box;
 
-  static Future<void> saveToken(String token) async {
-    await _storage.write(key: "access_token", value: token);
+  /// Initialize Hive Storage
+  static Future<void> init() async {
+    await Hive.initFlutter();
+
+    if (!Hive.isBoxOpen(_boxName)) {
+      _box = await Hive.openBox(_boxName);
+    }
   }
 
-  static Future<void> saveTokenExpiry(String tokenExpiry) async {
-    await _storage.write(key: "token_expiry", value: tokenExpiry);
+  /// Ensure the box is open before accessing it
+  static Future<void> _ensureBoxIsOpen() async {
+    if (_box == null || !Hive.isBoxOpen(_boxName)) {
+      _box = await Hive.openBox(_boxName);
+    }
   }
 
-  static Future<String?> getToken() async {
-    return await _storage.read(key: "access_token");
+  /// Save Data
+  static Future<void> saveData(String key, String value) async {
+    await _ensureBoxIsOpen();
+    await _box?.put(key, value);
   }
 
-  static Future<String?> getTokenExpiry() async {
-    return await _storage.read(key: "token_expiry");
+  /// Get Data
+  static Future<String?> getData(String key) async {
+    await _ensureBoxIsOpen();
+    return _box?.get(key);
   }
 
-  static Future<void> saveRefreshToken(String token) async {
-    await _storage.write(key: "refresh_token", value: token);
-  }
-
-  static Future<String?> getRefreshToken() async {
-    return await _storage.read(key: "refresh_token");
-  }
-
-  // Remove token (for logout)
+  /// Remove Data (Logout)
   static Future<void> removeData() async {
-    await _storage.delete(key: "access_token");
-    await _storage.delete(key: "refresh_token");
-    await _storage.delete(key: "token_expiry");
+    await _ensureBoxIsOpen();
+    await _box?.clear();
   }
 
-  // Check if user is logged in
+  /// Check If User Is Logged In (Token Expiry Check)
   static Future<bool> isLoggedIn() async {
-    String? expiryString = await getTokenExpiry();
+    String? expiryString = await getData("token_expiry");
 
     if (expiryString == null) return false;
+
+    if (!isValidInteger(expiryString)) return false;
 
     final expiryTime =
         DateTime.fromMillisecondsSinceEpoch(int.parse(expiryString) * 1000);
     final currentTime = DateTime.now();
 
-    if (currentTime.isBefore(expiryTime)) {
-      return true; // Token is still valid
-    } else {
-      return false; // Token is expired
+    return currentTime.isBefore(expiryTime); // True if token is still valid
+  }
+
+  /// Close the Hive Box (Optional)
+  static Future<void> closeBox() async {
+    if (_box != null && _box!.isOpen) {
+      await _box?.close();
+      _box = null;
     }
+  }
+
+  static bool isValidInteger(String input) {
+    return int.tryParse(input) != null;
   }
 }
