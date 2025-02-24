@@ -12,6 +12,13 @@ class WelcomeViewModel extends Cubit<AuthState> {
         );
   }
 
+  void signInWithApple(BuildContext context) {
+    emit(AuthLoading());
+    context.read<AuthBloc>().add(
+          AuthSignInWithApple(),
+        );
+  }
+
   void handleAuthState(AuthState state) {
     emit(state); // Forward AuthBloc state changes to UI
   }

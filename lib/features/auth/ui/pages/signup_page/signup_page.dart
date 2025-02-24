@@ -229,6 +229,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             const SizedBox(height: 32),
                             SocialLoginsWidget(
+                              onSignInWithApple: () {},
                               onSignInWithGoogle: () => context
                                   .read<SignUpViewModel>()
                                   .signInWithGoogle(context),

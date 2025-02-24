@@ -7,6 +7,7 @@ import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:every_watch/features/auth/data/models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient apiClient;
@@ -136,6 +137,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel> signInWithApple() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // Note: Apple provides email and full name only during the very first login.
+      String displayName = '';
+      if (credential.givenName != null && credential.familyName != null) {
+        displayName = '${credential.givenName} ${credential.familyName}';
+        print("##");
+        print(displayName);
+        print("##");
+      }
+
+      final response = await apiClient.post(ApiEndpoints.googleLogin, data: {
+        "idToken": 'idToken',
+      });
+
+      final result = ApiResponse.fromJson(response.data);
+
+      if (result.success) {
+        final user = UserModel.fromJson(result.data);
+
+        // Save access token securely
+        await SecureStorage.saveData("access_token", user.accessToken);
+        await SecureStorage.saveData(
+            "token_expiry", user.accessTokenExpires.toString());
+        await SecureStorage.saveData("refresh_token", user.refreshToken);
+
+        return user;
+      } else {
+        throw ServerException(result.message);
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw ServerException(e.response!.data['message'] ?? "Request failed");
+      } else {
+        throw ServerException(e.message ?? "Unexpected error");
+      }
+    } catch (e) {
+      throw ServerException("Apple sign in failed. ${e.toString()}");
     }
   }
 }

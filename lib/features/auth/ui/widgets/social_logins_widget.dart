@@ -7,9 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SocialLoginsWidget extends StatefulWidget {
   final Function() onSignInWithGoogle;
+  final Function() onSignInWithApple;
   const SocialLoginsWidget({
     super.key,
     required this.onSignInWithGoogle,
+    required this.onSignInWithApple,
   });
 
   @override
@@ -75,7 +77,7 @@ class _SocialLoginsWidgetState extends State<SocialLoginsWidget> {
                   color: FlutterFlowTheme.of(context).primary,
                   size: 24.0,
                 ),
-                onPressed: () {},
+                onPressed: widget.onSignInWithApple,
               ),
               FlutterFlowIconButton(
                 borderColor: FlutterFlowTheme.of(context).primary,

@@ -13,4 +13,5 @@ abstract interface class AuthRemoteDataSource {
     required String invitationCode,
   });
   Future<UserModel> signInWithGoogle();
+  Future<UserModel> signInWithApple();
 }

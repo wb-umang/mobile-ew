@@ -39,6 +39,9 @@ class _WelcomePageState extends State<WelcomePage> {
           context.pushNamed('MainPage');
         }
         if (state is AuthError && !state.isValidationError) {
+          print("##");
+          print(state.message);
+          print("##");
           showCustomSnackBar(context, state.message);
         }
       }, builder: (context, authState) {
@@ -196,6 +199,9 @@ class _WelcomePageState extends State<WelcomePage> {
                                 onSignInWithGoogle: () => context
                                     .read<WelcomeViewModel>()
                                     .signInWithGoogle(context),
+                                onSignInWithApple: () => context
+                                    .read<WelcomeViewModel>()
+                                    .signInWithApple(context),
                               ),
                             ),
                           ),

@@ -5,6 +5,7 @@ import 'package:every_watch/features/auth/data/datasources/auth_remote_data_sour
 import 'package:every_watch/features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:every_watch/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:every_watch/features/auth/domain/repository/auth_repository.dart';
+import 'package:every_watch/features/auth/domain/usecases/sign_in_with_apple.dart';
 import 'package:every_watch/features/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:every_watch/features/auth/domain/usecases/user_login_usecase.dart';
 import 'package:every_watch/features/auth/domain/usecases/user_signup_usecase.dart';
@@ -56,11 +57,16 @@ void _initAuth() {
     () => SignInWithGoogleUsecase(serviceLocator()),
   );
 
+  serviceLocator.registerFactory<SignInWithAppleUsecase>(
+    () => SignInWithAppleUsecase(serviceLocator()),
+  );
+
   serviceLocator.registerLazySingleton<AuthBloc>(
     () => AuthBloc(
       userSignupUsecase: serviceLocator(),
       userLoginUsecase: serviceLocator(),
       signInWithGoogleUsecase: serviceLocator(),
+      signInWithAppleUsecase: serviceLocator(),
     ),
   );
 }
