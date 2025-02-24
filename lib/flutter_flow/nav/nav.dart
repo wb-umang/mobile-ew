@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:every_watch/features/auth/ui/pages/login_page.dart';
-import 'package:every_watch/features/auth/ui/pages/signup_page.dart';
-import 'package:every_watch/features/auth/ui/pages/welcome_page.dart';
+import 'package:every_watch/core/storage/secure_storage.dart';
+import 'package:every_watch/features/auth/ui/pages/login_page/login_page.dart';
+import 'package:every_watch/features/auth/ui/pages/signup_page/signup_page.dart';
+import 'package:every_watch/features/auth/ui/pages/welcome_page/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,12 +38,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      redirect: (context, state) {
-        // Add a redirect handler that will force router to evaluate routes
+      redirect: (context, state) async {
+        bool isLoggedIn = await SecureStorage.isLoggedIn();
+        // Show Splash Screen first
         if (appStateNotifier.showSplashImage) {
           return '/';
         } else {
-          return state.fullPath == '/' ? '/welcomePage' : state.fullPath;
+          if (isLoggedIn) {
+            return state.fullPath == '/' ? '/mainPage' : state.fullPath;
+          } else {
+            return state.fullPath == '/' ? '/welcomePage' : state.fullPath;
+          }
         }
       },
       errorBuilder: (context, state) => Container(

@@ -1,17 +1,20 @@
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
+import 'package:every_watch/core/di/init_dependencies.dart';
+import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
-import '../../core/widgets/icon_button/icon_button_widget.dart';
-import '../../core/widgets/pill_button/pill_button_widget.dart';
-import '../../core/widgets/profile_row/profile_row_widget.dart';
-import '../../core/widgets/referral_dialog/referral_dialog_widget.dart';
-import '../../core/widgets/search_bar/search_bar_widget.dart';
-import '../../core/widgets/separator_icon/separator_icon_widget.dart';
-import '../../core/widgets/small_arrow_button/small_arrow_button_widget.dart';
-import '../../core/widgets/toggle_button/toggle_button_widget.dart';
-import '../../core/widgets/watch_card/watch_card_widget.dart';
+import '../../core/common/widgets/icon_button/icon_button_widget.dart';
+import '../../core/common/widgets/pill_button/pill_button_widget.dart';
+import '../../core/common/widgets/profile_row/profile_row_widget.dart';
+import '../../core/common/widgets/referral_dialog/referral_dialog_widget.dart';
+import '../../core/common/widgets/search_bar/search_bar_widget.dart';
+import '../../core/common/widgets/separator_icon/separator_icon_widget.dart';
+import '../../core/common/widgets/small_arrow_button/small_arrow_button_widget.dart';
+import '../../core/common/widgets/toggle_button/toggle_button_widget.dart';
+import '../../core/common/widgets/watch_card/watch_card_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -33,6 +36,8 @@ class MainPageWidget extends StatefulWidget {
 
 class _MainPageWidgetState extends State<MainPageWidget>
     with TickerProviderStateMixin {
+  final googleSignIn = serviceLocator<GoogleSignIn>();
+
   late MainPageModel _model;
   late SearchBarModel _searchBarModel;
   var isLoadingSearch = true;
@@ -2308,6 +2313,11 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                         LoginDataStruct();
                                                                     FFAppState()
                                                                         .clear();
+                                                                    await SecureStorage
+                                                                        .removeData();
+
+                                                                    await googleSignIn
+                                                                        .disconnect();
 
                                                                     context.pushNamed(
                                                                         'WelcomePage');

@@ -1,4 +1,4 @@
-import '../../core/widgets/referral_dialog/referral_dialog_widget.dart';
+import '../../core/common/widgets/referral_dialog/referral_dialog_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

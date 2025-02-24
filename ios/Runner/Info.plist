@@ -22,6 +22,8 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>GIDClientID</key>
+	<string>765011114266-6ajh4kf08fgrnut9p33u8m9h8fc5p5ro.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -31,7 +33,7 @@
 			<string>everywatch.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>everywatch</string>
+				<string>com.googleusercontent.apps.765011114266-6ajh4kf08fgrnut9p33u8m9h8fc5p5ro</string>
 			</array>
 		</dict>
 	</array>

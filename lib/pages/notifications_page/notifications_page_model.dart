@@ -1,5 +1,5 @@
-import '../../core/widgets/profile_row/profile_row_widget.dart';
-import '../../core/widgets/separator_icon/separator_icon_widget.dart';
+import '../../core/common/widgets/profile_row/profile_row_widget.dart';
+import '../../core/common/widgets/separator_icon/separator_icon_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'notifications_page_widget.dart' show NotificationsPageWidget;
 import 'package:flutter/material.dart';

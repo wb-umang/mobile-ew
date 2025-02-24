@@ -318,6 +318,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      sha256: "253a18bbd4851fecba42f7343a1df3a9a4c1d31a2c1b37e221086b4fa8c8dbc9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.8.0+1"
+  dio_web_adapter:
+    dependency: transitive
+    description:
+      name: dio_web_adapter
+      sha256: e485c7a39ff2b384fa1d7e09b4e25f755804de8384358049124830b04fc4f93a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   easy_debounce:
     dependency: "direct main"
     description:
@@ -443,6 +459,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
+  flutter_dotenv:
+    dependency: "direct main"
+    description:
+      name: flutter_dotenv
+      sha256: b7c7be5cd9f6ef7a78429cabd2774d3c4af50e79cb2b7593e3d5d763ef95c61b
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.1"
   flutter_gen_core:
     dependency: transitive
     description:
@@ -570,6 +594,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.8.0"
+  fpdart:
+    dependency: "direct main"
+    description:
+      name: fpdart
+      sha256: "1b84ce64453974159f08046f5d05592020d1fcb2099d7fe6ec58da0e7337af77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   from_css_color:
     dependency: "direct main"
     description:
@@ -618,6 +650,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
+  google_identity_services_web:
+    dependency: transitive
+    description:
+      name: google_identity_services_web
+      sha256: "55580f436822d64c8ff9a77e37d61f5fb1e6c7ec9d632a43ee324e2a05c3c6c9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      sha256: fad6ddc80c427b0bba705f2116204ce1173e09cf299f85e053d57a55e5b2dd56
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.2"
+  google_sign_in_android:
+    dependency: transitive
+    description:
+      name: google_sign_in_android
+      sha256: "7af72e5502c313865c729223b60e8ae7bce0a1011b250c24edcf30d3d7032748"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.35"
+  google_sign_in_ios:
+    dependency: transitive
+    description:
+      name: google_sign_in_ios
+      sha256: "8468465516a6fdc283ffbbb06ec03a860ee34e9ff84b0454074978705b42379b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.8.0"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      sha256: "1f6e5787d7a120cc0359ddf315c92309069171306242e181c09472d1b00a2971"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.5"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      sha256: ada595df6c30cead48e66b1f3a050edf0c5cf2ba60c185d69690e08adcc6281b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.12.4+3"
   graphs:
     dependency: transitive
     description:
@@ -642,6 +722,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  hive:
+    dependency: "direct main"
+    description:
+      name: hive
+      sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
+  hive_flutter:
+    dependency: "direct main"
+    description:
+      name: hive_flutter
+      sha256: dca1da446b1d808a51689fb5d0c6c9510c0a2ba01e22805d492c73b68e33eecc
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   html:
     dependency: transitive
     description:
@@ -787,7 +883,7 @@ packages:
     source: hosted
     version: "0.7.1"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
@@ -802,6 +898,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.5"
+  json_serializable:
+    dependency: "direct dev"
+    description:
+      name: json_serializable
+      sha256: c2fcb3920cf2b6ae6845954186420fca40bc0a8abcc84903b7801f17d7050d7c
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -1146,6 +1250,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  sign_in_with_apple:
+    dependency: "direct main"
+    description:
+      name: sign_in_with_apple
+      sha256: e84a62e17b7e463abf0a64ce826c2cd1f0b72dff07b7b275e32d5302d76fb4c5
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.4"
+  sign_in_with_apple_platform_interface:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_platform_interface
+      sha256: c2ef2ce6273fce0c61acd7e9ff5be7181e33d7aa2b66508b39418b786cca2119
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  sign_in_with_apple_web:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_web
+      sha256: "2f7c38368f49e3f2043bca4b46a4a61aaae568c140a79aa0675dc59ad0ca49bc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   skeletonizer:
     dependency: "direct main"
     description:
@@ -1175,6 +1303,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  source_helper:
+    dependency: transitive
+    description:
+      name: source_helper
+      sha256: "86d247119aedce8e63f4751bd9626fc9613255935558447569ad42f9f5b48b3c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.5"
   source_span:
     dependency: transitive
     description:

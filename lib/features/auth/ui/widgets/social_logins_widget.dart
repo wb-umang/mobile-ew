@@ -6,7 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SocialLoginsWidget extends StatefulWidget {
-  const SocialLoginsWidget({super.key});
+  final Function() onSignInWithGoogle;
+  final Function() onSignInWithApple;
+  const SocialLoginsWidget({
+    super.key,
+    required this.onSignInWithGoogle,
+    required this.onSignInWithApple,
+  });
 
   @override
   State<SocialLoginsWidget> createState() => _SocialLoginsWidgetState();
@@ -71,20 +77,7 @@ class _SocialLoginsWidgetState extends State<SocialLoginsWidget> {
                   color: FlutterFlowTheme.of(context).primary,
                   size: 24.0,
                 ),
-                onPressed: () {},
-              ),
-              FlutterFlowIconButton(
-                borderColor: FlutterFlowTheme.of(context).primary,
-                borderRadius: 14.0,
-                borderWidth: 1.0,
-                buttonSize: 44.0,
-                fillColor: FlutterFlowTheme.of(context).secondaryBackground,
-                icon: Icon(
-                  Icons.facebook,
-                  color: FlutterFlowTheme.of(context).primary,
-                  size: 24.0,
-                ),
-                onPressed: () {},
+                onPressed: widget.onSignInWithApple,
               ),
               FlutterFlowIconButton(
                 borderColor: FlutterFlowTheme.of(context).primary,
@@ -97,7 +90,7 @@ class _SocialLoginsWidgetState extends State<SocialLoginsWidget> {
                   color: FlutterFlowTheme.of(context).primary,
                   size: 16.0,
                 ),
-                onPressed: () {},
+                onPressed: widget.onSignInWithGoogle,
               ),
             ].divide(const SizedBox(width: 16.0)),
           ),

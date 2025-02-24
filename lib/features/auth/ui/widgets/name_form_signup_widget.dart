@@ -1,12 +1,16 @@
 import 'package:every_watch/core/utils/app_strings.dart';
-import 'package:every_watch/features/auth/ui/widgets/model/signup_page_model.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class NameFormSignupWidget extends StatefulWidget {
-  final SignupPageModel model;
-  const NameFormSignupWidget({super.key, required this.model});
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  const NameFormSignupWidget({
+    super.key,
+    required this.firstNameController,
+    required this.lastNameController,
+  });
 
   @override
   State<NameFormSignupWidget> createState() => _NameFormSignupWidgetState();
@@ -16,7 +20,6 @@ class _NameFormSignupWidgetState extends State<NameFormSignupWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: widget.model.formKey2,
       autovalidateMode: AutovalidateMode.disabled,
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
@@ -51,16 +54,7 @@ class _NameFormSignupWidgetState extends State<NameFormSignupWidget> {
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             0.0, 4.0, 0.0, 0.0),
                         child: TextFormField(
-                          controller:
-                              widget.model.firstNameTextFieldTextController,
-                          focusNode: widget.model.firstNameTextFieldFocusNode,
-                          onFieldSubmitted: (_) async {
-                            if (widget.model.formKey2.currentState == null ||
-                                !widget.model.formKey2.currentState!
-                                    .validate()) {
-                              return;
-                            }
-                          },
+                          controller: widget.firstNameController,
                           autofocus: true,
                           textInputAction: TextInputAction.next,
                           obscureText: false,
@@ -116,9 +110,6 @@ class _NameFormSignupWidgetState extends State<NameFormSignupWidget> {
                                     letterSpacing: 0.08,
                                     lineHeight: 1.43,
                                   ),
-                          validator: widget
-                              .model.firstNameTextFieldTextControllerValidator
-                              .asValidator(context),
                         ),
                       ),
                     ),
@@ -153,16 +144,7 @@ class _NameFormSignupWidgetState extends State<NameFormSignupWidget> {
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             0.0, 4.0, 0.0, 0.0),
                         child: TextFormField(
-                          controller:
-                              widget.model.lastNameTextFieldTextController,
-                          focusNode: widget.model.lastNameTextFieldFocusNode,
-                          onFieldSubmitted: (_) async {
-                            if (widget.model.formKey2.currentState == null ||
-                                !widget.model.formKey2.currentState!
-                                    .validate()) {
-                              return;
-                            }
-                          },
+                          controller: widget.lastNameController,
                           autofocus: true,
                           textInputAction: TextInputAction.next,
                           obscureText: false,
@@ -218,9 +200,6 @@ class _NameFormSignupWidgetState extends State<NameFormSignupWidget> {
                                     letterSpacing: 0.08,
                                     lineHeight: 1.43,
                                   ),
-                          validator: widget
-                              .model.lastNameTextFieldTextControllerValidator
-                              .asValidator(context),
                         ),
                       ),
                     ),

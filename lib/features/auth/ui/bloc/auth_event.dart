@@ -1,18 +1,34 @@
-import 'package:equatable/equatable.dart';
+part of 'auth_bloc.dart';
 
-abstract class AuthEvent extends Equatable {
-  @override
-  List<Object> get props => [];
+@immutable
+sealed class AuthEvent {}
+
+final class AuthSignUp extends AuthEvent {
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String password;
+  final String invitationCode;
+
+  AuthSignUp({
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.password,
+    required this.invitationCode,
+  });
 }
 
-class LoginRequested extends AuthEvent {
+final class AuthLogin extends AuthEvent {
   final String email;
   final String password;
 
-  LoginRequested({required this.email, required this.password});
-
-  @override
-  List<Object> get props => [email, password];
+  AuthLogin({
+    required this.email,
+    required this.password,
+  });
 }
 
-class LogoutRequested extends AuthEvent {}
+final class AuthSignInWithGoogle extends AuthEvent {}
+
+final class AuthSignInWithApple extends AuthEvent {}

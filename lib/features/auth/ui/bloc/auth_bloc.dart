@@ -1,31 +1,91 @@
+import 'package:every_watch/app_state.dart';
+import 'package:every_watch/core/common/entities/user_entity.dart';
+import 'package:every_watch/core/utils/temp/map_to_login_data_struct.dart';
+import 'package:every_watch/features/auth/domain/usecases/sign_in_with_apple.dart';
+import 'package:every_watch/features/auth/domain/usecases/sign_in_with_google.dart';
+import 'package:every_watch/features/auth/domain/usecases/user_login_usecase.dart';
+import 'package:every_watch/features/auth/domain/usecases/user_signup_usecase.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
-// import '../../domain/usecases/login_usecase.dart';
-// import '../../domain/entities/user.dart';
+
+part 'auth_event.dart';
+part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  // final LoginUseCase loginUseCase;
+  final UserSignupUsecase _userSignupUsecase;
+  final UserLoginUsecase _userLoginUsecase;
+  final SignInWithGoogleUsecase _signInWithGoogleUsecase;
+  final SignInWithAppleUsecase _signInWithAppleUsecase;
 
-  AuthBloc() : super(AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
-    on<LogoutRequested>(_onLogoutRequested);
-  }
+  AuthBloc({
+    required UserSignupUsecase userSignupUsecase,
+    required UserLoginUsecase userLoginUsecase,
+    required SignInWithGoogleUsecase signInWithGoogleUsecase,
+    required SignInWithAppleUsecase signInWithAppleUsecase,
+  })  : _userSignupUsecase = userSignupUsecase,
+        _userLoginUsecase = userLoginUsecase,
+        _signInWithGoogleUsecase = signInWithGoogleUsecase,
+        _signInWithAppleUsecase = signInWithAppleUsecase,
+        super(AuthInitial()) {
+    on<AuthLogin>((event, emit) async {
+      emit(AuthLoading());
+      final res = await _userLoginUsecase(UserLoginParams(
+        email: event.email,
+        password: event.password,
+      ));
 
-  Future<void> _onLoginRequested(
-      LoginRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+      res.fold((failure) {
+        emit(AuthError(failure.message));
+      }, (result) {
+        // TODO: Remove this temporary solution after full new arch. migration
+        FFAppState().loginData = mapUserEntityToLoginData(result);
+        emit(AuthSuccess(result));
+      });
+    });
 
-    try {
-      // final user = await loginUseCase.execute(event.email, event.password);
-      // emit(AuthAuthenticated(user));
-    } catch (e) {
-      emit(AuthError("Login failed. Please try again."));
-    }
-  }
+    on<AuthSignUp>((event, emit) async {
+      emit(AuthLoading());
+      final res = await _userSignupUsecase(UserSignUpParams(
+        email: event.email,
+        firstName: event.firstName,
+        lastName: event.lastName,
+        password: event.password,
+        invitationCode: event.invitationCode,
+      ));
 
-  Future<void> _onLogoutRequested(
-      LogoutRequested event, Emitter<AuthState> emit) async {
-    emit(AuthInitial());
+      res.fold((failure) {
+        emit(AuthError(failure.message));
+      }, (result) {
+        // TODO: Remove this temporary solution after full new arch. migration
+        FFAppState().loginData = mapUserEntityToLoginData(result);
+        emit(AuthSuccess(result));
+      });
+    });
+
+    on<AuthSignInWithGoogle>((event, emit) async {
+      emit(AuthLoading(isGoogleLogin: true));
+      final res = await _signInWithGoogleUsecase(null);
+
+      res.fold((failure) {
+        emit(AuthError(failure.message));
+      }, (result) {
+        // TODO: Remove this temporary solution after full new arch. migration
+        FFAppState().loginData = mapUserEntityToLoginData(result);
+        emit(AuthSuccess(result));
+      });
+    });
+
+    on<AuthSignInWithApple>((event, emit) async {
+      emit(AuthLoading(isGoogleLogin: true));
+      final res = await _signInWithAppleUsecase(null);
+
+      res.fold((failure) {
+        emit(AuthError(failure.message));
+      }, (result) {
+        // TODO: Remove this temporary solution after full new arch. migration
+        FFAppState().loginData = mapUserEntityToLoginData(result);
+        emit(AuthSuccess(result));
+      });
+    });
   }
 }

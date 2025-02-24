@@ -1,28 +1,26 @@
-import 'package:equatable/equatable.dart';
+part of 'auth_bloc.dart';
 
-abstract class AuthState extends Equatable {
-  @override
-  List<Object> get props => [];
+sealed class AuthState {
+  const AuthState();
 }
 
-class AuthInitial extends AuthState {}
+final class AuthInitial extends AuthState {}
 
-class AuthLoading extends AuthState {}
+final class AuthLoading extends AuthState {
+  final bool isGoogleLogin;
 
-class AuthAuthenticated extends AuthState {
-  // final User user;
-
-  // AuthAuthenticated(this.user);
-
-  // @override
-  // List<Object> get props => [user];
+  const AuthLoading({this.isGoogleLogin = false});
 }
 
-class AuthError extends AuthState {
+final class AuthSuccess extends AuthState {
+  final UserEntity user;
+
+  const AuthSuccess(this.user);
+}
+
+final class AuthError extends AuthState {
   final String message;
+  final bool isValidationError;
 
-  AuthError(this.message);
-
-  @override
-  List<Object> get props => [message];
+  const AuthError(this.message, {this.isValidationError = false});
 }
