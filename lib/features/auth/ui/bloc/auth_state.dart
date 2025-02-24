@@ -6,7 +6,11 @@ sealed class AuthState {
 
 final class AuthInitial extends AuthState {}
 
-final class AuthLoading extends AuthState {}
+final class AuthLoading extends AuthState {
+  final bool isGoogleLogin;
+
+  const AuthLoading({this.isGoogleLogin = false});
+}
 
 final class AuthSuccess extends AuthState {
   final UserEntity user;

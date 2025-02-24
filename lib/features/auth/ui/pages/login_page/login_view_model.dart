@@ -36,7 +36,7 @@ class LoginViewModel extends Cubit<AuthState> {
           errorMessage,
           isValidationError: true,
         ),
-      ); // Emit error state if validation fails
+      );
       return;
     } else {
       emit(AuthLoading());
@@ -47,6 +47,13 @@ class LoginViewModel extends Cubit<AuthState> {
             ),
           );
     }
+  }
+
+  void signInWithGoogle(BuildContext context) {
+    emit(AuthLoading());
+    context.read<AuthBloc>().add(
+          AuthSignInWithGoogle(),
+        );
   }
 
   void handleAuthState(AuthState state) {

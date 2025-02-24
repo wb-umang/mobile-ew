@@ -171,7 +171,8 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                             ),
                             SignupButtonWidget(
-                              isLoading: signUpState is AuthLoading,
+                              isLoading: signUpState is AuthLoading &&
+                                  !signUpState.isGoogleLogin,
                               onPressed: () => context
                                   .read<SignUpViewModel>()
                                   .signUp(context),
@@ -227,7 +228,11 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                             ),
                             const SizedBox(height: 32),
-                            const SocialLoginsWidget(),
+                            SocialLoginsWidget(
+                              onSignInWithGoogle: () => context
+                                  .read<SignUpViewModel>()
+                                  .signInWithGoogle(context),
+                            ),
                             const SizedBox(height: 32),
                           ],
                         ),

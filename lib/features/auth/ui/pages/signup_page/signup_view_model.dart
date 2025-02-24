@@ -73,6 +73,13 @@ class SignUpViewModel extends Cubit<AuthState> {
     }
   }
 
+  void signInWithGoogle(BuildContext context) {
+    emit(AuthLoading());
+    context.read<AuthBloc>().add(
+          AuthSignInWithGoogle(),
+        );
+  }
+
   void handleAuthState(AuthState state) {
     emit(state); // Forward AuthBloc state changes to UI
   }

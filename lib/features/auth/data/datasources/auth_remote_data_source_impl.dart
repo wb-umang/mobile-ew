@@ -6,11 +6,16 @@ import 'package:every_watch/core/network/api_response.dart';
 import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:every_watch/features/auth/data/models/user_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient apiClient;
+  final GoogleSignIn googleSignIn;
 
-  AuthRemoteDataSourceImpl({required this.apiClient});
+  AuthRemoteDataSourceImpl({
+    required this.apiClient,
+    required this.googleSignIn,
+  });
 
   @override
   Future<UserModel> logInWithEmailAndPassword({
@@ -64,6 +69,48 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "lastName": lastName,
         "password": password,
         "invitationCode": invitationCode,
+      });
+
+      final result = ApiResponse.fromJson(response.data);
+
+      if (result.success) {
+        final user = UserModel.fromJson(result.data);
+
+        // Save access token securely
+        await SecureStorage.saveData("access_token", user.accessToken);
+        await SecureStorage.saveData(
+            "token_expiry", user.accessTokenExpires.toString());
+        await SecureStorage.saveData("refresh_token", user.refreshToken);
+
+        return user;
+      } else {
+        throw ServerException(result.message);
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw ServerException(e.response!.data['message'] ?? "Request failed");
+      } else {
+        throw ServerException(e.message ?? "Unexpected error");
+      }
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
+
+      if (account == null) {
+        throw ServerException("User cancelled the sign-in flow.");
+      }
+
+      final GoogleSignInAuthentication auth = await account.authentication;
+      String? idToken = auth.idToken;
+
+      final response = await apiClient.post(ApiEndpoints.googleLogin, data: {
+        "idToken": idToken,
       });
 
       final result = ApiResponse.fromJson(response.data);

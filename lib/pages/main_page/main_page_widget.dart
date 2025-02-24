@@ -1,6 +1,8 @@
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
+import 'package:every_watch/core/di/init_dependencies.dart';
 import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
@@ -34,6 +36,8 @@ class MainPageWidget extends StatefulWidget {
 
 class _MainPageWidgetState extends State<MainPageWidget>
     with TickerProviderStateMixin {
+  final googleSignIn = serviceLocator<GoogleSignIn>();
+
   late MainPageModel _model;
   late SearchBarModel _searchBarModel;
   var isLoadingSearch = true;
@@ -2311,6 +2315,9 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                         .clear();
                                                                     await SecureStorage
                                                                         .removeData();
+
+                                                                    await googleSignIn
+                                                                        .disconnect();
 
                                                                     context.pushNamed(
                                                                         'WelcomePage');

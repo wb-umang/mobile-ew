@@ -3,4 +3,5 @@ class ApiEndpoints {
 
   static const String login = "$baseUrl/api/Auth/Login";
   static const String register = "$baseUrl/api/Auth/Register";
+  static const String googleLogin = "$baseUrl/api/Auth/GoogleSignUp";
 }

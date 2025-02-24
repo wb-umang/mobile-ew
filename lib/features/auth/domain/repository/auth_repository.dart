@@ -14,4 +14,5 @@ abstract interface class AuthRepository {
     required String password,
     required String invitationCode,
   });
+  Future<Either<Failure, UserEntity>> signInWithGoogle();
 }

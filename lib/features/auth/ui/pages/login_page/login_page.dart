@@ -161,7 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   const SizedBox(height: 16),
                                   LoginButtonWidget(
-                                    isLoading: loginState is AuthLoading,
+                                    isLoading: loginState is AuthLoading &&
+                                        !loginState.isGoogleLogin,
                                     onPressed: () => context
                                         .read<LoginViewModel>()
                                         .login(context),
@@ -205,7 +206,11 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 32),
-                                  const SocialLoginsWidget(),
+                                  SocialLoginsWidget(
+                                    onSignInWithGoogle: () => context
+                                        .read<LoginViewModel>()
+                                        .signInWithGoogle(context),
+                                  ),
                                 ],
                               ),
                             ),
