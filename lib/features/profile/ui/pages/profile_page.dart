@@ -22,6 +22,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final googleSignIn = serviceLocator<GoogleSignIn>();
   late MainPageModel _model;
+  bool isLoggingOut = false;
 
   @override
   void initState() {
@@ -30,17 +31,42 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _handleLogout() async {
+    setState(() {
+      isLoggingOut = true;
+    });
+
     FFAppState().loginData = LoginDataStruct();
     FFAppState().clear();
 
     await SecureStorage.removeData();
     await googleSignIn.disconnect();
 
+    setState(() {
+      isLoggingOut = false;
+    });
+
     if (mounted) context.go('/welcome');
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoggingOut) {
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        body: Center(
+          child: SizedBox(
+            width: 50.0,
+            height: 50.0,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                FlutterFlowTheme.of(context).primary,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
       body: SafeArea(
