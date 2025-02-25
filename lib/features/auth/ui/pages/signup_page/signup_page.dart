@@ -1,6 +1,6 @@
+import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/core/utils/show_custom_snackbar.dart';
-import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:every_watch/features/auth/ui/pages/signup_page/signup_view_model.dart';
 import 'package:every_watch/features/auth/ui/widgets/email_pass_form_signup_widget.dart';
@@ -35,7 +35,7 @@ class _SignupPageState extends State<SignupPage> {
         listener: (context, state) {
           context.read<SignUpViewModel>().handleAuthState(state);
           if (state is AuthSuccess) {
-            context.pushNamed('MainPage');
+            context.go('/home');
           }
           if (state is AuthError && !state.isValidationError) {
             showCustomSnackBar(context, state.message);
@@ -221,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
                                 focusColor: Colors.transparent,
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
-                                onTap: () => context.pushNamed('LoginPage'),
+                                onTap: () => context.pushReplacement('/login'),
                                 child: const ArrowButtonWidget(
                                   title: SignupPageStrings.logIn,
                                 ),

@@ -36,7 +36,7 @@ class _WelcomePageState extends State<WelcomePage> {
       child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
         context.read<WelcomeViewModel>().handleAuthState(state);
         if (state is AuthSuccess) {
-          context.pushNamed('MainPage');
+          context.go('/home');
         }
         if (state is AuthError && !state.isValidationError) {
           showCustomSnackBar(context, state.message);
@@ -118,9 +118,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   0.0, 32.0, 0.0, 0.0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed(
-                                    'LoginPage',
-                                  );
+                                  context.push('/login');
                                 },
                                 text: WelcomePageStrings.logInText,
                                 options: FFButtonOptions(
@@ -155,7 +153,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 0.0, 12.0, 0.0, 0.0),
                             child: FFButtonWidget(
                               onPressed: () async {
-                                context.pushNamed('RegisterPage');
+                                context.push('/signup');
                               },
                               text: WelcomePageStrings.signUpText,
                               options: FFButtonOptions(
