@@ -10,6 +10,7 @@ import 'package:every_watch/features/auth/domain/usecases/sign_in_with_google.da
 import 'package:every_watch/features/auth/domain/usecases/user_login_usecase.dart';
 import 'package:every_watch/features/auth/domain/usecases/user_signup_usecase.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
+import 'package:every_watch/features/find_watch/ui/cubit/image_search_cubit.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -30,6 +31,10 @@ void initDependencies() {
             ? dotenv.env['WEB_GOOGLE_CLIENT_ID']
             : dotenv.env['IOS_GOOGLE_CLIENT_ID'],
       ));
+
+  // TODO: Remove this when home module is fully implemented
+  serviceLocator
+      .registerLazySingleton<ImageSearchCubit>(() => ImageSearchCubit());
 
   _initAuth();
 }

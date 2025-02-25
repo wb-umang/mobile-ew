@@ -1,5 +1,5 @@
-import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/core/common/widgets/arrow_button/arrow_button_widget.dart';
+import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/core/utils/show_custom_snackbar.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:every_watch/features/auth/ui/pages/login_page/login_view_model.dart';
@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           context.read<LoginViewModel>().handleAuthState(state);
           if (state is AuthSuccess) {
-            context.pushNamed('MainPage');
+            context.go('/home');
           }
           if (state is AuthError && !state.isValidationError) {
             showCustomSnackBar(context, state.message);
@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                   const SizedBox(height: 16),
                                   InkWell(
                                     onTap: () =>
-                                        context.pushNamed('RegisterPage'),
+                                        context.pushReplacement('/signup'),
                                     child: const ArrowButtonWidget(
                                       title: LoginPageStrings.signUp,
                                     ),

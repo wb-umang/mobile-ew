@@ -1,11 +1,21 @@
+import 'dart:async';
+
 import 'package:every_watch/backend/schema/structs/image_search_response_struct.dart';
 import 'package:every_watch/core/di/init_dependencies.dart';
 import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import '../../core/common/widgets/icon_button/icon_button_widget.dart';
 import '../../core/common/widgets/pill_button/pill_button_widget.dart';
 import '../../core/common/widgets/profile_row/profile_row_widget.dart';
@@ -15,16 +25,8 @@ import '../../core/common/widgets/separator_icon/separator_icon_widget.dart';
 import '../../core/common/widgets/small_arrow_button/small_arrow_button_widget.dart';
 import '../../core/common/widgets/toggle_button/toggle_button_widget.dart';
 import '../../core/common/widgets/watch_card/watch_card_widget.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'dart:async';
-import 'package:sticky_headers/sticky_headers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'main_page_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 export 'main_page_model.dart';
 
 class MainPageWidget extends StatefulWidget {
@@ -1609,10 +1611,8 @@ class _MainPageWidgetState extends State<MainPageWidget>
                                                                       .primaryText,
                                                                   size: 16.0,
                                                                 ),
-                                                                onPressed: () {
-                                                                  print(
-                                                                      'IconButton pressed ...');
-                                                                },
+                                                                onPressed:
+                                                                    () {},
                                                               ),
                                                               Align(
                                                                 alignment:

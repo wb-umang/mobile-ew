@@ -1,10 +1,10 @@
+import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/core/utils/show_custom_snackbar.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:every_watch/features/auth/ui/pages/welcome_page/welcome_view_model.dart';
 import 'package:every_watch/features/auth/ui/widgets/social_logins_widget.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_widgets.dart';
-import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,12 +36,9 @@ class _WelcomePageState extends State<WelcomePage> {
       child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
         context.read<WelcomeViewModel>().handleAuthState(state);
         if (state is AuthSuccess) {
-          context.pushNamed('MainPage');
+          context.go('/home');
         }
         if (state is AuthError && !state.isValidationError) {
-          print("##");
-          print(state.message);
-          print("##");
           showCustomSnackBar(context, state.message);
         }
       }, builder: (context, authState) {
@@ -121,9 +118,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   0.0, 32.0, 0.0, 0.0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed(
-                                    'LoginPage',
-                                  );
+                                  context.push('/login');
                                 },
                                 text: WelcomePageStrings.logInText,
                                 options: FFButtonOptions(
@@ -158,7 +153,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 0.0, 12.0, 0.0, 0.0),
                             child: FFButtonWidget(
                               onPressed: () async {
-                                context.pushNamed('RegisterPage');
+                                context.push('/signup');
                               },
                               text: WelcomePageStrings.signUpText,
                               options: FFButtonOptions(

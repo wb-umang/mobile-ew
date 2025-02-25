@@ -1,6 +1,6 @@
 class ApiResponse {
   final bool success;
-  final dynamic data; // Changed from UserData to dynamic
+  final dynamic data;
   final String message;
   final ApiError error;
 

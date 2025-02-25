@@ -28,6 +28,7 @@ class FFIcons {
   static const String _emailFamily = 'Email';
   static const String _bookmarkFamily = 'Bookmark';
   static const String _lock = 'Lock';
+  static const String _search = 'Search';
 
   // hometab
   static const IconData khome = IconData(0xe901, fontFamily: _hometabFamily);
@@ -103,4 +104,7 @@ class FFIcons {
 
   // lock
   static const IconData klock = IconData(0xe900, fontFamily: _lock);
+
+  // search
+  static const IconData ksearch = IconData(0xe900, fontFamily: _search);
 }

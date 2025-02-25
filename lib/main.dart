@@ -1,14 +1,15 @@
 import 'package:every_watch/core/di/init_dependencies.dart';
+import 'package:every_watch/core/navigation/app_router.dart';
 import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:provider/provider.dart';
+
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -96,7 +97,7 @@ class _MyAppState extends State<MyApp> {
           ),
           themeMode: ThemeMode
               .light, // TODO: Remove this in future when we have a proper dark theme configuration
-          routerConfig: _router,
+          routerConfig: AppRouter.router,
         ));
   }
 }

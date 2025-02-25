@@ -104,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
 
       if (account == null) {
-        throw ServerException("User cancelled the sign-in flow.");
+        throw ServerException("Google sign-in flow cancelled.");
       }
 
       final GoogleSignInAuthentication auth = await account.authentication;
@@ -135,8 +135,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         throw ServerException(e.message ?? "Unexpected error");
       }
-    } catch (e) {
-      throw ServerException(e.toString());
+    } on ServerException catch (e) {
+      throw ServerException(e.message.toString());
     }
   }
 
@@ -154,9 +154,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       String displayName = '';
       if (credential.givenName != null && credential.familyName != null) {
         displayName = '${credential.givenName} ${credential.familyName}';
-        print("##");
-        print(displayName);
-        print("##");
       }
 
       final response = await apiClient.post(ApiEndpoints.googleLogin, data: {
