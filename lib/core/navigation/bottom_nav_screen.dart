@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:every_watch/features/find_watch/ui/pages/find_watch_page.dart';
 import 'package:every_watch/features/followed/ui/pages/followed_page.dart';
 import 'package:every_watch/features/home/ui/pages/home_page.dart';
 import 'package:every_watch/features/profile/ui/pages/profile_page.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';
-import 'package:every_watch/pages/main_page/custom_camera_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavScreen extends StatefulWidget {
@@ -48,15 +48,11 @@ class _BottomNavScreenState extends State<BottomNavScreen>
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CustomCameraScreen(
-            onSearch: (context, base64Image) => _searchImage(),
-          ),
+          builder: (context) => FindWatchPage(),
         ),
       );
     }
   }
-
-  void _searchImage() {}
 
   @override
   void dispose() {
