@@ -39,7 +39,10 @@ class _ProfilePageState extends State<ProfilePage> {
     FFAppState().clear();
 
     await SecureStorage.removeData();
-    await googleSignIn.disconnect();
+
+    if (await googleSignIn.isSignedIn()) {
+      await googleSignIn.disconnect();
+    }
 
     setState(() {
       isLoggingOut = false;
