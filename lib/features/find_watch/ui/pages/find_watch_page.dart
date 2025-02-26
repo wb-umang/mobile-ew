@@ -81,22 +81,32 @@ class _FindWatchPageState extends State<FindWatchPage> {
   }
 
   Future<void> _initializeCamera() async {
-    cameras = await availableCameras();
+    try {
+      // Fetch the available cameras
+      cameras = await availableCameras();
 
-    _controller = CameraController(
-      cameras![0], // Use the first available back camera
-      ResolutionPreset.max,
-      enableAudio: false,
-    );
+      if (cameras!.isEmpty) {
+        throw Exception("No cameras found on this device.");
+      }
 
-    await _controller!.initialize();
+      _controller = CameraController(
+        cameras![0], // Use the first available camera
+        ResolutionPreset.max,
+        enableAudio: false,
+      );
 
-    if (!mounted) return;
+      await _controller!.initialize();
+      setState(() {}); // Refresh UI once camera is initialized
 
-    setState(() {
-      isCameraInitialized = true;
-      _updateCameraRotation();
-    });
+      if (!mounted) return;
+
+      setState(() {
+        isCameraInitialized = true;
+        _updateCameraRotation();
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Updates rotation dynamically
