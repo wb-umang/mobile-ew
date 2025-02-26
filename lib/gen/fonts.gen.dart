@@ -73,6 +73,9 @@ class FontFamily {
   /// Font family: Reset
   static const String reset = 'Reset';
 
+  /// Font family: Search
+  static const String search = 'Search';
+
   /// Font family: Share
   static const String share = 'Share';
 

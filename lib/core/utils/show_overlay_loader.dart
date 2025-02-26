@@ -1,4 +1,3 @@
-import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 
 class FullScreenLoader extends StatelessWidget {
@@ -27,8 +26,7 @@ class FullScreenLoader extends StatelessWidget {
         // Centered loader
         Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-                FlutterFlowTheme.of(context).primary),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
         ),
       ],

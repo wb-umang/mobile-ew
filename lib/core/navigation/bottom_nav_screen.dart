@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:every_watch/features/find_watch/ui/pages/find_watch_page.dart';
 import 'package:every_watch/features/followed/ui/pages/followed_page.dart';
-import 'package:every_watch/features/home/ui/pages/home_page.dart';
+import 'package:every_watch/features/home/ui/pages/home_page/home_page.dart';
 import 'package:every_watch/features/profile/ui/pages/profile_page.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_theme.dart';
 import 'package:every_watch/flutter_flow/flutter_flow_util.dart';

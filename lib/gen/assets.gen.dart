@@ -88,6 +88,9 @@ class $AssetsFontsGen {
   /// File path: assets/fonts/reset.ttf
   String get reset => 'assets/fonts/reset.ttf';
 
+  /// File path: assets/fonts/search.ttf
+  String get search => 'assets/fonts/search.ttf';
+
   /// File path: assets/fonts/share.ttf
   String get share => 'assets/fonts/share.ttf';
 
@@ -124,6 +127,7 @@ class $AssetsFontsGen {
         rate,
         referral,
         reset,
+        search,
         share,
         sort,
         subscription,
@@ -282,6 +286,7 @@ class $AssetsVideosGen {
 class Assets {
   const Assets._();
 
+  static const String aEnv = '.env';
   static const $AssetsAudiosGen audios = $AssetsAudiosGen();
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
@@ -292,6 +297,9 @@ class Assets {
   static const $AssetsRiveAnimationsGen riveAnimations =
       $AssetsRiveAnimationsGen();
   static const $AssetsVideosGen videos = $AssetsVideosGen();
+
+  /// List of all assets
+  static List<String> get values => [aEnv];
 }
 
 class AssetGenImage {

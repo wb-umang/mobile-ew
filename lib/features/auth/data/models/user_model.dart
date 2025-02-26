@@ -1,5 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:every_watch/core/common/entities/user_entity.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
@@ -26,10 +26,8 @@ class UserModel extends UserEntity {
     super.roles,
   });
 
-  /// ✅ Generates `fromJson`
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
-  /// ✅ Generates `toJson`
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }
