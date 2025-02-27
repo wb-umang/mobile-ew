@@ -19,6 +19,7 @@ class WatchCardWidget extends StatefulWidget {
     String? auctionDate,
     String? auctionLotType,
     this.imagePath,
+    this.isLoading = false,
   })  : brand = brand ?? '-',
         model = model ?? '-',
         priceTitle = priceTitle ?? '-',
@@ -35,6 +36,7 @@ class WatchCardWidget extends StatefulWidget {
   final String auctionDate;
   final String auctionLotType;
   final String? imagePath;
+  final bool isLoading;
 
   @override
   State<WatchCardWidget> createState() => _WatchCardWidgetState();
@@ -145,36 +147,42 @@ class _WatchCardWidgetState extends State<WatchCardWidget> {
                       ),
                     ],
                   ),
-                  Align(
-                    alignment: const AlignmentDirectional(1.0, 0.0),
-                    child: ToggleIcon(
-                      onPressed: () async {
-                        safeSetState(
-                            () => _model.isFollowed = !_model.isFollowed);
-                      },
-                      value: _model.isFollowed,
-                      onIcon: Icon(
-                        Icons.favorite_outlined,
-                        color: FlutterFlowTheme.of(context).badge,
-                        size: 24.0,
-                      ),
-                      offIcon: Icon(
-                        Icons.favorite_border,
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        size: 25.0,
+                  Visibility(
+                    visible: !widget.isLoading,
+                    child: Align(
+                      alignment: const AlignmentDirectional(1.0, 0.0),
+                      child: ToggleIcon(
+                        onPressed: () async {
+                          safeSetState(
+                              () => _model.isFollowed = !_model.isFollowed);
+                        },
+                        value: _model.isFollowed,
+                        onIcon: Icon(
+                          Icons.favorite_outlined,
+                          color: FlutterFlowTheme.of(context).badge,
+                          size: 24.0,
+                        ),
+                        offIcon: Icon(
+                          Icons.favorite_border,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 25.0,
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        8.0, 8.0, 0.0, 0.0),
-                    child: wrapWithModel(
-                      model: _model.watchTagModel,
-                      updateCallback: () => safeSetState(() {}),
-                      child: WatchTagWidget(
-                        title: widget.auctionLotType == 'RESULT'
-                            ? 'LIVE AUCTION'
-                            : 'MARKETPLACE',
+                  Visibility(
+                    visible: !widget.isLoading,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          8.0, 8.0, 0.0, 0.0),
+                      child: wrapWithModel(
+                        model: _model.watchTagModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: WatchTagWidget(
+                          title: widget.auctionLotType == 'RESULT'
+                              ? 'LIVE AUCTION'
+                              : 'MARKETPLACE',
+                        ),
                       ),
                     ),
                   ),

@@ -1,10 +1,15 @@
 part of 'home_bloc.dart';
 
 @immutable
-sealed class HomeEvent {}
+sealed class HomeEvent {
+  final bool isScreenInitializing;
+
+  const HomeEvent({this.isScreenInitializing = false});
+}
 
 final class HomeGetWatchListing extends HomeEvent {
   final WatchListingFilterModel filter;
 
-  HomeGetWatchListing({required this.filter});
+  const HomeGetWatchListing(
+      {required this.filter, required super.isScreenInitializing});
 }

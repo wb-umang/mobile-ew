@@ -2,8 +2,10 @@ enum TabType { available, historical }
 
 enum SortType { asc, desc }
 
-enum SortColumn { relevance, price }
+enum SortColumn { relevance, price, newest }
 
-enum AuctionType { marketplace, historical }
+enum SortColumnUi { relevance, price, newest, priceHighToLow, priceLowToHigh }
+
+enum AuctionType { marketplace, historical, listing }
 
 enum CurrencyMode { usd, eur }

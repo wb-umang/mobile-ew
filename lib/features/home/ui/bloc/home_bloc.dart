@@ -15,7 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   })  : _watchListingUsecase = watchListingUsecase,
         super(HomeInitial()) {
     on<HomeGetWatchListing>((event, emit) async {
-      emit(HomeLoading());
+      emit(HomeLoading(event.isScreenInitializing));
       final res = await _watchListingUsecase(
         WatchListingParams(
           filter: event.filter,

@@ -28,4 +28,20 @@ class WatchListingFilterModel extends WatchListingFilterEntity {
       _$WatchListingFilterModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$WatchListingFilterModelToJson(this);
+
+  WatchListingFilterModel copyWith({
+    Map<String, dynamic>? filterData,
+    String? sortType,
+    String? sortColumn,
+    int? from,
+    int? size,
+  }) {
+    return WatchListingFilterModel(
+      filterData: filterData ?? this.filterData,
+      sortType: sortType ?? this.sortType,
+      sortColumn: sortColumn ?? this.sortColumn,
+      from: from ?? this.from,
+      size: size ?? this.size,
+    );
+  }
 }

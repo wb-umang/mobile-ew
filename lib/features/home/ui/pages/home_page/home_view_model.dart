@@ -9,10 +9,14 @@ class HomeViewModel extends Cubit<HomeState> {
   void getWatchListing(
     BuildContext context,
     WatchListingFilterModel filter,
+    bool isScreenInitializing,
   ) {
-    emit(HomeLoading());
+    emit(HomeLoading(isScreenInitializing));
     context.read<HomeBloc>().add(
-          HomeGetWatchListing(filter: filter),
+          HomeGetWatchListing(
+            filter: filter,
+            isScreenInitializing: isScreenInitializing,
+          ),
         );
   }
 

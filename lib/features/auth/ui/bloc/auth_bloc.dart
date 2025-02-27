@@ -1,6 +1,6 @@
 import 'package:every_watch/app_state.dart';
 import 'package:every_watch/core/common/entities/user_entity.dart';
-import 'package:every_watch/core/utils/temp/map_to_login_data_struct.dart';
+import 'package:every_watch/core/utils/temp/map_to_old_data_struct.dart';
 import 'package:every_watch/features/auth/domain/usecases/sign_in_with_apple_usecase.dart';
 import 'package:every_watch/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import 'package:every_watch/features/auth/domain/usecases/user_login_usecase.dart';

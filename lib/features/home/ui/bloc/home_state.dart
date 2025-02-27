@@ -6,7 +6,11 @@ sealed class HomeState {
 
 final class HomeInitial extends HomeState {}
 
-final class HomeLoading extends HomeState {}
+final class HomeLoading extends HomeState {
+  final bool isScreenInitializing;
+
+  const HomeLoading(this.isScreenInitializing);
+}
 
 final class HomeSuccess extends HomeState {
   final List<WatchDetailModel> watchListings;
