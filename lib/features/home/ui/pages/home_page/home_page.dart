@@ -100,175 +100,167 @@ class _HomePageState extends State<HomePage> {
                       ),
                       isLoading: false,
                       loaderColor: FlutterFlowTheme.of(context).primary,
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(18, 8, 18, 8),
-                                child: Column(
-                                  children: [
-                                    SearchBarWidget(
-                                      searchLabel: 'Search Watch',
-                                    ),
-                                    SizedBox(height: 18),
-                                    TopTabHomeWidget(
-                                      selectedTab: selectedTab,
-                                      onAvailableSelected: (tab) {
-                                        context
-                                            .read<HomeViewModel>()
-                                            .getWatchListing(
-                                                context,
-                                                watchListingFilter
-                                                    .copyWith(filterData: {
-                                                  "auctionType": [
-                                                    AuctionType.listing.name
-                                                  ]
-                                                }),
-                                                false);
-                                        setState(() {
-                                          selectedTab = TabType.available;
-                                        });
-                                      },
-                                      onHistoricalSelected: (tab) {
-                                        context
-                                            .read<HomeViewModel>()
-                                            .getWatchListing(
-                                                context,
-                                                watchListingFilter
-                                                    .copyWith(filterData: {
-                                                  "auctionType": [
-                                                    AuctionType.historical.name
-                                                  ]
-                                                }),
-                                                false);
-                                        setState(() {
-                                          selectedTab = TabType.historical;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
+                      child: Column(
+                        children: [
+                          // Fixed Header
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20),
+                                bottomRight: Radius.circular(20),
                               ),
                             ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                primary: false,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 10),
-                                    Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(20),
-                                          topRight: Radius.circular(20),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 14),
-                                        child: Column(
-                                          children: [
-                                            FilterOptionsWidget(
-                                              tabType: selectedTab,
-                                              onMarketplaceSelected:
-                                                  (auctionType) {
-                                                context
-                                                    .read<HomeViewModel>()
-                                                    .getWatchListing(
-                                                        context,
-                                                        watchListingFilter
-                                                            .copyWith(
-                                                                filterData: {
-                                                              "auctionType": [
-                                                                auctionType.name
-                                                              ]
-                                                            }),
-                                                        false);
-                                              },
-                                              onMarketplaceUnselected: () {
-                                                context
-                                                    .read<HomeViewModel>()
-                                                    .getWatchListing(
-                                                        context,
-                                                        watchListingFilter
-                                                            .copyWith(
-                                                                filterData: {
-                                                              "auctionType": [
-                                                                AuctionType
-                                                                    .listing
-                                                                    .name
-                                                              ]
-                                                            }),
-                                                        false);
-                                              },
-                                              onSortSelected:
-                                                  (sortColumn, sortType) {
-                                                context
-                                                    .read<HomeViewModel>()
-                                                    .getWatchListing(
-                                                        context,
-                                                        watchListingFilter
-                                                            .copyWith(
-                                                                sortColumn:
-                                                                    sortColumn
-                                                                        .name,
-                                                                sortType:
-                                                                    sortType
-                                                                        .name,
-                                                                filterData: {
-                                                              "currencyMode":
-                                                                  CurrencyMode
-                                                                      .usd.name
-                                                                      .toUpperCase(),
-                                                              "auctionType": [
-                                                                selectedTab ==
-                                                                        TabType
-                                                                            .available
-                                                                    ? AuctionType
-                                                                        .listing
-                                                                        .name
-                                                                    : AuctionType
-                                                                        .historical
-                                                                        .name
-                                                              ]
-                                                            }),
-                                                        false);
-                                              },
-                                            ),
-                                            WatchListingView(
-                                              watchListing: watchListing,
-                                              tabType: selectedTab,
-                                              isLoading:
-                                                  homeState is HomeLoading,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(18, 8, 18, 8),
+                              child: Column(
+                                children: [
+                                  SearchBarWidget(
+                                    searchLabel: 'Search Watch',
+                                  ),
+                                  SizedBox(height: 18),
+                                  TopTabHomeWidget(
+                                    selectedTab: selectedTab,
+                                    onAvailableSelected: (tab) {
+                                      context
+                                          .read<HomeViewModel>()
+                                          .getWatchListing(
+                                              context,
+                                              watchListingFilter
+                                                  .copyWith(filterData: {
+                                                "auctionType": [
+                                                  AuctionType.listing.name
+                                                ]
+                                              }),
+                                              false);
+                                      setState(() {
+                                        selectedTab = TabType.available;
+                                      });
+                                    },
+                                    onHistoricalSelected: (tab) {
+                                      context
+                                          .read<HomeViewModel>()
+                                          .getWatchListing(
+                                              context,
+                                              watchListingFilter
+                                                  .copyWith(filterData: {
+                                                "auctionType": [
+                                                  AuctionType.historical.name
+                                                ]
+                                              }),
+                                              false);
+                                      setState(() {
+                                        selectedTab = TabType.historical;
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+
+                          // Expanded content to enable scrolling
+                          Expanded(
+                            child: SingleChildScrollView(
+                              primary: false,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 14),
+                                      child: Column(
+                                        children: [
+                                          FilterOptionsWidget(
+                                            tabType: selectedTab,
+                                            onMarketplaceSelected:
+                                                (auctionType) {
+                                              context
+                                                  .read<HomeViewModel>()
+                                                  .getWatchListing(
+                                                      context,
+                                                      watchListingFilter
+                                                          .copyWith(
+                                                              filterData: {
+                                                            "auctionType": [
+                                                              auctionType.name
+                                                            ]
+                                                          }),
+                                                      false);
+                                            },
+                                            onMarketplaceUnselected: () {
+                                              context
+                                                  .read<HomeViewModel>()
+                                                  .getWatchListing(
+                                                      context,
+                                                      watchListingFilter
+                                                          .copyWith(
+                                                              filterData: {
+                                                            "auctionType": [
+                                                              AuctionType
+                                                                  .listing.name
+                                                            ]
+                                                          }),
+                                                      false);
+                                            },
+                                            onSortSelected:
+                                                (sortColumn, sortType) {
+                                              context
+                                                  .read<HomeViewModel>()
+                                                  .getWatchListing(
+                                                      context,
+                                                      watchListingFilter
+                                                          .copyWith(
+                                                              sortColumn:
+                                                                  sortColumn
+                                                                      .name,
+                                                              sortType:
+                                                                  sortType.name,
+                                                              filterData: {
+                                                            "currencyMode":
+                                                                CurrencyMode
+                                                                    .usd.name
+                                                                    .toUpperCase(),
+                                                            "auctionType": [
+                                                              selectedTab ==
+                                                                      TabType
+                                                                          .available
+                                                                  ? AuctionType
+                                                                      .listing
+                                                                      .name
+                                                                  : AuctionType
+                                                                      .historical
+                                                                      .name
+                                                            ]
+                                                          }),
+                                                      false);
+                                            },
+                                          ),
+                                          WatchListingView(
+                                            watchListing: watchListing,
+                                            tabType: selectedTab,
+                                            isLoading: homeState is HomeLoading,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
