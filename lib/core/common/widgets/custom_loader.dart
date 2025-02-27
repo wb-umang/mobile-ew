@@ -4,7 +4,12 @@ class CustomLoader extends StatelessWidget {
   final Color? color;
   final double? width;
   final double? height;
-  const CustomLoader({super.key, this.color, this.width, this.height});
+  const CustomLoader({
+    super.key,
+    this.color,
+    this.width,
+    this.height,
+  });
 
   @override
   Widget build(BuildContext context) {

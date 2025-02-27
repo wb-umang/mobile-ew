@@ -44,7 +44,7 @@ class _WelcomePageState extends State<WelcomePage> {
         }
       }, builder: (context, authState) {
         return BlocBuilder<WelcomeViewModel, AuthState>(
-          builder: (context, loginState) {
+          builder: (context, authState) {
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: Scaffold(

@@ -16,15 +16,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         super(HomeInitial()) {
     on<HomeGetWatchListing>((event, emit) async {
       emit(HomeLoading());
-      final res = await _watchListingUsecase(WatchListingParams(
-        filter: WatchListingFilterModel(
-          sortType: '',
-          sortColumn: '',
-          from: 0,
-          size: 0,
-          filterData: {},
+      final res = await _watchListingUsecase(
+        WatchListingParams(
+          filter: event.filter,
         ),
-      ));
+      );
 
       res.fold((failure) {
         emit(HomeError(failure.message));

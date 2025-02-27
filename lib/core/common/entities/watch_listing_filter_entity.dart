@@ -1,5 +1,5 @@
 class WatchListingFilterEntity {
-  final Map<String, List<String>> filterData;
+  final Map<String, dynamic> filterData;
   final String sortType;
   final String sortColumn;
   final int from;

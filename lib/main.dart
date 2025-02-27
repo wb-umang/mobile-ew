@@ -3,6 +3,7 @@ import 'package:every_watch/core/navigation/app_router.dart';
 import 'package:every_watch/core/storage/secure_storage.dart';
 import 'package:every_watch/core/utils/app_strings.dart';
 import 'package:every_watch/features/auth/ui/bloc/auth_bloc.dart';
+import 'package:every_watch/features/home/ui/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -74,30 +75,34 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => serviceLocator<AuthBloc>(),
-        child: MaterialApp.router(
-          title: AppStrings.appName,
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: const [
-            FFLocalizationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          locale: _locale,
-          supportedLocales: const [
-            Locale('en'),
-          ],
-          theme: ThemeData(
-            brightness: Brightness.light,
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-          ),
-          themeMode: ThemeMode
-              .light, // TODO: Remove this in future when we have a proper dark theme configuration
-          routerConfig: AppRouter.router,
-        ));
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
+      ],
+      child: MaterialApp.router(
+        title: AppStrings.appName,
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          FFLocalizationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: _locale,
+        supportedLocales: const [
+          Locale('en'),
+        ],
+        theme: ThemeData(
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+        ),
+        themeMode: ThemeMode
+            .light, // TODO: Remove this in future when we have a proper dark theme configuration
+        routerConfig: AppRouter.router,
+      ),
+    );
   }
 }

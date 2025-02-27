@@ -9,10 +9,7 @@ part of 'watch_listing_filter_model.dart';
 WatchListingFilterModel _$WatchListingFilterModelFromJson(
         Map<String, dynamic> json) =>
     WatchListingFilterModel(
-      filterData: (json['filterData'] as Map<String, dynamic>).map(
-        (k, e) =>
-            MapEntry(k, (e as List<dynamic>).map((e) => e as String).toList()),
-      ),
+      filterData: json['filterData'] as Map<String, dynamic>,
       sortType: json['sortType'] as String,
       sortColumn: json['sortColumn'] as String,
       from: (json['from'] as num).toInt(),

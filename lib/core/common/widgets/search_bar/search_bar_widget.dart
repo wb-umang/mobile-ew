@@ -1,8 +1,10 @@
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'search_bar_model.dart';
+
 export 'search_bar_model.dart';
 
 class SearchBarWidget extends StatefulWidget {
@@ -65,6 +67,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 widget.searchLabel,
                 'Search Watch',
               ),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
               labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                     fontFamily: 'DM Sans',
                     color: FlutterFlowTheme.of(context).alternate,
@@ -132,7 +135,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           Align(
             alignment: const AlignmentDirectional(-1.0, 0.0),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.asset(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:every_watch/core/error/exceptions.dart';
 import 'package:every_watch/core/network/api_client.dart';
@@ -19,15 +21,19 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   Future<List<WatchDetailModel>> getWatchListing(
       {required WatchListingFilterModel filter}) async {
     try {
-      final response = await apiClient.get(ApiEndpoints.watchListing, query: {
-        "variables": filter.toJson(),
-      });
+      final response = await apiClient.get(
+        ApiEndpoints.watchListing,
+        query: {
+          "variables": json.encode(filter.toJson()),
+        },
+      );
 
       final result = ApiResponse.fromJson(response.data);
 
       if (result.success) {
         final watchListing =
-            AuctionWiseListingModel.fromJson(result.data).watchListings;
+            AuctionWiseListingModel.fromJson(result.data['auctionWiseListing'])
+                .watchListings;
 
         return watchListing;
       } else {
